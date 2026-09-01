@@ -1,0 +1,1955 @@
+import logging
+import os
+import re
+import struct
+import sys
+import copy
+import json
+import uuid
+import time
+import queue
+import asyncio
+import threading
+import traceback
+import subprocess
+import zlib
+import redis
+import random
+from datetime import datetime
+import websockets
+import requests
+
+from core.utils.util import (
+    extract_json_from_string,
+    check_vad_update,
+    check_asr_update,
+    filter_sensitive_info,
+)
+from typing import Dict, Any
+from collections import deque
+from core.utils.modules_initialize import (
+    initialize_modules,
+    initialize_tts,
+    initialize_asr,
+)
+from core.handle.reportHandle import report
+from core.providers.tts.default import DefaultTTS
+from concurrent.futures import ThreadPoolExecutor
+from core.utils.dialogue import Message, Dialogue
+from core.providers.asr.dto.dto import InterfaceType
+from core.handle.textHandle import handleTextMessage
+from core.providers.tools.unified_tool_handler import UnifiedToolHandler
+from plugins_func.loadplugins import auto_import_modules
+from plugins_func.register import Action
+from core.auth import AuthenticationError
+from config.config_loader import get_private_config_from_api
+from core.providers.tts.dto.dto import ContentType, TTSMessageDTO, SentenceType
+from config.logger import setup_logging, build_module_string, create_connection_logger
+from config.manage_api_client import DeviceNotFoundException, DeviceBindException
+from core.utils.prompt_manager import PromptManager
+from core.utils.voiceprint_provider import VoiceprintProvider
+from core.utils import textUtils
+
+TAG = __name__
+
+auto_import_modules("plugins_func.functions")
+conversation_id = None
+section_id = None
+
+# 初始化Redis客户端
+redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+
+
+LANGUAGE_MESSAGES = {
+    "zh": {
+        "upload_success": "上传成功",
+        "user_upload": "用户上传图片",
+        "create_success": "生成成功",
+        "image_create_fail": "图片生成失败",
+        "wait_image_answer": [
+            "正在生成图像，请稍后",
+            "正在生成图像中",
+            "生成图像中，请等待",
+            "正在生成图像中，请等待"
+        ],
+    },
+
+    "en": {
+        "upload_success": "Upload successful",
+        "user_upload": "User uploaded an image",
+        "create_success": "Generated successfully",
+        "image_create_fail": "Image generation failed",
+        "wait_image_answer": [
+            "Generating image, please wait",
+            "Generating image",
+            "Image is being generated, please wait",
+            "Generating image, please wait a moment"
+        ],
+    },
+
+    "ja": {
+        "upload_success": "アップロード成功",
+        "user_upload": "ユーザーが画像をアップロードしました",
+        "create_success": "生成に成功しました",
+        "image_create_fail": "画像の生成に失敗しました",
+        "wait_image_answer": [
+            "画像を生成中です。しばらくお待ちください",
+            "画像を生成しています",
+            "画像生成中です。お待ちください",
+            "画像を生成しています。少々お待ちください"
+        ],
+    },
+
+    "ko": {
+        "upload_success": "업로드 성공",
+        "user_upload": "사용자가 이미지를 업로드했습니다",
+        "create_success": "생성 성공",
+        "image_create_fail": "이미지 생성에 실패했습니다",
+        "wait_image_answer": [
+            "이미지를 생성 중입니다. 잠시만 기다려 주세요",
+            "이미지를 생성하고 있습니다",
+            "이미지 생성 중입니다. 기다려 주세요",
+            "이미지를 생성 중입니다. 잠시 기다려 주세요"
+        ],
+    },
+}
+
+
+def detect_language(text: str):
+    from fast_langdetect import detect
+
+    result = detect(text)[0]
+    return result["lang"]
+
+
+def _normalize_language(language: str | None) -> str:
+    normalized_language = (language or "").lower().replace("_", "-")
+    base_language = normalized_language.split("-", 1)[0]
+    return base_language if base_language in LANGUAGE_MESSAGES else "en"
+
+
+def text_according_language(language: str | None, key: str, **kwargs) -> str:
+    messages = LANGUAGE_MESSAGES[_normalize_language(language)]
+    value = messages[key]
+    if isinstance(value, list):
+        value = random.choice(value)
+    return value.format(**kwargs)
+
+
+def _safe_detect_language(text: str | None) -> str:
+    normalized_text = (text or "").strip()
+    if not normalized_text:
+        return "zh"
+    try:
+        return _normalize_language(detect_language(normalized_text))
+    except Exception as exc:
+        logger.warning("语言识别失败，使用默认语言: %s", exc)
+        return "en"
+
+
+def parse_text(result: str):
+    try:
+        data = json.loads(result)
+        return data["category"], data
+    except Exception as e:
+        print("解析失败:", e)
+        return "类别3", None
+
+
+def get_image_path_from_name(image_name):
+    URL = "http://111.229.199.238:8889/xiaozhi/get_image_url_from_name"
+    payload = {
+        "image_name": image_name
+    }
+    try:
+        resp = requests.post(URL, json=payload, timeout=30, proxies={
+            "http": "http://127.0.0.1:7890",
+            "https": "https://127.0.0.1:7890",
+        })
+        resp.raise_for_status()
+        data = resp.json()
+        print("响应结果：")
+        print(data)
+        if data.get("status") == "success":
+            return data.get("image_url")
+        else:
+            return None
+
+    except requests.exceptions.RequestException as e:
+        print("请求失败：", e)
+        return None
+
+
+def build_input_image_paths(payload):
+    images = []
+
+    # 收集 reference_images
+    for img in payload.get("reference_images", []):
+        if img:
+            images.append(img)
+
+    # 加入 target_image
+    target = payload.get("target_image")
+    if target:
+        images.append(target)
+
+    # 按 id 排序
+    def extract_id(name):
+        try:
+            return int(name.split("_")[0])
+        except:
+            return 9999  # 异常兜底
+
+    images = sorted(images, key=extract_id)
+
+    # 转换为真实路径
+    input_image_paths = []
+
+    for img in images:
+        try:
+            # 1_rrr.jpg → rrr
+            filename = img.split("_", 1)[1]
+            filename_no_ext = filename.rsplit(".", 1)[0]
+
+            image_path = get_image_path_from_name(filename_no_ext)
+            if image_path is not None:
+                input_image_paths.append(image_path)
+
+        except Exception as e:
+            print(f"解析图片失败: {img}, error: {e}")
+
+    return input_image_paths if input_image_paths else None
+
+
+class TTSException(RuntimeError):
+    pass
+
+
+class ConnectionHandler:
+    def __init__(
+            self,
+            config: Dict[str, Any],
+            _vad,
+            _asr,
+            _llm,
+            _memory,
+            _intent,
+            server=None,
+    ):
+        self.common_config = config
+        self.config = copy.deepcopy(config)
+        self.session_id = str(uuid.uuid4())
+        self.logger = setup_logging()
+        self.server = server  # 保存server实例的引用
+
+        self.need_bind = False  # 是否需要绑定设备
+        self.bind_completed_event = asyncio.Event()
+        self.bind_code = None  # 绑定设备的验证码
+        self.last_bind_prompt_time = 0  # 上次播放绑定提示的时间戳(秒)
+        self.bind_prompt_interval = 60  # 绑定提示播放间隔(秒)
+
+        self.read_config_from_api = self.config.get("read_config_from_api", False)
+
+        self.websocket = None
+        self.headers = None
+        self.device_id = None
+        self.client_ip = None
+        self.prompt = None
+        self.welcome_msg = None
+        self.max_output_size = 0
+        self.chat_history_conf = 0
+        self.audio_format = "opus"
+        self.payload = None
+
+        # 客户端状态相关
+        self.client_abort = False
+        self.client_is_speaking = False
+        self.client_listen_mode = "auto"  # manual 不会自动切换
+
+        # 线程任务相关
+        self.loop = None  # 在 handle_connection 中获取运行中的事件循环
+        self.stop_event = threading.Event()
+        self.executor = ThreadPoolExecutor(max_workers=5)
+
+        # 添加上报线程池
+        self.report_queue = queue.Queue()
+        self.report_thread = None
+        # 未来可以通过修改此处，调节asr的上报和tts的上报，目前默认都开启
+        self.report_asr_enable = self.read_config_from_api
+        self.report_tts_enable = self.read_config_from_api
+
+        # 依赖的组件
+        self.vad = None
+        self.asr = None
+        self.tts = None
+        self._asr = _asr
+        self._vad = _vad
+        self.llm = _llm
+        self.memory = _memory
+        self.intent = _intent
+
+        # 为每个连接单独管理声纹识别
+        self.voiceprint_provider = None
+
+        # vad相关变量
+        self.client_audio_buffer = bytearray()
+        self.client_have_voice = False
+        self.client_voice_window = deque(maxlen=5)
+        self.first_activity_time = 0.0  # 记录首次活动的时间（毫秒）
+        self.last_activity_time = 0.0  # 统一的活动时间戳（毫秒）
+        self.client_voice_stop = False
+        self.last_is_voice = False
+
+        # asr相关变量
+        # 因为实际部署时可能会用到公共的本地ASR，不能把变量暴露给公共ASR
+        # 所以涉及到ASR的变量，需要在这里定义，属于connection的私有变量
+        self.asr_audio = []
+        self.asr_audio_queue = queue.Queue()
+        self.current_speaker = None  # 存储当前说话人
+        self.current_language_tag = None  # 存储当前ASR识别的语言标签
+
+        # llm相关变量
+        self.llm_finish_task = True
+        self.dialogue = Dialogue()
+
+        # tts相关变量
+        self.sentence_id = None
+        # 处理TTS响应没有文本返回
+        self.tts_MessageText = ""
+
+        # iot相关变量
+        self.iot_descriptors = {}
+        self.func_handler = None
+
+        self.cmd_exit = self.config["exit_commands"]
+
+        # 是否在聊天结束后关闭连接
+        self.close_after_chat = False
+        self.load_function_plugin = False
+        self.intent_type = "nointent"
+
+        self.timeout_seconds = (
+                int(self.config.get("close_connection_no_voice_time", 120)) + 60
+        )  # 在原来第一道关闭的基础上加60秒，进行二道关闭
+        self.timeout_task = None
+
+        # {"mcp":true} 表示启用MCP功能
+        self.features = None
+
+        # 标记连接是否来自MQTT
+        self.conn_from_mqtt_gateway = False
+
+        # 初始化提示词管理器
+        self.prompt_manager = PromptManager(self.config, self.logger)
+
+        self.sticker_image_list = []
+
+    def send_test_bin_image(self):
+        # test
+        print_bin = "/home/xdy/xiaozhi-esp32-server/main/mcp-services/image_results/29bc17183a5b4b149a3e3e63d3e78995_240x240_rgb565.bin"
+        display_size = (240, 240)
+        self.logger.bind(tag=TAG).info(f"{print_bin}")
+        if os.path.exists(print_bin):
+            self.sticker_image_list.append({"path": print_bin, "type": "print_bin", "size": display_size})
+            self.logger.bind(tag=TAG).info(f"send test display image")
+        else:
+            self.logger.bind(tag=TAG).info(f"没有测试图：{print_bin}")
+        future = asyncio.run_coroutine_threadsafe(
+            self._handle_send_sticker_image(), self.loop
+        )
+        future.result()
+        asyncio.sleep(3)
+
+    async def handle_connection(self, ws):
+        try:
+            # 获取运行中的事件循环（必须在异步上下文中）
+            self.loop = asyncio.get_running_loop()
+
+            # 获取并验证headers
+            self.headers = dict(ws.request.headers)
+            real_ip = self.headers.get("x-real-ip") or self.headers.get(
+                "x-forwarded-for"
+            )
+            if real_ip:
+                self.client_ip = real_ip.split(",")[0].strip()
+            else:
+                self.client_ip = ws.remote_address[0]
+            self.logger.bind(tag=TAG).info(
+                f"{self.client_ip} conn - Headers: {self.headers}"
+            )
+
+            print(f'self.headers => {self.headers}')
+            self.device_id = self.headers.get("device-id", None)
+            self.account_id = self.headers.get("client-id", None)
+            self.creating_sticker = int(self.headers.get("sticker", 0))
+
+            # 认证通过,继续处理
+            self.websocket = ws
+
+            # 检查是否来自MQTT连接
+            request_path = ws.request.path
+            self.conn_from_mqtt_gateway = request_path.endswith("?from=mqtt_gateway")
+            if self.conn_from_mqtt_gateway:
+                self.logger.bind(tag=TAG).info("连接来自:MQTT网关")
+
+            # 初始化活动时间戳
+            self.first_activity_time = time.time() * 1000
+            self.last_activity_time = time.time() * 1000
+
+            # 启动超时检查任务
+            self.timeout_task = asyncio.create_task(self._check_timeout())
+
+            self.welcome_msg = self.config["xiaozhi"]
+            self.welcome_msg["session_id"] = self.session_id
+
+            # 在后台初始化配置和组件（完全不阻塞主循环）
+            asyncio.create_task(self._background_initialize())
+
+            try:
+                async for message in self.websocket:
+                    await self._route_message(message)
+            except websockets.exceptions.ConnectionClosed:
+                self.logger.bind(tag=TAG).info("客户端断开连接")
+
+        except AuthenticationError as e:
+            self.logger.bind(tag=TAG).error(f"Authentication failed: {str(e)}")
+            return
+        except Exception as e:
+            stack_trace = traceback.format_exc()
+            self.logger.bind(tag=TAG).error(f"Connection error: {str(e)}-{stack_trace}")
+            return
+        finally:
+            try:
+                await self._save_and_close(ws)
+            except Exception as final_error:
+                self.logger.bind(tag=TAG).error(f"最终清理时出错: {final_error}")
+                # 确保即使保存记忆失败，也要关闭连接
+                try:
+                    await self.close(ws)
+                except Exception as close_error:
+                    self.logger.bind(tag=TAG).error(
+                        f"强制关闭连接时出错: {close_error}"
+                    )
+
+    async def _save_and_close(self, ws):
+        """保存记忆并关闭连接"""
+        try:
+            if self.memory:
+                # 使用线程池异步保存记忆
+                def save_memory_task():
+                    try:
+                        # 创建新事件循环（避免与主循环冲突）
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
+                        loop.run_until_complete(
+                            self.memory.save_memory(
+                                self.dialogue.dialogue, self.session_id
+                            )
+                        )
+                    except Exception as e:
+                        self.logger.bind(tag=TAG).error(f"保存记忆失败: {e}")
+                    finally:
+                        try:
+                            loop.close()
+                        except Exception:
+                            pass
+
+                # 启动线程保存记忆，不等待完成
+                threading.Thread(target=save_memory_task, daemon=True).start()
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"保存记忆失败: {e}")
+        finally:
+            # 立即关闭连接，不等待记忆保存完成
+            try:
+                await self.close(ws)
+            except Exception as close_error:
+                self.logger.bind(tag=TAG).error(
+                    f"保存记忆后关闭连接失败: {close_error}"
+                )
+
+    async def _discard_message_with_bind_prompt(self):
+        """丢弃消息并检查是否需要播放绑定提示"""
+        current_time = time.time()
+        # 检查是否需要播放绑定提示
+        if current_time - self.last_bind_prompt_time >= self.bind_prompt_interval:
+            self.last_bind_prompt_time = current_time
+            # 复用现有的绑定提示逻辑
+            from core.handle.receiveAudioHandle import check_bind_device
+
+            asyncio.create_task(check_bind_device(self))
+
+    async def _route_message(self, message):
+        """消息路由"""
+        msg_json = json.loads(message)
+        self.payload = msg_json.get("payload")
+        # 检查是否已经获取到真实的绑定状态
+        if not self.bind_completed_event.is_set():
+            # 还没有获取到真实状态，等待直到获取到真实状态或超时
+            try:
+                await asyncio.wait_for(self.bind_completed_event.wait(), timeout=1)
+            except asyncio.TimeoutError:
+                # 超时仍未获取到真实状态，丢弃消息
+                await self._discard_message_with_bind_prompt()
+                return
+
+        # 已经获取到真实状态，检查是否需要绑定
+        if self.need_bind:
+            # 需要绑定，丢弃消息
+            await self._discard_message_with_bind_prompt()
+            return
+
+        # 不需要绑定，继续处理消息
+        if isinstance(message, str):
+            await handleTextMessage(self, message)
+        elif isinstance(message, bytes):
+            if self.vad is None or self.asr is None:
+                return
+
+            # 处理来自MQTT网关的音频包
+            if self.conn_from_mqtt_gateway and len(message) >= 16:
+                handled = await self._process_mqtt_audio_message(message)
+                if handled:
+                    return
+
+            # 不需要头部处理或没有头部时，直接处理原始消息
+            self.asr_audio_queue.put(message)
+
+    async def _process_mqtt_audio_message(self, message):
+        """
+        处理来自MQTT网关的音频消息，解析16字节头部并提取音频数据
+
+        Args:
+            message: 包含头部的音频消息
+
+        Returns:
+            bool: 是否成功处理了消息
+        """
+        try:
+            # 提取头部信息
+            timestamp = int.from_bytes(message[8:12], "big")
+            audio_length = int.from_bytes(message[12:16], "big")
+
+            # 提取音频数据
+            if audio_length > 0 and len(message) >= 16 + audio_length:
+                # 有指定长度，提取精确的音频数据
+                audio_data = message[16: 16 + audio_length]
+                # 基于时间戳进行排序处理
+                self._process_websocket_audio(audio_data, timestamp)
+                return True
+            elif len(message) > 16:
+                # 没有指定长度或长度无效，去掉头部后处理剩余数据
+                audio_data = message[16:]
+                self.asr_audio_queue.put(audio_data)
+                return True
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"解析WebSocket音频包失败: {e}")
+
+        # 处理失败，返回False表示需要继续处理
+        return False
+
+    def _process_websocket_audio(self, audio_data, timestamp):
+        """处理WebSocket格式的音频包"""
+        # 初始化时间戳序列管理
+        if not hasattr(self, "audio_timestamp_buffer"):
+            self.audio_timestamp_buffer = {}
+            self.last_processed_timestamp = 0
+            self.max_timestamp_buffer_size = 20
+
+        # 如果时间戳是递增的，直接处理
+        if timestamp >= self.last_processed_timestamp:
+            self.asr_audio_queue.put(audio_data)
+            self.last_processed_timestamp = timestamp
+
+            # 处理缓冲区中的后续包
+            processed_any = True
+            while processed_any:
+                processed_any = False
+                for ts in sorted(self.audio_timestamp_buffer.keys()):
+                    if ts > self.last_processed_timestamp:
+                        buffered_audio = self.audio_timestamp_buffer.pop(ts)
+                        self.asr_audio_queue.put(buffered_audio)
+                        self.last_processed_timestamp = ts
+                        processed_any = True
+                        break
+        else:
+            # 乱序包，暂存
+            if len(self.audio_timestamp_buffer) < self.max_timestamp_buffer_size:
+                self.audio_timestamp_buffer[timestamp] = audio_data
+            else:
+                self.asr_audio_queue.put(audio_data)
+
+    async def handle_restart(self, message):
+        """处理服务器重启请求"""
+        try:
+
+            self.logger.bind(tag=TAG).info("收到服务器重启指令，准备执行...")
+
+            # 发送确认响应
+            await self.websocket.send(
+                json.dumps(
+                    {
+                        "type": "server",
+                        "status": "success",
+                        "message": "服务器重启中...",
+                        "content": {"action": "restart"},
+                    }
+                )
+            )
+
+            # 异步执行重启操作
+            def restart_server():
+                """实际执行重启的方法"""
+                time.sleep(1)
+                self.logger.bind(tag=TAG).info("执行服务器重启...")
+                subprocess.Popen(
+                    [sys.executable, "app.py"],
+                    stdin=sys.stdin,
+                    stdout=sys.stdout,
+                    stderr=sys.stderr,
+                    start_new_session=True,
+                )
+                os._exit(0)
+
+            # 使用线程执行重启避免阻塞事件循环
+            threading.Thread(target=restart_server, daemon=True).start()
+
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"重启失败: {str(e)}")
+            await self.websocket.send(
+                json.dumps(
+                    {
+                        "type": "server",
+                        "status": "error",
+                        "message": f"Restart failed: {str(e)}",
+                        "content": {"action": "restart"},
+                    }
+                )
+            )
+
+    def _initialize_components(self):
+        try:
+            if self.tts is None:
+                self.tts = self._initialize_tts()
+            # 打开语音合成通道
+            asyncio.run_coroutine_threadsafe(
+                self.tts.open_audio_channels(self), self.loop
+            )
+            if self.need_bind:
+                self.bind_completed_event.set()
+                return
+            self.selected_module_str = build_module_string(
+                self.config.get("selected_module", {})
+            )
+            self.logger = create_connection_logger(self.selected_module_str)
+
+            """初始化组件"""
+            if self.config.get("prompt") is not None:
+                user_prompt = self.config["prompt"]
+                # 使用快速提示词进行初始化
+                prompt = self.prompt_manager.get_quick_prompt(user_prompt)
+                self.change_system_prompt(prompt)
+                self.logger.bind(tag=TAG).info(
+                    f"快速初始化组件: prompt成功 {prompt[:50]}..."
+                )
+
+            """初始化本地组件"""
+            if self.vad is None:
+                self.vad = self._vad
+            if self.asr is None:
+                self.asr = self._initialize_asr()
+
+            # 初始化声纹识别
+            self._initialize_voiceprint()
+            # 打开语音识别通道
+            asyncio.run_coroutine_threadsafe(
+                self.asr.open_audio_channels(self), self.loop
+            )
+
+            """加载记忆"""
+            self._initialize_memory()
+            """加载意图识别"""
+            self._initialize_intent()
+            """初始化上报线程"""
+            self._init_report_threads()
+            """更新系统提示词"""
+            self._init_prompt_enhancement()
+
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"实例化组件失败: {e}")
+
+    def _init_prompt_enhancement(self):
+
+        # 更新上下文信息
+        self.prompt_manager.update_context_info(self, self.client_ip)
+        enhanced_prompt = self.prompt_manager.build_enhanced_prompt(
+            self.config["prompt"], self.device_id, self.client_ip
+        )
+        if enhanced_prompt:
+            self.change_system_prompt(enhanced_prompt)
+            self.logger.bind(tag=TAG).debug("系统提示词已增强更新")
+
+    def _init_report_threads(self):
+        """初始化ASR和TTS上报线程"""
+        if not self.read_config_from_api or self.need_bind:
+            return
+        if self.chat_history_conf == 0:
+            return
+        if self.report_thread is None or not self.report_thread.is_alive():
+            self.report_thread = threading.Thread(
+                target=self._report_worker, daemon=True
+            )
+            self.report_thread.start()
+            self.logger.bind(tag=TAG).info("TTS上报线程已启动")
+
+    def _initialize_tts(self):
+        """初始化TTS"""
+        tts = None
+        if not self.need_bind:
+            tts = initialize_tts(self.config)
+
+        if tts is None:
+            tts = DefaultTTS(self.config, delete_audio_file=True)
+
+        return tts
+
+    def _initialize_asr(self):
+        """初始化ASR"""
+        if (
+                self._asr is not None
+                and hasattr(self._asr, "interface_type")
+                and self._asr.interface_type == InterfaceType.LOCAL
+        ):
+            # 如果公共ASR是本地服务，则直接返回
+            # 因为本地一个实例ASR，可以被多个连接共享
+            asr = self._asr
+        else:
+            # 如果公共ASR是远程服务，则初始化一个新实例
+            # 因为远程ASR，涉及到websocket连接和接收线程，需要每个连接一个实例
+            asr = initialize_asr(self.config)
+
+        return asr
+
+    def _initialize_voiceprint(self):
+        """为当前连接初始化声纹识别"""
+        try:
+            voiceprint_config = self.config.get("voiceprint", {})
+            if voiceprint_config:
+                voiceprint_provider = VoiceprintProvider(voiceprint_config)
+                if voiceprint_provider is not None and voiceprint_provider.enabled:
+                    self.voiceprint_provider = voiceprint_provider
+                    self.logger.bind(tag=TAG).info("声纹识别功能已在连接时动态启用")
+                else:
+                    self.logger.bind(tag=TAG).warning("声纹识别功能启用但配置不完整")
+            else:
+                self.logger.bind(tag=TAG).info("声纹识别功能未启用")
+        except Exception as e:
+            self.logger.bind(tag=TAG).warning(f"声纹识别初始化失败: {str(e)}")
+
+    async def _background_initialize(self):
+        """在后台初始化配置和组件（完全不阻塞主循环）"""
+        try:
+            # 异步获取差异化配置
+            await self._initialize_private_config_async()
+            # 在线程池中初始化组件
+            self.executor.submit(self._initialize_components)
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"后台初始化失败: {e}")
+
+    async def _initialize_private_config_async(self):
+        """从接口异步获取差异化配置（异步版本，不阻塞主循环）"""
+        if not self.read_config_from_api:
+            self.need_bind = False
+            self.bind_completed_event.set()
+            return
+        try:
+            begin_time = time.time()
+            private_config = await get_private_config_from_api(
+                self.config,
+                self.headers.get("device-id"),
+                self.headers.get("client-id", self.headers.get("device-id")),
+            )
+            private_config["delete_audio"] = bool(self.config.get("delete_audio", True))
+            self.logger.bind(tag=TAG).info(
+                f"{time.time() - begin_time} 秒，异步获取差异化配置成功: {json.dumps(filter_sensitive_info(private_config), ensure_ascii=False)}"
+            )
+            self.need_bind = False
+            self.bind_completed_event.set()
+        except DeviceNotFoundException as e:
+            self.need_bind = True
+            private_config = {}
+        except DeviceBindException as e:
+            self.need_bind = True
+            self.bind_code = e.bind_code
+            private_config = {}
+        except Exception as e:
+            self.need_bind = True
+            self.logger.bind(tag=TAG).error(f"异步获取差异化配置失败: {e}")
+            private_config = {}
+
+        init_llm, init_tts, init_memory, init_intent = (
+            False,
+            False,
+            False,
+            False,
+        )
+
+        init_vad = check_vad_update(self.common_config, private_config)
+        init_asr = check_asr_update(self.common_config, private_config)
+
+        if init_vad:
+            self.config["VAD"] = private_config["VAD"]
+            self.config["selected_module"]["VAD"] = private_config["selected_module"][
+                "VAD"
+            ]
+        if init_asr:
+            self.config["ASR"] = private_config["ASR"]
+            self.config["selected_module"]["ASR"] = private_config["selected_module"][
+                "ASR"
+            ]
+        if private_config.get("TTS", None) is not None:
+            init_tts = True
+            self.config["TTS"] = private_config["TTS"]
+            self.config["selected_module"]["TTS"] = private_config["selected_module"][
+                "TTS"
+            ]
+        if private_config.get("LLM", None) is not None:
+            init_llm = True
+            self.config["LLM"] = private_config["LLM"]
+            self.config["selected_module"]["LLM"] = private_config["selected_module"][
+                "LLM"
+            ]
+        if private_config.get("VLLM", None) is not None:
+            self.config["VLLM"] = private_config["VLLM"]
+            self.config["selected_module"]["VLLM"] = private_config["selected_module"][
+                "VLLM"
+            ]
+        if private_config.get("Memory", None) is not None:
+            init_memory = True
+            self.config["Memory"] = private_config["Memory"]
+            self.config["selected_module"]["Memory"] = private_config[
+                "selected_module"
+            ]["Memory"]
+        if private_config.get("Intent", None) is not None:
+            init_intent = True
+            self.config["Intent"] = private_config["Intent"]
+            model_intent = private_config.get("selected_module", {}).get("Intent", {})
+            self.config["selected_module"]["Intent"] = model_intent
+            # 加载插件配置
+            if model_intent != "Intent_nointent":
+                plugin_from_server = private_config.get("plugins", {})
+                for plugin, config_str in plugin_from_server.items():
+                    plugin_from_server[plugin] = json.loads(config_str)
+                self.config["plugins"] = plugin_from_server
+                self.config["Intent"][self.config["selected_module"]["Intent"]][
+                    "functions"
+                ] = plugin_from_server.keys()
+        if private_config.get("prompt", None) is not None:
+            self.config["prompt"] = private_config["prompt"]
+        # 获取声纹信息
+        if private_config.get("voiceprint", None) is not None:
+            self.config["voiceprint"] = private_config["voiceprint"]
+        if private_config.get("summaryMemory", None) is not None:
+            self.config["summaryMemory"] = private_config["summaryMemory"]
+        if private_config.get("device_max_output_size", None) is not None:
+            self.max_output_size = int(private_config["device_max_output_size"])
+        if private_config.get("chat_history_conf", None) is not None:
+            self.chat_history_conf = int(private_config["chat_history_conf"])
+        if private_config.get("mcp_endpoint", None) is not None:
+            self.config["mcp_endpoint"] = private_config["mcp_endpoint"]
+        if private_config.get("context_providers", None) is not None:
+            self.config["context_providers"] = private_config["context_providers"]
+
+        # 使用 run_in_executor 在线程池中执行 initialize_modules，避免阻塞主循环
+        try:
+            modules = await self.loop.run_in_executor(
+                None,  # 使用默认线程池
+                initialize_modules,
+                self.logger,
+                private_config,
+                init_vad,
+                init_asr,
+                init_llm,
+                init_tts,
+                init_memory,
+                init_intent,
+            )
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"初始化组件失败: {e}")
+            modules = {}
+        if modules.get("tts", None) is not None:
+            self.tts = modules["tts"]
+        if modules.get("vad", None) is not None:
+            self.vad = modules["vad"]
+        if modules.get("asr", None) is not None:
+            self.asr = modules["asr"]
+        if modules.get("llm", None) is not None:
+            self.llm = modules["llm"]
+        if modules.get("intent", None) is not None:
+            self.intent = modules["intent"]
+        if modules.get("memory", None) is not None:
+            self.memory = modules["memory"]
+
+    def _initialize_memory(self):
+        if self.memory is None:
+            return
+        """初始化记忆模块"""
+        self.memory.init_memory(
+            role_id=self.device_id,
+            llm=self.llm,
+            summary_memory=self.config.get("summaryMemory", None),
+            save_to_file=not self.read_config_from_api,
+        )
+
+        # 获取记忆总结配置
+        memory_config = self.config["Memory"]
+        memory_type = self.config["Memory"][self.config["selected_module"]["Memory"]][
+            "type"
+        ]
+        # 如果使用 nomen，直接返回
+        if memory_type == "nomem":
+            return
+        # 使用 mem_local_short 模式
+        elif memory_type == "mem_local_short":
+            memory_llm_name = memory_config[self.config["selected_module"]["Memory"]][
+                "llm"
+            ]
+            if memory_llm_name and memory_llm_name in self.config["LLM"]:
+                # 如果配置了专用LLM，则创建独立的LLM实例
+                from core.utils import llm as llm_utils
+
+                memory_llm_config = self.config["LLM"][memory_llm_name]
+                memory_llm_type = memory_llm_config.get("type", memory_llm_name)
+                memory_llm = llm_utils.create_instance(
+                    memory_llm_type, memory_llm_config
+                )
+                self.logger.bind(tag=TAG).info(
+                    f"为记忆总结创建了专用LLM: {memory_llm_name}, 类型: {memory_llm_type}"
+                )
+                self.memory.set_llm(memory_llm)
+            else:
+                # 否则使用主LLM
+                self.memory.set_llm(self.llm)
+                self.logger.bind(tag=TAG).info("使用主LLM作为意图识别模型")
+
+    def _initialize_intent(self):
+        if self.intent is None:
+            return
+        self.intent_type = self.config["Intent"][
+            self.config["selected_module"]["Intent"]
+        ]["type"]
+        if self.intent_type == "function_call" or self.intent_type == "intent_llm":
+            self.load_function_plugin = True
+        """初始化意图识别模块"""
+        # 获取意图识别配置
+        intent_config = self.config["Intent"]
+        intent_type = self.config["Intent"][self.config["selected_module"]["Intent"]][
+            "type"
+        ]
+
+        # 如果使用 nointent，直接返回
+        if intent_type == "nointent":
+            return
+        # 使用 intent_llm 模式
+        elif intent_type == "intent_llm":
+            intent_llm_name = intent_config[self.config["selected_module"]["Intent"]][
+                "llm"
+            ]
+
+            if intent_llm_name and intent_llm_name in self.config["LLM"]:
+                # 如果配置了专用LLM，则创建独立的LLM实例
+                from core.utils import llm as llm_utils
+
+                intent_llm_config = self.config["LLM"][intent_llm_name]
+                intent_llm_type = intent_llm_config.get("type", intent_llm_name)
+                intent_llm = llm_utils.create_instance(
+                    intent_llm_type, intent_llm_config
+                )
+                self.logger.bind(tag=TAG).info(
+                    f"为意图识别创建了专用LLM: {intent_llm_name}, 类型: {intent_llm_type}"
+                )
+                self.intent.set_llm(intent_llm)
+            else:
+                # 否则使用主LLM
+                self.intent.set_llm(self.llm)
+                self.logger.bind(tag=TAG).info("使用主LLM作为意图识别模型")
+
+        """加载统一工具处理器"""
+        self.func_handler = UnifiedToolHandler(self)
+
+        # 异步初始化工具处理器
+        if hasattr(self, "loop") and self.loop:
+            asyncio.run_coroutine_threadsafe(self.func_handler._initialize(), self.loop)
+
+    def change_system_prompt(self, prompt):
+        self.prompt = prompt
+        # 更新系统prompt至上下文
+        self.dialogue.update_system_message(self.prompt)
+
+    def _guess_intent(self, query: str, language: str):
+        """
+        return:
+            意图类别: "生图意图" | "管控意图" | "其他"
+        """
+
+        system_prompt = """你是一个智能电子相册的对话意图判别专家，请根据用户对话上下文判断其意图，仅分成以下4类之一：
+
+                1. 生成图片意图 - 用户想要生成一张图像(绘画/平面图/平面艺术/贴纸/海报/照片等各种图像型态)，或者用户描述了一个具体的画面，或者希望修改/重绘某个图片。
+                     1.1 上下文信息完整
+                     1.2 上下文信息不完整，需要用户进一步补充输入信息或上传图像
+                2. 管控相册意图 - 用户想要管理相框设备，编辑调整已有图像、查看历史记录、设置播放策略等管理设备操作
+                3. 其他 - 用户的问题与上述两类无关
+
+                类别1.1：
+                Reference image：{参考图片，可以1个或多个，可以为空。图片的拼写规则是“id_文件名”，id属于后分配，和原始上下文无关，必须是从1开始的递增自然数，文件名必须是出现在上下文中的16位字符串，Reference image和Target image无交集} 
+                Target image：{目标图片，只能有1个，可以为空。图片的拼写规则是“id_文件名”，id=Reference image id最大值加1，Reference image为空的话，Target image id=1，文件名必须是出现在上下文中的16位字符串，Reference image和Target image无交集}
+                User requirements:{ 用户对图片需求的完整描述，不可为空， 语言与用户的输入语言保持一致。由于语音转文本可能有谐音识别错误，首先需要对用户输入句进行谐音词纠错/拼写纠错，特别是在用户有明确拼写要求前提下，纠错后的文本根据原意图可以去除冗余描述信息。描述可以引用Reference image和Target image字段里的图片id, 如果涉及的Reference image加Target image有2张或以上，将其分别表述为第"id"张图，如果涉及的仅1张，表述为"这张图"，不能直接引用图片文件名。} 
+                message: {注意语言与用户的输入语言保持一致}
+
+                类别1.2：{ 给出提示用户补全信息的简短精准提示语 }
+
+                类别2：{仅包含类别信息}
+
+                类别3：{包含类别信息，和标准应答词}
+
+                输出按以下示例格式规范返回（示例里面的文件名为模拟，文本也默认是中文，实际需要根据用户的输入语言保持一致）：
+                特别注意：最终输出中的 message 和 user_requirements 必须严格使用“最后一条用户输入”的语言
+                示例1：
+                {
+                  "category": "类别1.1",
+                  "reference_images": ["1_8c4721194445494d.png", "2_abcd1234efgh5678.png"],
+                  "target_image": "3_1234567890abcdef.png",
+                  "user_requirements": "把第3张图中的人像换成第1张和第2张中的人",
+                  "message": ""
+                }
+                示例2：
+                {
+                  "category": "类别1.1",
+                  "reference_images": ["1_8c4721194445494d.png"],
+                  "target_image": null,
+                  "user_requirements": "参考这张图的颜色和构图风格，生成一张以机车为主体海报图，并写上新款发布文字。",
+                  "message": ""
+                }
+               示例3：
+                {
+                  "category": "类别1.1",
+                  "reference_images": [],
+                  "target_image":  "1_1234567890abcdef.png",
+                  "user_requirements": "将这张图改画为超现实注意风格，并在下方增加今日日期 ",
+                  "message": ""
+                }
+
+                示例4：
+                {
+                  "category": "类别1.1",
+                  "reference_images": [],
+                  "target_image": null,
+                  "user_requirements": "生成小狗图片",
+                  "message": ""
+                }
+                示例5：
+                {
+                  "category": "类别1.2",
+                  "reference_images": [],
+                  "target_image": null,
+                  "user_requirements": "",
+                  "message": "请上传您的具体图片"
+                }
+                示例6：
+                {
+                  "category": "类别2",
+                  "reference_images": [],
+                  "target_image": null,
+                  "user_requirements": "",
+                  "message": ""
+                }
+                示例7：
+                {
+                  "category": "类别3",
+                  "reference_images": [],
+                  "target_image": null,
+                  "user_requirements": "",
+                  "message": "您好，本系统仅回答相框相关提问和操作"
+                }"""
+
+        try:
+            # 构造 messages
+            messages = [{"role": "system", "content": f"Output language: {language} " + system_prompt}]
+
+            # 取最近 N 轮真实对话（可选，保留上下文）
+            history_msgs = self.dialogue.dialogue[:]
+
+            for m in history_msgs:
+                if m.role in ("user", "assistant") and m.content:
+                    messages.append(
+                        {"role": m.role, "content": m.content}
+                    )
+
+            # 当前用户输入
+            messages.append({"role": "user", "content": query})
+            self.logger.bind(tag=TAG).info(f"意图识别发送的message: {messages}")
+
+            # 调用模型
+            from openai import OpenAI
+            client_item = {
+                "base_url": "https://147ai.com/v1",
+                "api_key": "sk-ITU2L7pOLRIN6QHjVw0oHDaQzm4xGODyohFRk7V92SDaPZuA",
+                "model": "gpt-5.2"
+            }
+
+            """
+            备选配置：
+            client_item = {
+                "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                "api_key": "sk-43be0711ee2b480abd1014de00de7433",
+                "model": "qwen-flash"
+            }
+            client_item = {
+                "base_url": "https://api.apiyi.com/v1",
+                "api_key": "sk-qOufEzf7gbzBP8dg7fCa1eBd6083467aA0CcA3200f4160C7",
+                "model": "gpt-5.2-chat-latest"
+            }
+            client_item = {
+                "base_url": "http://192.168.2.119:8888/v1",
+                "api_key": "token-abc123",
+                "model": "Qwen3-8B"
+            }
+            119服务器启动qwen
+            conda activate qwen
+            cd /home/huishi/workspace/data/repository/Common_Models
+            python -m vllm.entrypoints.openai.api_server --model Qwen3-8B --api-key token-abc123 --port 8888 --max-model-len 16384 --gpu-memory-utilization 0.95
+
+            # 若client带了参数extra_body={"enable_thinking": False}，则启动命令需要使用--reasoning-parser
+            python -m vllm.entrypoints.openai.api_server --model Qwen3-0.6B --api-key token-abc123 --port 8888 --reasoning-parser qwen3
+            """
+            client = OpenAI(
+                api_key=client_item.get("api_key"),
+                base_url=client_item.get("base_url")
+            )
+            start = time.time()
+            response = client.chat.completions.create(
+                model=client_item.get("model"),
+                messages=messages,
+                temperature=0
+            )
+            end = time.time()
+            result = response.choices[0].message.content.strip()
+            self.logger.bind(tag=TAG).info(f"意图判别result: {result} || 耗时 => {end - start}")
+            intent_type, payload = parse_text(result)
+
+            self.logger.bind(tag=TAG).info(
+                f"解析后: intent={intent_type}, payload={payload}"
+            )
+
+            return intent_type, payload
+
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"intent rewrite failed: {e}")
+            return "类别3", None
+
+    def save_chat_message_remote(self, account_id, role, content, device_id=None):
+        """
+        保存聊天记录到 message_transfer
+        """
+
+        url = "http://111.229.199.238:8889/xiaozhi/save_chat_message"
+
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        data = {
+            "account_id": account_id,
+            "role": role,
+            "content": content,
+            "device_id": device_id
+        }
+
+        try:
+            response = requests.post(
+                url,
+                headers=headers,
+                json=data,
+                timeout=30,
+                proxies={
+                    "http": "http://127.0.0.1:7890",
+                    "https": "https://127.0.0.1:7890",
+                }
+            )
+
+            if response.status_code == 200:
+                result = response.json()
+
+                return result.get("status") == "success"
+
+            return False
+
+        except Exception as e:
+            print(f"保存聊天记录失败: {e}")
+            return False
+
+    def get_recent_chat_history_remote(self, account_id, limit=1000):
+        """
+        获取最近聊天记录
+        """
+
+        url = "http://111.229.199.238:8889/xiaozhi/get_recent_chat_history"
+
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        data = {
+            "account_id": account_id,
+            "limit": limit
+        }
+
+        try:
+            response = requests.post(
+                url,
+                headers=headers,
+                json=data,
+                timeout=10,
+                proxies={
+                    "http": "http://127.0.0.1:7890",
+                    "https": "https://127.0.0.1:7890",
+                }
+            )
+
+            if response.status_code != 200:
+                return []
+
+            result = response.json()
+
+            if result.get("status") != "success":
+                return []
+
+            return result.get("data", [])
+
+        except Exception as e:
+            print(f"获取聊天记录失败: {e}")
+            return []
+
+    def send_image_to_message_server(self, image_path: str, device_id: str, account_id: str):
+        """小智后台调用此函数发送图片路径"""
+        url = "http://111.229.199.238:8889/xiaozhi/get_xiaozhi_image"
+        headers = {
+            "Content-Type": "application/json"
+        }
+        data = {
+            "device_id": device_id,
+            "account_id": account_id,
+            "image_path": image_path
+        }
+        self.logger.bind(tag=TAG).info(
+            f"[小智] 发送图片路径: device_id={device_id}, account_id={account_id}, path={image_path}")
+
+        try:
+            response = requests.post(
+                url,
+                headers=headers,
+                json=data,
+                timeout=5
+            )
+
+            if response.status_code == 200:
+                result = response.json()
+                if result.get("status") == "success":
+                    self.logger.bind(tag=TAG).info(f"[小智] 图片路径发送成功: {result}")
+                else:
+                    self.logger.bind(tag=TAG).info(f"[小智] 图片路径发送失败: {result}")
+                return result
+            else:
+                self.logger.bind(tag=TAG).info(f"[小智] HTTP错误: {response.status_code}")
+                return None
+
+        except requests.exceptions.Timeout:
+            self.logger.bind(tag=TAG).info(f"[小智] 请求超时")
+            return None
+        except Exception as e:
+            self.logger.bind(tag=TAG).info(f"[小智] 请求异常: {e}")
+            return None
+
+    def send_text_to_message_server(self, payload: str, text: str):
+        """小智后台调用此函数发送图片路径"""
+        url = "http://111.229.199.238:8889/xiaozhi/send_message_to_whatsapp"
+        headers = {
+            "Content-Type": "application/json"
+        }
+        data = {
+            "payload": payload,
+            "text": text,
+        }
+        self.logger.bind(tag=TAG).info(f"[小智] 发送text: text={text}")
+
+        try:
+            response = requests.post(
+                url,
+                headers=headers,
+                json=data,
+                timeout=5
+            )
+
+            if response.status_code == 200:
+                result = response.json()
+                if result.get("status") == "success":
+                    self.logger.bind(tag=TAG).info(f"[小智] text发送成功: {result}")
+                else:
+                    self.logger.bind(tag=TAG).info(f"[小智] text发送失败: {result}")
+                return result
+            else:
+                self.logger.bind(tag=TAG).info(f"[小智] HTTP错误: {response.status_code}")
+                return None
+
+        except requests.exceptions.Timeout:
+            self.logger.bind(tag=TAG).info(f"[小智] 请求超时")
+            return None
+        except Exception as e:
+            self.logger.bind(tag=TAG).info(f"[小智] 请求异常: {e}")
+            return None
+
+    def restore_dialogue_from_db(self, limit=2000):
+        """
+        从数据库恢复最近聊天上下文
+        """
+
+        try:
+            if not self.account_id:
+                return
+            rows = self.get_recent_chat_history_remote(
+                account_id=self.account_id,
+                limit=limit
+            )
+            if not rows:
+                return
+            self.dialogue.dialogue = [
+                m for m in self.dialogue.dialogue
+                if m.role == "system"
+            ]
+            for item in rows:
+                role = item.get("role")
+                content = item.get("content")
+                if not role or not content:
+                    continue
+
+                self.dialogue.put(
+                    Message(
+                        role=role,
+                        content=content
+                    )
+                )
+            self.logger.bind(tag=TAG).info(
+                f"恢复历史聊天记录成功，共 {len(rows)} 条"
+            )
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(
+                f"恢复聊天记录失败: {e}"
+            )
+
+    def append_dialogue(self, role, content):
+        """
+        统一写入 dialogue + MySQL
+        """
+
+        try:
+
+            if not content:
+                return
+
+            # 写入内存 dialogue
+            self.dialogue.put(
+                Message(
+                    role=role,
+                    content=content
+                )
+            )
+
+            # 写入远程 MySQL
+            self.save_chat_message_remote(
+                account_id=self.account_id,
+                device_id=self.device_id,
+                role=role,
+                content=content
+            )
+
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(
+                f"append_dialogue失败: {e}"
+            )
+
+    def get_xiaozhi_image_detail(self, device_id: str):
+        """小智后台调用此函数发送图片路径，并返回 vertical 字段"""
+        url = f"http://111.229.199.238:8889/pyapi/images/{device_id}"
+
+        try:
+            resp = requests.get(url, timeout=5)
+            resp.raise_for_status()  # 请求失败会抛异常
+
+            result = resp.json()
+
+            # 判断接口返回状态
+            if result.get("code") != 200 or result.get("status") != "success":
+                return None
+
+            data = result.get("data", {})
+
+            # 获取 vertical 字段
+            return data.get("vertical")
+
+        except requests.RequestException as e:
+            print(f"请求失败: {e}")
+            return None
+        except ValueError:
+            print("返回数据不是合法 JSON")
+            return None
+
+    def set_xiaozhi_answer(self, query, answer):
+        # 写入 dialogue
+        if query is not None:
+            self.append_dialogue(
+                role="user",
+                content=query
+            )
+
+        if answer is not None:
+            self.append_dialogue(
+                role="assistant",
+                content=answer
+            )
+
+    def xiaozhi_answer(self, query, answer, skip_record_dialogue=False):
+        try:
+            # 标记进入一次新的 LLM 会话
+            self.llm_finish_task = False
+            self.sentence_id = str(uuid.uuid4().hex)
+
+            if not skip_record_dialogue:
+                # 写入 dialogue
+                if query is not None:
+                    self.append_dialogue(
+                        role="user",
+                        content=query
+                    )
+
+                if answer is not None:
+                    self.append_dialogue(
+                        role="assistant",
+                        content=answer
+                    )
+
+            # 设置 TTS 文本缓存
+            self.tts_MessageText = answer
+
+            # 发送 FIRST
+            self.tts.tts_text_queue.put(
+                TTSMessageDTO(
+                    sentence_id=self.sentence_id,
+                    sentence_type=SentenceType.FIRST,
+                    content_type=ContentType.ACTION,
+                )
+            )
+
+            # 发送 TEXT
+            self.tts.tts_text_queue.put(
+                TTSMessageDTO(
+                    sentence_id=self.sentence_id,
+                    sentence_type=SentenceType.MIDDLE,
+                    content_type=ContentType.TEXT,
+                    content_detail=answer,
+                )
+            )
+
+            # 发送 LAST
+            self.tts.tts_text_queue.put(
+                TTSMessageDTO(
+                    sentence_id=self.sentence_id,
+                    sentence_type=SentenceType.LAST,
+                    content_type=ContentType.ACTION,
+                )
+            )
+
+            self.llm_finish_task = True
+            return True
+
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"xiaozhi answer 处理失败: {e}")
+            return False
+
+    def image_relevant(self, query, payload, language, use_device_id=None):
+        device_id = self.device_id if use_device_id is None else use_device_id
+        # ========== Redis任务管理 ==========
+        task_id = str(uuid.uuid4())
+        task_key = f"device:{device_id}:current_task"
+
+        redis_client.hset(task_key, mapping={
+            'task_id': task_id,
+            'status': 'generating',
+            'query': query,
+            'start_time': datetime.now().isoformat()
+        })
+
+        try:
+            # 用户文本需要生成图片
+            from plugins_func.functions.utils.make_image import generate_image_task
+            from plugins_func.functions.utils.convert_image_to_bin_v1 import crop_to_3_4_center
+            from plugins_func.functions.utils.convert_image_to_bin_v3 import convert
+
+            self.logger.bind(tag=TAG).info(f"开始生成图片 task_id={task_id}")
+
+            wait_image_answer = text_according_language(language, "wait_image_answer")
+            self.set_xiaozhi_answer(query=query, answer=wait_image_answer)
+            self.send_text_to_message_server(self.payload, wait_image_answer)
+            image_folder_path = "image_xiaozhi_result"
+            os.makedirs(image_folder_path, exist_ok=True)
+            image_save_path = os.path.join(image_folder_path, f'{str(uuid.uuid4().hex[:16])}.png')
+            input_image_paths = build_input_image_paths(payload)
+            generate_image_task(
+                text=payload.get('user_requirements'),
+                save_path=image_save_path,
+                mode="all",
+                quality="hq",
+                input_image_paths=input_image_paths
+            )
+            create_image_answer = text_according_language(language, "create_success")
+            self.set_xiaozhi_answer(query=None, answer=f"{create_image_answer}:{os.path.basename(image_save_path)}")
+            return image_save_path
+        except Exception as e:
+            redis_client.hset(task_key, mapping={
+                'status': 'failed',
+                'error': str(e),
+                'fail_time': datetime.now().isoformat()
+            })
+            self.logger.bind(tag=TAG).error(f"图片生成失败: {e} => {traceback.format_exc()}")
+            return None
+
+    def manage_relevant(self, query, answer=None, skip_record_dialogue=False):
+        if answer is None:
+            answer = "网页地址"
+        self.xiaozhi_answer(query=query, answer=answer, skip_record_dialogue=skip_record_dialogue)
+
+    def other_relevant(self, query, answer=None):
+        answer_list = ["仅接受相框相关对话"]
+        # 从answer_list里面随机选一个作为answer
+        if answer is None:
+            answer = random.choice(answer_list)
+        self.xiaozhi_answer(query, answer)
+
+    def chat(self, query, depth=0):
+        # nrb新增
+        """
+        小智硬件设备发送的query: "{'content': 'xxx'}"
+        测试网页发送的query: "xxx"
+        """
+        self.restore_dialogue_from_db()
+        self.logger.bind(tag=TAG).info(f"原生的query: {repr(query)}")
+        if query is not None and isinstance(query, str):
+            if "{" in query:
+                self.logger.bind(tag=TAG).info("尝试按JSON解析")
+                try:
+                    query_obj = json.loads(query)
+                    if isinstance(query_obj, dict):
+                        query = query_obj.get("content")
+                        self.logger.bind(tag=TAG).info("JSON解析成功，提取content字段")
+                except Exception:
+                    self.logger.bind(tag=TAG).info("JSON解析失败，保持原值")
+            else:
+                self.logger.bind(tag=TAG).info("普通字符串")
+
+        language = _safe_detect_language(query)
+        self.logger.info(f'query => {query} || language => {language}')
+        if text_according_language(language, "user_upload") in query:
+            upload_answer = text_according_language(language, "upload_success")
+            self.set_xiaozhi_answer(query=query, answer=f"{query.split(':')[-1]} {upload_answer}")
+        else:
+            intent_type, payload = self._guess_intent(query, language)
+            if intent_type == "类别1.1":
+                image_save_path = self.image_relevant(query, payload, language)
+                if image_save_path is not None:
+                    self.manage_relevant(query=None, answer=f"网页地址 图片生成成功[{image_save_path}]", skip_record_dialogue=True)
+                else:
+                    image_create_fail_answer = text_according_language(language, "image_create_fail")
+                    self.other_relevant(query=None, answer=image_create_fail_answer)
+            elif intent_type == "类别1.2":
+                self.other_relevant(query, answer=payload.get("message"))
+            elif intent_type == "类别2":
+                self.manage_relevant(query)
+            elif intent_type == "类别3":
+                self.other_relevant(query, answer=payload.get("message"))
+
+        return True
+
+    def _handle_function_result(self, tool_results, depth):
+        need_llm_tools = []
+
+        for result, tool_call_data in tool_results:
+            if result.action in [
+                Action.RESPONSE,
+                Action.NOTFOUND,
+                Action.ERROR,
+            ]:  # 直接回复前端
+                text = result.response if result.response else result.result
+                self.tts.tts_one_sentence(self, ContentType.TEXT, content_detail=text)
+                self.dialogue.put(Message(role="assistant", content=text))
+
+            elif result.action == Action.REQLLM:
+                # 收集需要 LLM 处理的工具
+                need_llm_tools.append((result, tool_call_data))
+            else:
+                pass
+
+        self.send_sticker_image()
+
+        if need_llm_tools:
+            all_tool_calls = [
+                {
+                    "id": tool_call_data["id"],
+                    "function": {
+                        "arguments": (
+                            "{}"
+                            if tool_call_data["arguments"] == ""
+                            else tool_call_data["arguments"]
+                        ),
+                        "name": tool_call_data["name"],
+                    },
+                    "type": "function",
+                    "index": idx,
+                }
+                for idx, (_, tool_call_data) in enumerate(need_llm_tools)
+            ]
+            self.dialogue.put(Message(role="assistant", tool_calls=all_tool_calls))
+
+            for result, tool_call_data in need_llm_tools:
+                text = result.result
+                self.logger.bind(tag=TAG).info(
+                    f"_handle_function_result got result.response type: {type(result.response)} \nValue: {result.response}")
+                # assert isinstance(result.response, dict)
+                response = result.response
+                if isinstance(response, str):
+                    response = json.loads(response)
+                # response = {'success': True, 'response': '已经为您创建好图像了。', 'type': 'image sticker', 'data': {'type': 'sticker', 'mode': 'sticker', 'backend': 'flux2klein', 'prompt': '\n    Design a funny image.\n\n    SUBJECT: Sticker concept: A grumpy avocado holding a sign that reads "NO GUAC TODAY."\n\nKeywords: avocado, grumpy, sign\n\n    STYLE:\n    - funny cartoon style\n    - Vector Art\n    - Clean lines, Just black and white colors\n    - Funny and caricatured\n    - Must be funny or iconic or cool.\n    - Irregular outer edge\n    LAYOUT:\n    1. THICK BLACK OUTLINE around the subject\n    2. SOLID WHITE BACKGROUND\n    3. Center composition\n    ', 'duration_sec': 11.152363061904907, 'display_bin': '/home/ubuntu/xiaozhi-server/image_results/700731b0417a4dc9844a4e87af7d87a6_240x240_rgb565.bin', 'display_size': (240, 240), 'print_bin': '/home/ubuntu/xiaozhi-server/image_results/700731b0417a4dc9844a4e87af7d87a6_400x400.bin'}}
+                if response.get('success'):
+                    self.parse_sticker_result_data(response.get("data"))
+                    self.send_sticker_image()
+                else:
+                    self.logger.bind(tag=TAG).info("not image sticker data")
+                if text is not None and len(text) > 0:
+                    self.dialogue.put(
+                        Message(
+                            role="tool",
+                            tool_call_id=(
+                                str(uuid.uuid4())
+                                if tool_call_data["id"] is None
+                                else tool_call_data["id"]
+                            ),
+                            content=text,
+                        )
+                    )
+
+            self.chat(None, depth=depth + 1)
+
+    def send_sticker_image(self):
+        if self.sticker_image_list:
+            future = asyncio.run_coroutine_threadsafe(
+                self._handle_send_sticker_image(), self.loop
+            )
+            future.result()
+
+    def parse_sticker_result(self, result):
+        self.logger.bind(tag=TAG).info(f"parse_sticker_result got result.response: {result.response}")
+        if isinstance(result.response, str) and "sticker image" in result.result:
+            json_result = json.loads(result.result)
+            sticker_data = json_result.get("data")
+            self.parse_sticker_result_data(sticker_data)
+
+    def parse_sticker_result_data(self, sticker_data):
+        self.logger.bind(tag=TAG).info(f"parse_sticker_result_data receive: {sticker_data}")
+        if isinstance(sticker_data, str):
+            sticker_data = json.loads(sticker_data)
+
+        if sticker_data is None:
+            self.logger.bind(tag=TAG).error(f"parse_sticker_result got no sticker data in {sticker_data}")
+        else:
+            display_bin = sticker_data.get("display_bin")
+            display_size = sticker_data.get("display_size")
+            print_bin = sticker_data.get("print_bin")
+            print_size = sticker_data.get("print_size", (400, 400))
+            assert display_bin is not None
+            assert print_bin is not None
+            self.sticker_image_list.append(
+                {"path": display_bin, "type": "display_bin", "size": display_size})
+            self.sticker_image_list.append({"path": print_bin, "type": "print_bin", "size": print_size})
+        self.logger.bind(tag=TAG).info(f"sticker_image_list: {self.sticker_image_list}")
+
+    # async def _handle_send_sticker_image(self):
+    #     '''发送 贴图 bin'''
+    #     # tts 消化线程
+    #     self.send_sticker_bin_thread = threading.Thread(
+    #         target=self._send_sticker_bin_thread_func(), daemon=True
+    #     )
+    #     self.send_sticker_bin_thread.start()
+
+    async def _handle_send_sticker_image(self):
+        '''数据包格式：
+        4字节 magic head, 内容是 BinI (显示图) 或是 BinP (打印图)
+        32位整型: 文件crc32作为 传输 ID
+        16位整型: 当前数据包序号
+        16位整型: 数据包总数
+        <=block_size 数据包二进制数据
+        '''
+        block_size = 8000
+        self.logger.bind(tag=TAG).info(f"start _send_sticker_bin_thread_func, block_size:{block_size}")
+        while len(self.sticker_image_list):
+            file_info = self.sticker_image_list.pop()
+            bin_file, s_type = file_info["path"], file_info["type"]
+            # self.logger.bind(tag=TAG).info(f"self.websocket is {type(self.websocket)}") # <class 'websockets.asyncio.server.ServerConnection
+            img_size = file_info.get("size", (200, 200))
+            self.logger.bind(tag=TAG).info(f"start sending file {bin_file}, img_size: {img_size}, s_type: {s_type}")
+            with open(bin_file, "rb") as fd:
+                bin_data = fd.read()
+                file_crc32 = zlib.crc32(bin_data)
+                self.logger.bind(tag=TAG).info(f"file crc32 {file_crc32}. file size {len(bin_data)}")
+                magic_head = "BinI" if s_type == "display_bin" else "BinP"
+                total_n = (len(bin_data) + block_size - 1) // block_size
+                for i in range(total_n):
+                    packet = bytearray()
+                    packet += magic_head.encode()
+                    packet += struct.pack("<I", file_crc32)
+                    packet += struct.pack("<I", len(bin_data))
+                    packet += struct.pack("<I", (total_n << 16) + i)
+                    packet += struct.pack("<I", (img_size[0] << 16) + img_size[1])
+                    cur_block = bin_data[i * block_size:i * block_size + block_size]
+                    packet += cur_block
+
+                    await self.websocket.send(bytes(packet))
+                    self.logger.bind(tag=TAG).info(f"sended packet {magic_head} {i}/{total_n}")
+
+    def _report_worker(self):
+        """聊天记录上报工作线程"""
+        while not self.stop_event.is_set():
+            try:
+                # 从队列获取数据，设置超时以便定期检查停止事件
+                item = self.report_queue.get(timeout=1)
+                if item is None:  # 检测毒丸对象
+                    break
+                try:
+                    # 检查线程池状态
+                    if self.executor is None:
+                        continue
+                    # 提交任务到线程池
+                    self.executor.submit(self._process_report, *item)
+                except Exception as e:
+                    self.logger.bind(tag=TAG).error(f"聊天记录上报线程异常: {e}")
+            except queue.Empty:
+                continue
+            except Exception as e:
+                self.logger.bind(tag=TAG).error(f"聊天记录上报工作线程异常: {e}")
+
+        self.logger.bind(tag=TAG).info("聊天记录上报线程已退出")
+
+    def _process_report(self, type, text, audio_data, report_time):
+        """处理上报任务"""
+        try:
+            # 执行异步上报（在事件循环中运行）
+            asyncio.run(report(self, type, text, audio_data, report_time))
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"上报处理异常: {e}")
+        finally:
+            # 标记任务完成
+            self.report_queue.task_done()
+
+    def clearSpeakStatus(self):
+        self.client_is_speaking = False
+        self.logger.bind(tag=TAG).debug(f"清除服务端讲话状态")
+
+    async def close(self, ws=None):
+        """资源清理方法"""
+        try:
+            # 清理音频缓冲区
+            if hasattr(self, "audio_buffer"):
+                self.audio_buffer.clear()
+
+            # 取消超时任务
+            if self.timeout_task and not self.timeout_task.done():
+                self.timeout_task.cancel()
+                try:
+                    await self.timeout_task
+                except asyncio.CancelledError:
+                    pass
+                self.timeout_task = None
+
+            # 清理工具处理器资源
+            if hasattr(self, "func_handler") and self.func_handler:
+                try:
+                    await self.func_handler.cleanup()
+                except Exception as cleanup_error:
+                    self.logger.bind(tag=TAG).error(
+                        f"清理工具处理器时出错: {cleanup_error}"
+                    )
+
+            # 触发停止事件
+            if self.stop_event:
+                self.stop_event.set()
+
+            # 清空任务队列
+            self.clear_queues()
+
+            # 关闭WebSocket连接
+            try:
+                if ws:
+                    # 安全地检查WebSocket状态并关闭
+                    try:
+                        if hasattr(ws, "closed") and not ws.closed:
+                            await ws.close()
+                        elif hasattr(ws, "state") and ws.state.name != "CLOSED":
+                            await ws.close()
+                        else:
+                            # 如果没有closed属性，直接尝试关闭
+                            await ws.close()
+                    except Exception:
+                        # 如果关闭失败，忽略错误
+                        pass
+                elif self.websocket:
+                    try:
+                        if (
+                                hasattr(self.websocket, "closed")
+                                and not self.websocket.closed
+                        ):
+                            await self.websocket.close()
+                        elif (
+                                hasattr(self.websocket, "state")
+                                and self.websocket.state.name != "CLOSED"
+                        ):
+                            await self.websocket.close()
+                        else:
+                            # 如果没有closed属性，直接尝试关闭
+                            await self.websocket.close()
+                    except Exception:
+                        # 如果关闭失败，忽略错误
+                        pass
+            except Exception as ws_error:
+                self.logger.bind(tag=TAG).error(f"关闭WebSocket连接时出错: {ws_error}")
+
+            if self.tts:
+                await self.tts.close()
+
+            # 最后关闭线程池（避免阻塞）
+            if self.executor:
+                try:
+                    self.executor.shutdown(wait=False)
+                except Exception as executor_error:
+                    self.logger.bind(tag=TAG).error(
+                        f"关闭线程池时出错: {executor_error}"
+                    )
+                self.executor = None
+            self.logger.bind(tag=TAG).info("连接资源已释放")
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"关闭连接时出错: {e}")
+        finally:
+            # 确保停止事件被设置
+            if self.stop_event:
+                self.stop_event.set()
+
+    def clear_queues(self):
+        """清空所有任务队列"""
+        if self.tts:
+            self.logger.bind(tag=TAG).debug(
+                f"开始清理: TTS队列大小={self.tts.tts_text_queue.qsize()}, 音频队列大小={self.tts.tts_audio_queue.qsize()}"
+            )
+
+            # 使用非阻塞方式清空队列
+            for q in [
+                self.tts.tts_text_queue,
+                self.tts.tts_audio_queue,
+                self.report_queue,
+            ]:
+                if not q:
+                    continue
+                while True:
+                    try:
+                        q.get_nowait()
+                    except queue.Empty:
+                        break
+
+            # 重置音频流控器（取消后台任务并清空队列）
+            if hasattr(self, "audio_rate_controller") and self.audio_rate_controller:
+                self.audio_rate_controller.reset()
+                self.logger.bind(tag=TAG).debug("已重置音频流控器")
+
+            self.logger.bind(tag=TAG).debug(
+                f"清理结束: TTS队列大小={self.tts.tts_text_queue.qsize()}, 音频队列大小={self.tts.tts_audio_queue.qsize()}"
+            )
+
+    def reset_vad_states(self):
+        self.client_audio_buffer = bytearray()
+        self.client_have_voice = False
+        self.client_voice_stop = False
+        self.logger.bind(tag=TAG).debug("VAD states reset.")
+
+    def chat_and_close(self, text):
+        """Chat with the user and then close the connection"""
+        try:
+            # Use the existing chat method
+            self.chat(text)
+
+            # After chat is complete, close the connection
+            self.close_after_chat = True
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"Chat and close error: {str(e)}")
+
+    async def _check_timeout(self):
+        """检查连接超时"""
+        try:
+            while not self.stop_event.is_set():
+                last_activity_time = self.last_activity_time
+                if self.need_bind:
+                    last_activity_time = self.first_activity_time
+
+                # 检查是否超时（只有在时间戳已初始化的情况下）
+                if last_activity_time > 0.0:
+                    current_time = time.time() * 1000
+                    if current_time - last_activity_time > self.timeout_seconds * 1000 * 10:
+                        if not self.stop_event.is_set():
+                            self.logger.bind(tag=TAG).info(f"连接超时{self.timeout_seconds}，准备关闭")
+                            # 设置停止事件，防止重复处理
+                            self.stop_event.set()
+                            # 使用 try-except 包装关闭操作，确保不会因为异常而阻塞
+                            try:
+                                await self.close(self.websocket)
+                            except Exception as close_error:
+                                self.logger.bind(tag=TAG).error(
+                                    f"超时关闭连接时出错: {close_error}"
+                                )
+                        break
+                # 每10秒检查一次，避免过于频繁
+                await asyncio.sleep(10)
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"超时检查任务出错: {e}")
+        finally:
+            self.logger.bind(tag=TAG).info("超时检查任务已退出")
+
+    def _merge_tool_calls(self, tool_calls_list, tools_call):
+        """合并工具调用列表
+
+        Args:
+            tool_calls_list: 已收集的工具调用列表
+            tools_call: 新的工具调用
+        """
+        for tool_call in tools_call:
+            tool_index = getattr(tool_call, "index", None)
+            if tool_index is None:
+                if tool_call.function.name:
+                    # 有 function_name，说明是新的工具调用
+                    tool_index = len(tool_calls_list)
+                else:
+                    tool_index = len(tool_calls_list) - 1 if tool_calls_list else 0
+
+            # 确保列表有足够的位置
+            if tool_index >= len(tool_calls_list):
+                tool_calls_list.append({"id": "", "name": "", "arguments": ""})
+
+            # 更新工具调用信息
+            if tool_call.id:
+                tool_calls_list[tool_index]["id"] = tool_call.id
+            if tool_call.function.name:
+                tool_calls_list[tool_index]["name"] = tool_call.function.name
+            if tool_call.function.arguments:
+                tool_calls_list[tool_index]["arguments"] += tool_call.function.arguments

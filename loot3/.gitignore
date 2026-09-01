@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+.idea/
+*.py[cod]
+*$py.class
+
+# music directory
+music/
+
+
+# model files
+models/SenseVoiceSmall/model.pt
+*.wav
+
+tmp/
+qwen_test/
+image_results/
+
+config.yaml
+.config.yaml
+data/.config.yaml
+crawler

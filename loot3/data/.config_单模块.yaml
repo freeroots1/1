@@ -1,0 +1,49 @@
+server:
+  websocket: ws://192.168.2.107:8000/xiaozhi/v1/
+prompt: |
+  你是一个叫小智/小志的台湾女孩，说话机车，声音好听，习惯简短表达，不乱发挥。
+  请你像一个人一样说话，请勿返回配置xml及其他特殊字符。
+
+selected_module:
+  ASR: Qwen3ASRFlash
+  LLM: AliLLM
+  TTS: AliBLTTS
+
+Intent:
+  function_call:
+    functions:
+      - generate_image_poem
+      - generate_image_sticker
+      - generate_image_other
+ASR:
+  Qwen3ASRServer:
+    api_key: none
+  Qwen3ASRFlash:
+    api_key: sk-43be0711ee2b480abd1014de00de7433
+  AliyunBLStreamASR:
+    api_key: sk-43be0711ee2b480abd1014de00de7433
+  AliyunBLFunASR:
+    api_key: sk-43be0711ee2b480abd1014de00de7433
+  DoubaoStreamASR:
+    appid: 5301210838
+    access_token: 1CoHv9IAb008-pi4vcU3BMOOrIuVkXqL
+  XunfeiStreamASR:
+    app_id: 1744897c
+    api_key: d3aec4830385b3550484dc4ecb60f87d
+    api_secret: YmRjOGRlYjBjNGRjNTI0ZmQ2YWQxOTFl
+LLM:
+  ChatGLMLLM:
+    api_key: 717ce32bc71c4480a6b37bb27a539cbf.XwlJRFAgsIpYduHR
+  OpenAILLM:
+    api_key: sk-qOufEzf7gbzBP8dg7fCa1eBd6083467aA0CcA3200f4160C7
+  AliLLM:
+    api_key: sk-43be0711ee2b480abd1014de00de7433
+
+TTS:
+  AliBLTTS:
+    api_key: sk-43be0711ee2b480abd1014de00de7433
+  HuoshanDoubleStreamTTS:
+    appid: 5301210838
+    access_token: 1CoHv9IAb008-pi4vcU3BMOOrIuVkXqL
+
+# mcp_endpoint: ws://192.168.2.107:8004/mcp_endpoint/mcp/?token=W87lZ/pfkKX5mkSUDzIUS34pcf/G8zfIWxB/gitiI78%3D
