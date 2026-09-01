@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仓库货物动态看板</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin:0; padding:0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .dashboard { max-width: 1400px; margin:0 auto; }
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .header h1 { color: #667eea; font-size: 32px; margin-bottom: 10px; }
+        .header p { color: #666; font-size: 14px; }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card .icon { font-size: 40px; margin-bottom: 10px; }
+        .stat-card .number { font-size: 36px; font-weight: bold; color: #667eea; margin: 10px 0; }
+        .stat-card .label { color: #666; font-size: 14px; }
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .chart-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .chart-card h3 { color: #667eea; margin-bottom: 20px; font-size: 18px; }
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow-x: auto;
+        }
+        .table-container h3 { color: #667eea; margin-bottom: 20px; font-size: 18px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #667eea; color: white; padding: 12px; text-align: left; font-weight: 600; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #f5f5f5; }
+        .timestamp { text-align: center; color: rgba(255, 255, 255, 0.8); margin-top: 20px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>📦 仓库货物动态看板</h1>
+            <p>数据更新时间: <span id="updateTime"></span></p>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="icon">📊</div>
+                <div class="number" id="totalDevices">0</div>
+                <div class="label">设备种类</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">📦</div>
+                <div class="number" id="totalQuantity">0</div>
+                <div class="label">总库存量（件）</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">🏷️</div>
+                <div class="number" id="totalBrands">0</div>
+                <div class="label">品牌数量</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">⚠️</div>
+                <div class="number" id="lowStock">0</div>
+                <div class="label">库存 < 10 件</div>
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>📊 品牌库存分布 Top 10</h3>
+                <canvas id="brandChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>📈 库存数量 Top 10</h3>
+                <canvas id="top10Chart"></canvas>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <h3>📋 库存明细表（按数量排序）</h3>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>设备名称</th>
+                        <th>品牌</th>
+                        <th>型号/规格</th>
+                        <th>数量</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        
+        <div class="timestamp">仓库管理系统 © 2026 | 本看板数据来源于汇总表</div>
+    </div>
+    
+    <script>
+        const inventoryData = [{"name": "硬盘", "brand": "希捷", "model": "14T", "qty": 400}, {"name": "门禁读卡器", "brand": "大华", "model": "DH-ASR2101A", "qty": 240}, {"name": "磁力锁", "brand": "大华", "model": "DH-ASF280BL", "qty": 235}, {"name": "磁力锁支架", "brand": "大华", "model": "DH-DL220L-I", "qty": 230}, {"name": "开门按钮", "brand": "大华", "model": "DH-ASF900", "qty": 197}, {"name": "变焦镜头", "brand": "大华", "model": "DH-OPT-117F3716D-IR12MP", "qty": 185}, {"name": "网络摄像机", "brand": "大华", "model": "DH-SH-HF9528P-I", "qty": 182}, {"name": "安装支架", "brand": "大华", "model": "DH-PFB605W", "qty": 10}, {"name": "60W电源适配器", "brand": "台达", "model": "ADP-60KD", "qty": 10}, {"name": "磁力锁", "brand": "大华", "model": "DH-ASF280A", "qty": 9}, {"name": "磁力锁支架", "brand": "大华", "model": "DH-ASF280ZL", "qty": 8}, {"name": "配件", "brand": "大华", "model": "配件", "qty": 8}, {"name": "智能认证USB防拔插设备", "brand": "大华", "model": "DH-USB-CM508", "qty": 8}, {"name": "LED补光灯", "brand": "大华", "model": "DH-PFM522-D1", "qty": 7}, {"name": "支架", "brand": "大华", "model": "DH-ASF053-ZJ", "qty": 6}, {"name": "道闸", "brand": "大华", "model": "DH-SH-RZ951-YNB", "qty": 6}, {"name": "智能门禁一体机", "brand": "大华", "model": "DH-SH-MB9523Z-KL", "qty": 6}, {"name": "AP", "brand": "思科", "model": "1PC9136I-ROW", "qty": 6}, {"name": "显示器", "brand": "HP", "model": "HP 524pf Monitor", "qty": 5}, {"name": "充电器", "brand": "浩客", "model": "S760 7 PORT", "qty": 5}, {"name": "HDMI长传发送器", "brand": "crestrom", "model": "DM-TX-4KZ-302-C", "qty": 5}, {"name": "HDMI长传4K接收器", "brand": "crestrom", "model": "DM-RMC-4KZ-SCALER-C", "qty": 5}, {"name": "网络摄像机", "brand": "万店掌", "model": "D6P-C 4mm(DC)", "qty": 5}, {"name": "笔记本电脑", "brand": "联想", "model": "ThinkPad X1 Carbon Gen 13 (U5 32G 512G)", "qty": 4}, {"name": "HDMI高清收发送器", "brand": "crestrom", "model": "HD-RXC-4KZ-101", "qty": 4}, {"name": "HDMI高清收发送器", "brand": "crestrom", "model": "HD-TXC-4KZ-101", "qty": 4}, {"name": "显示器", "brand": "HP", "model": "HP-524pr Monitor", "qty": 3}, {"name": "硬盘", "brand": "DELL", "model": "16TB硬盘", "qty": 3}, {"name": "扬声器", "brand": "QSC", "model": "AC-C6T", "qty": 3}, {"name": "广播套装", "brand": "纽曼", "model": "R15", "qty": 3}, {"name": "Microsoft Surface", "brand": "微软", "model": "Microsoft Surface Pro for Business Intel R CoreTM Ultra 5 Processor 236V16GB · Go RAM · Gt RAM256GB·Go·Gt\nBlack", "qty": 3}, {"name": "笔记本电脑", "brand": "联想", "model": "ThinkPad X9-14 Gen (U5 32G 512G)", "qty": 2}, {"name": "防火墙", "brand": "paloalto", "model": "PAN-PA-415", "qty": 2}, {"name": "防火墙安装支架", "brand": "paloalto", "model": "PAN-PA-400-POE-RACKTRAY", "qty": 2}, {"name": "防火墙电源适配器", "brand": "paloalto", "model": "PAN-PA-4000-POE-PWR-150W", "qty": 2}, {"name": "数字无绳电话", "brand": "摩托罗拉", "model": "CL101C", "qty": 2}, {"name": "键鼠套装", "brand": "罗技", "model": "MK275", "qty": 2}, {"name": "按键电话机", "brand": "伟易达", "model": "V9\\T10", "qty": 2}, {"name": "开关电源", "brand": "灏越", "model": "5V-200W电源", "qty": 2}, {"name": "单通道手持话筒", "brand": "SHURE", "model": "BLX24RCN/SM58-M17", "qty": 2}, {"name": "话筒天线", "brand": "SHURE", "model": "UA864LO", "qty": 2}, {"name": "单门磁力锁", "brand": "海康威视", "model": "DS-K4H250S", "qty": 2}, {"name": "磁力锁支架", "brand": "海康威视", "model": "DS-K4H250-LZ", "qty": 2}, {"name": "2通道功放", "brand": "crown", "model": "NXLi2500-2-cn", "qty": 2}, {"name": "门禁", "brand": "海康威视", "model": "DS-K1T341CMF", "qty": 2}, {"name": "网络硬盘录像机", "brand": "大华", "model": "DH-SH-WS", "qty": 1}, {"name": "组合认证管理服务器（含软件）", "brand": "大华", "model": "DH-FaceACR-S", "qty": 1}, {"name": "组合认证前端采集设备", "brand": "大华", "model": "DH-FaceACR-G", "qty": 1}, {"name": "显示支架", "brand": "NB", "model": "MODEL-F80-XE", "qty": 1}, {"name": "配件", "brand": "NB", "model": "MODEL-FP-2", "qty": 1}, {"name": "32寸显示器", "brand": "三星", "model": "LH32QMCEBGCXXF", "qty": 1}, {"name": "电视机", "brand": "三星", "model": "QM50C", "qty": 1}, {"name": "高清触摸屏幕", "brand": "星网视易", "model": "", "qty": 1}, {"name": "", "brand": "SHURE", "model": "UA844+SWB/LC-C", "qty": 1}, {"name": "领夹麦克", "brand": "SHURE", "model": "MV-TWO-KIT-CHN-Z7", "qty": 1}, {"name": "领夹麦克", "brand": "SHURE", "model": "BLX14RCN/W85-M17", "qty": 1}, {"name": "摄像头", "brand": "索尼", "model": "SRG-X40UH", "qty": 1}, {"name": "显示器", "brand": "INNOCN", "model": "2710U PLUS", "qty": 1}, {"name": "键鼠套", "brand": "罗技", "model": "KM725", "qty": 1}, {"name": "音频处理器", "brand": "biamp", "model": "TesiraFORTE DAN CI", "qty": 1}, {"name": "4K高清8X8固态矩阵", "brand": "crestrom", "model": "HD-MD8X8-4KZ-E", "qty": 1}, {"name": "中控主机", "brand": "crestrom", "model": "CP4", "qty": 1}, {"name": "硬盘", "brand": "希捷", "model": "8T", "qty": 1}, {"name": "海外版门禁主机", "brand": "海康威视", "model": "DS0-L2602T", "qty": 1}, {"name": "硬盘", "brand": "希捷", "model": "6T", "qty": 1}, {"name": "玻璃破碎", "brand": "Button", "model": "DS-K7PEB", "qty": 1}, {"name": "开关按钮", "brand": "Button", "model": "DS-K7P01", "qty": 1}, {"name": "门禁电源", "brand": "海康威视", "model": "DS-K7B-12V5A", "qty": 1}, {"name": "出门开关", "brand": "海康威视", "model": "EB29", "qty": 1}, {"name": "玻璃破碎按钮", "brand": "-", "model": "DS-K7PEB", "qty": 1}, {"name": "AI督导服务器", "brand": "万店掌", "model": "Dolphin1-8-u2s-8chp", "qty": 1}];
+        
+        let brandChartInstance = null;
+        let top10ChartInstance = null;
+        
+        function initDashboard() {
+            document.getElementById('updateTime').textContent = new Date().toLocaleString('zh-CN');
+            updateStats();
+            updateCharts();
+            updateTable();
+        }
+        
+        function updateStats() {
+            const totalDevices = inventoryData.length;
+            const totalQuantity = inventoryData.reduce((sum, item) => sum + item.qty, 0);
+            const brands = new Set(inventoryData.map(item => item.brand));
+            const lowStock = inventoryData.filter(item => item.qty < 10).length;
+            
+            animateNumber('totalDevices', totalDevices);
+            animateNumber('totalQuantity', totalQuantity);
+            animateNumber('totalBrands', brands.size);
+            animateNumber('lowStock', lowStock);
+        }
+        
+        function animateNumber(elementId, target) {
+            const el = document.getElementById(elementId);
+            const duration = 1000;
+            const step = target / (duration / 16);
+            let current = 0;
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = Math.floor(current);
+            }, 16);
+        }
+        
+        function updateCharts() {
+            const brandData = {};
+            inventoryData.forEach(item => {
+                brandData[item.brand] = (brandData[item.brand] || 0) + item.qty;
+            });
+            
+            const topBrands = Object.entries(brandData).sort((a, b) => b[1] - a[1]).slice(0, 10);
+            
+            if (brandChartInstance) brandChartInstance.destroy();
+            const brandCtx = document.getElementById('brandChart').getContext('2d');
+            brandChartInstance = new Chart(brandCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: topBrands.map(b => b[0]),
+                    datasets: [{
+                        data: topBrands.map(b => b[1]),
+                        backgroundColor: [
+                            '#667eea', '#764ba2', '#f093fb', '#f5576c',
+                            '#4facfe', '#00f2fe', '#43e97b', '#38f9d7',
+                            '#ffd89b', '#19547b'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+            
+            const top10 = inventoryData.slice(0, 10);
+            if (top10ChartInstance) top10ChartInstance.destroy();
+            const top10Ctx = document.getElementById('top10Chart').getContext('2d');
+            top10ChartInstance = new Chart(top10Ctx, {
+                type: 'bar',
+                data: {
+                    labels: top10.map(item => item.name.length > 10 ? item.name.substring(0, 10) + '...' : item.name),
+                    datasets: [{
+                        label: '库存数量',
+                        data: top10.map(item => item.qty),
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+        
+        function updateTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            inventoryData.forEach((item, index) => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = index + 1;
+                row.insertCell(1).textContent = item.name;
+                row.insertCell(2).textContent = item.brand;
+                row.insertCell(3).textContent = item.model;
+                row.insertCell(4).textContent = item.qty;
+                const statusCell = row.insertCell(5);
+                if (item.qty >= 100) {
+                    statusCell.innerHTML = '<span style="color:green;">充足</span>';
+                } else if (item.qty >= 10) {
+                    statusCell.innerHTML = '<span style="color:orange;">正常</span>';
+                } else {
+                    statusCell.innerHTML = '<span style="color:red;">偏低</span>';
+                }
+            });
+        }
+        
+        window.onload = function() {
+            initDashboard();
+            setInterval(initDashboard, 30000);
+        };
+    </script>
+</body>
+</html>

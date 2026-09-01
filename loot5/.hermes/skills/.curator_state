@@ -1,0 +1,8 @@
+{
+  "last_report_path": "/home/ubuntu/.hermes/logs/curator/20260522-093143",
+  "last_run_at": "2026-05-22T09:31:43.707718+00:00",
+  "last_run_duration_seconds": 127.114278,
+  "last_run_summary": "auto: no changes; llm: The consolidation is complete. Now let me provide the summary as required.\n\n---\n\n## Human Summary\n\n**Cluster processed**: OCR and Document-related skills\n\nThe only agent-created skill in this Hermes instance was `warehouse-label-recognition…",
+  "paused": false,
+  "run_count": 1
+}

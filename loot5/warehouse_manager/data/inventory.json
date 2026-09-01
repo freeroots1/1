@@ -1,0 +1,32 @@
+{
+  "笔记本电脑": {
+    "total_quantity": 15,
+    "sn_codes": [
+      "PF627KOK",
+      "PF62A5JK",
+      "PF62A9ZR",
+      "PF628NSF",
+      "PF6299W6",
+      "PF61G97N",
+      "PF63HT0N",
+      "PF627JC9",
+      "PF627NCR",
+      "PF5VWM9K",
+      "PF6391G1",
+      "PF628JGN",
+      "PF628R19",
+      "PF5VF5DY",
+      "PF678ZBD"
+    ],
+    "created_at": "2026-05-22T17:06:40.531217",
+    "updated_at": "2026-05-22T17:06:40.531217"
+  },
+  "显示器": {
+    "total_quantity": 1,
+    "sn_codes": [
+      "CN4546052N"
+    ],
+    "created_at": "2026-05-22T18:00:19.946135",
+    "updated_at": "2026-05-22T18:00:19.946135"
+  }
+}

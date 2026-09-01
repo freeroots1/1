@@ -1,0 +1,42 @@
+[
+  {
+    "id": "b2bf5ef6",
+    "type": "in",
+    "product_name": "笔记本电脑",
+    "quantity": 15,
+    "sn_codes": [
+      "PF627KOK",
+      "PF62A5JK",
+      "PF62A9ZR",
+      "PF628NSF",
+      "PF6299W6",
+      "PF61G97N",
+      "PF63HT0N",
+      "PF627JC9",
+      "PF627NCR",
+      "PF5VWM9K",
+      "PF6391G1",
+      "PF628JGN",
+      "PF628R19",
+      "PF5VF5DY",
+      "PF678ZBD"
+    ],
+    "operator": "仓库管理员",
+    "note": "归属:QY-XS-20260522-006 品牌:联想 型号:ThinkPad E14 Gen 7 配置:Intel Core 5/16G/1T",
+    "timestamp": "2026-05-22T17:06:40.531217",
+    "month": "2026-05"
+  },
+  {
+    "id": "957e518e",
+    "type": "in",
+    "product_name": "显示器",
+    "quantity": 1,
+    "sn_codes": [
+      "CN4546052N"
+    ],
+    "operator": "仓库管理员",
+    "note": "归属:波科项目 品牌:HP 型号:524pf",
+    "timestamp": "2026-05-22T18:00:19.946135",
+    "month": "2026-05"
+  }
+]

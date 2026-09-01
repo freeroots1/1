@@ -1,0 +1,4 @@
+*/5 * * * * flock -xn /tmp/stargate.lock -c '/usr/local/qcloud/stargate/admin/start.sh > /dev/null 2>&1 &'
+# secu-tcs-agent monitor, install at Thu Apr 23 11:50:30 AM CST 2026
+* * * * * /usr/local/sa/agent/secu-tcs-agent-mon-safe.sh > /dev/null 2>&1
+*/1 * * * * cd /root/.openclaw/workspace/祥和超市云后台 && curl -sf --max-time 3 http://127.0.0.1:8082/api/stats > /dev/null 2>&1 || (nohup node server.js > /tmp/cloudadmin.log 2>&1 &)

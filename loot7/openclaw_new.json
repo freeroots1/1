@@ -1,0 +1,258 @@
+{
+  "agents": {
+    "defaults": {
+      "workspace": "/root/.openclaw/workspace",
+      "sandbox": {
+        "browser": {
+          "enabled": false
+        }
+      },
+      "model": {
+        "primary": "deepseek/deepseek-v4-flash"
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "models": {
+        "deepseek/deepseek-chat": {
+          "alias": "DeepSeek"
+        }
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "model": "deepseek/deepseek-v4-flash",
+        "subagents": {
+          "allowAgents": [
+            "accountant",
+            "idea-master",
+            "tech-hand",
+            "ops-officer",
+            "copy-writer",
+            "visual-artist",
+            "miniprogram-dev"
+          ]
+        }
+      },
+      {
+        "id": "accountant",
+        "name": "accountant",
+        "workspace": "/root/.openclaw/workspace/agents/finance",
+        "agentDir": "/root/.openclaw/agents/finance/agent",
+        "model": "deepseek/deepseek-v4-flash"
+      },
+      {
+        "id": "idea-master",
+        "name": "idea-master",
+        "workspace": "/root/.openclaw/workspace/agents/innovation",
+        "agentDir": "/root/.openclaw/agents/innovation/agent",
+        "model": "deepseek/deepseek-v4-flash",
+        "identity": {
+          "name": "点子王",
+          "emoji": "💡",
+          "theme": "创意狂人，脑洞大开"
+        }
+      },
+      {
+        "id": "tech-hand",
+        "name": "tech-hand",
+        "workspace": "/root/.openclaw/workspace/agents/tech",
+        "agentDir": "/root/.openclaw/agents/tech/agent",
+        "model": "deepseek/deepseek-v4-flash",
+        "identity": {
+          "name": "技术员",
+          "emoji": "🔧",
+          "theme": "代码工匠，务实高效"
+        }
+      },
+      {
+        "id": "ops-officer",
+        "name": "ops-officer",
+        "workspace": "/root/.openclaw/workspace/agents/ops",
+        "agentDir": "/root/.openclaw/agents/ops/agent",
+        "model": "deepseek/deepseek-v4-flash",
+        "identity": {
+          "name": "运维官",
+          "emoji": "🛡️",
+          "theme": "系统守护者，稳定压倒一切"
+        }
+      },
+      {
+        "id": "copy-writer",
+        "name": "copy-writer",
+        "workspace": "/root/.openclaw/workspace/agents/copy",
+        "agentDir": "/root/.openclaw/agents/copy/agent",
+        "model": "deepseek/deepseek-v4-flash",
+        "identity": {
+          "name": "文案手",
+          "emoji": "🖋️",
+          "theme": "文字匠人，字斟句酌"
+        }
+      },
+      {
+        "id": "visual-artist",
+        "name": "visual-artist",
+        "workspace": "/root/.openclaw/workspace/agents/visual",
+        "agentDir": "/root/.openclaw/agents/visual/agent",
+        "model": "deepseek/deepseek-v4-flash",
+        "identity": {
+          "name": "视觉师",
+          "emoji": "🎨",
+          "theme": "光影魔术师，审美在线"
+        }
+      },
+      {
+        "id": "miniprogram-dev",
+        "name": "小程",
+        "workspace": "/root/.openclaw/workspace/agents/miniprogram-dev",
+        "model": "deepseek/deepseek-v4-flash",
+        "identity": {
+          "name": "小程",
+          "emoji": "📱",
+          "theme": "小程序工匠，码到成功"
+        }
+      }
+    ]
+  },
+  "gateway": {
+    "mode": "local",
+    "auth": {
+      "mode": "token",
+      "token": "28da638dc6abeaf7f8d08d1cb15bc0993c7d0c5d472838cc"
+    },
+    "port": 27663,
+    "bind": "lan",
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "controlUi": {
+      "allowedOrigins": [
+        "http://124.222.232.92:27663"
+      ],
+      "allowInsecureAuth": true,
+      "dangerouslyDisableDeviceAuth": true,
+      "basePath": "/5sdczv"
+    }
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "tools": {
+    "profile": "full",
+    "deny": []
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    }
+  },
+  "wizard": {
+    "lastRunAt": "2026-05-13T00:44:59.379Z",
+    "lastRunVersion": "2026.4.21",
+    "lastRunCommand": "configure",
+    "lastRunMode": "local"
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.6.1",
+    "lastTouchedAt": "2026-06-10T00:30:39.471Z"
+  },
+  "plugins": {
+    "entries": {
+      "browser": {
+        "enabled": true
+      },
+      "deepseek": {
+        "enabled": true
+      },
+      "qqbot": {
+        "enabled": false
+      },
+      "openclaw-lark": {
+        "enabled": false
+      },
+      "wecom-openclaw-plugin": {
+        "enabled": false
+      },
+      "dingtalk-connector": {
+        "enabled": false
+      },
+      "openclaw-plugin-yuanbao": {
+        "enabled": false
+      },
+      "openclaw-weixin": {
+        "enabled": true
+      },
+      "lightclawbot": {
+        "enabled": false
+      },
+      "memory-tencentdb": {
+        "enabled": false
+      }
+    }
+  },
+  "browser": {
+    "enabled": true,
+    "executablePath": "/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome",
+    "noSandbox": true,
+    "defaultProfile": "user",
+    "profiles": {
+      "user": {
+        "cdpUrl": "http://localhost:9222",
+        "driver": "existing-session",
+        "attachOnly": true,
+        "color": "#4285F4",
+        "userDataDir": "/root/.openclaw/browser-existing-session"
+      }
+    },
+    "ssrfPolicy": {
+      "dangerouslyAllowPrivateNetwork": true
+    }
+  },
+  "channels": {
+    "openclaw-weixin": {
+      "accounts": {},
+      "channelConfigUpdatedAt": "2026-05-09T11:04:47.200Z"
+    },
+    "feishu": {
+      "enabled": true,
+      "dmPolicy": "open",
+      "appId": "cli_a97589897ef8dbd7",
+      "appSecret": "YGIhG5QQZ2SZJsaZLtun3VOzoRGTXy0C"
+    }
+  },
+  "models": {
+    "providers": {
+      "deepseek": {
+        "baseUrl": "https://api.deepseek.com/v1",
+        "apiKey": "sk-089a501da0e64114a1b9d7f271a3f358",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "deepseek-v4-flash",
+            "name": "DeepSeek V4 Flash"
+          },
+          {
+            "id": "deepseek-v4-pro",
+            "name": "DeepSeek V4 Pro"
+          }
+        ]
+      }
+    },
+    "mode": "merge"
+  },
+  "auth": {
+    "profiles": {
+      "deepseek:default": {
+        "provider": "deepseek",
+        "mode": "api_key"
+      }
+    }
+  },
+  "messages": {
+    "groupChat": {
+      "visibleReplies": "automatic"
+    }
+  }
+}

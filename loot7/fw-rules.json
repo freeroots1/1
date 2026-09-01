@@ -1,0 +1,34 @@
+[
+  {
+    "AppType": "自定义",
+    "Protocol": "TCP",
+    "Port": "8080",
+    "CidrBlock": "0.0.0.0/0",
+    "Action": "ACCEPT",
+    "FirewallRuleDescription": "祥和超市后台管理"
+  },
+  {
+    "AppType": "自定义",
+    "Protocol": "TCP",
+    "Port": "8082",
+    "CidrBlock": "0.0.0.0/0",
+    "Action": "ACCEPT",
+    "FirewallRuleDescription": "祥和超市云后台"
+  },
+  {
+    "AppType": "自定义",
+    "Protocol": "TCP",
+    "Port": "8898",
+    "CidrBlock": "0.0.0.0/0",
+    "Action": "ACCEPT",
+    "FirewallRuleDescription": "静态页面8898"
+  },
+  {
+    "AppType": "自定义",
+    "Protocol": "TCP",
+    "Port": "8899",
+    "CidrBlock": "0.0.0.0/0",
+    "Action": "ACCEPT",
+    "FirewallRuleDescription": "益鸿地坪网站"
+  }
+]
