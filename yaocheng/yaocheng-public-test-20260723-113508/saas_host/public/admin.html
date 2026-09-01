@@ -1,0 +1,1551 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>曜程管理中心</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{
+      --bg:#eef3f8;--panel:#fff;--panel-2:#f7f9fc;--ink:#111827;--text:#172033;--muted:#667085;
+      --line:#d8e1ec;--line-strong:#c4d0df;--brand:#102a43;--brand-2:#193b5a;
+      --blue:#2767c9;--blue-soft:#eaf2ff;--green:#0f766e;--green-soft:#e8faf4;
+      --red:#c43f3f;--red-soft:#fff1f1;--amber:#a16207;--amber-soft:#fff7e6;
+      --shadow:0 18px 45px rgba(16,42,67,.08);--shadow-soft:0 10px 24px rgba(16,42,67,.06)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#f7fbff 0,#eef3f8 260px,#eef3f8 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.5}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .login{min-height:100vh;display:none;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#102a43 0,#193b5a 42%,#eef3f8 42%,#eef3f8 100%)}
+    .login-card{width:min(430px,100%);background:rgba(255,255,255,.98);border:1px solid rgba(255,255,255,.72);border-radius:16px;padding:30px;box-shadow:0 24px 70px rgba(16,42,67,.18)}
+    .login-card h1{font-size:28px;margin:0 0 8px}.login-card p{margin:0 0 20px;color:var(--muted)}
+    .shell{max-width:1640px;margin:0 auto;padding:24px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:16px;background:var(--brand);color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px 20px;box-shadow:0 18px 44px rgba(16,42,67,.18)}
+    .brand-row{display:flex;gap:14px;align-items:center;min-width:0}.brand-mark{width:46px;height:46px;border-radius:12px;background:#fff;color:var(--brand);display:grid;place-items:center;font-size:22px;font-weight:950;box-shadow:inset 0 0 0 1px rgba(16,42,67,.08)}
+    .brand h1{font-size:24px;margin:0 0 4px;letter-spacing:0}.brand .sub{color:#cbd7e5;font-size:13px}.topbar-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.runtime-note{display:flex;flex-direction:column;gap:1px;border-left:1px solid rgba(255,255,255,.18);padding-left:14px;font-size:12px;color:#d8e6f3}.runtime-note b{font-size:13px;color:#fff}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .stack{display:flex;flex-direction:column;gap:10px}
+    .panel{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-soft)}
+    .panel-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(180deg,#fff,#fbfcfe)}
+    .panel-head h2{font-size:18px;margin:0 0 3px}.panel-body{padding:18px 20px}
+    .muted{color:var(--muted);font-size:13px}.strong{font-weight:800}
+    .badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;color:#334155}
+    .badge.active{background:#ecfdf5;border-color:#bbf7d0;color:#047857}.badge.disabled{background:#f1f5f9;color:#64748b}
+    .cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:14px}
+    .metric{min-height:92px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 10px 24px rgba(16,42,67,.045);position:relative;overflow:hidden}
+    .metric:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue)}
+    .metric .label{font-size:12px;color:var(--muted);margin-bottom:8px}.metric .value{font-size:26px;font-weight:950;letter-spacing:0;color:var(--ink)}
+    .main-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}.main-grid>*{min-width:0}
+    .main-grid.single-column{grid-template-columns:1fr}
+    .work-grid{display:grid;grid-template-columns:1fr;gap:16px}
+    input,select,textarea{border:1px solid var(--line-strong);border-radius:9px;padding:9px 10px;min-height:38px;background:#fff;color:var(--text)}
+    textarea{width:100%;min-height:86px;resize:vertical}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:#7aa7e8;box-shadow:0 0 0 3px rgba(31,95,191,.12)}
+    .grow{flex:1;min-width:180px}.small{width:112px}.date{width:150px}
+    .btn{border:1px solid var(--line-strong);border-radius:8px;background:#fff;color:var(--text);font-weight:800;min-height:40px;padding:8px 14px;line-height:1.2;white-space:nowrap;box-shadow:0 1px 0 rgba(16,42,67,.04)}
+    .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.green{background:var(--green);border-color:var(--green);color:#fff}
+    .btn.red{border-color:#efb4b0;color:var(--red);background:#fff}.btn.ghost{background:transparent;color:inherit;border-color:rgba(255,255,255,.25);box-shadow:none}
+    .topbar .btn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#fff}.topbar .btn:hover{background:rgba(255,255,255,.16)}
+    table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;font-size:14px;line-height:1.45}
+    th,td{border-bottom:1px solid #e8eef5;padding:13px 14px;text-align:left;vertical-align:middle}th{height:48px;background:#f6f8fb;font-weight:900;color:#445066;white-space:nowrap}tbody tr:last-child td{border-bottom:none}
+    tr.selectable{cursor:pointer}tr.selectable:hover{background:#f8fbff}tr.selected{background:var(--blue-soft)}
+    .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .status-note{border:1px solid var(--line);background:var(--panel-2);border-radius:12px;padding:12px;color:var(--muted)}
+    .security-warning{border:1px solid #f6c56d;background:var(--amber-soft);color:#7c4a03;border-radius:12px;padding:12px 14px;margin:0 0 14px;font-weight:800;display:none}
+    .empty{border:1px dashed var(--line-strong);background:#fff;border-radius:12px;padding:18px;color:var(--muted);text-align:center}
+    .detail-panel{position:static;overflow:hidden;scroll-margin-top:18px}.detail-title{font-size:20px;font-weight:900;margin:0 0 4px}
+    .detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.info{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px}
+    .info .k{font-size:12px;color:var(--muted);margin-bottom:4px}.info .v{font-weight:900}
+    .release-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.release-card{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:12px}
+    .release-card .title{font-size:12px;color:var(--muted);margin-bottom:5px}.release-card .text{font-weight:800}
+    .section-title{font-size:14px;font-weight:900;margin:14px 0 8px}
+    .nowrap{white-space:nowrap}.breakable{overflow-wrap:anywhere;word-break:break-word}
+    #signupRequestList,#tenantList{max-width:100%;overflow-x:auto}
+    .signup-request-table{min-width:1260px;table-layout:fixed}
+    .signup-request-table th:nth-child(1){width:130px}.signup-request-table th:nth-child(2){width:170px}.signup-request-table th:nth-child(3){width:170px}.signup-request-table th:nth-child(4){width:270px}.signup-request-table th:nth-child(5){width:115px}.signup-request-table th:nth-child(6){width:90px}.signup-request-table th:nth-child(7){width:100px}.signup-request-table th:nth-child(8){width:175px}.signup-request-table th:nth-child(9){width:125px}
+    .signup-contact,.signup-datetime{display:flex;flex-direction:column;gap:2px;line-height:1.4}
+    .signup-contact .muted,.signup-datetime span{white-space:nowrap}
+    .signup-modules{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+    .signup-modules span{white-space:nowrap}
+    .signup-status{display:inline-flex;align-items:center;min-height:28px;padding:3px 9px;border:1px solid var(--line);border-radius:7px;font-size:13px;font-weight:800;white-space:nowrap}
+    .signup-status.approved{background:var(--green-soft);border-color:#b7e4d6;color:var(--green)}.signup-status.pending{background:var(--amber-soft);border-color:#f1d6a6;color:var(--amber)}.signup-status.rejected{background:var(--red-soft);border-color:#efc0c0;color:var(--red)}
+    .signup-actions,.tenant-actions{display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
+    .signup-actions .btn{min-width:92px;justify-content:center}
+    .tenant-table{min-width:1320px;table-layout:fixed}
+    .tenant-table th:nth-child(1){width:200px}.tenant-table th:nth-child(2){width:105px}.tenant-table th:nth-child(3){width:155px}.tenant-table th:nth-child(4){width:115px}.tenant-table th:nth-child(5){width:80px}.tenant-table th:nth-child(6){width:95px}.tenant-table th:nth-child(7){width:135px}.tenant-table th:nth-child(8){width:435px}
+    .tenant-table td:nth-child(n+2):nth-child(-n+7){white-space:nowrap}
+    .tenant-name-cell{display:flex;flex-direction:column;gap:2px;line-height:1.35}
+    .tenant-table tbody tr{min-height:68px}
+    #moduleReleaseRecords{overflow-x:auto}
+    #moduleReleaseRecords table{min-width:960px}
+    #moduleReleaseRecords th:nth-child(1),#moduleReleaseRecords td:nth-child(1),
+    #moduleReleaseRecords th:nth-child(2),#moduleReleaseRecords td:nth-child(2),
+    #moduleReleaseRecords th:nth-child(4),#moduleReleaseRecords td:nth-child(4),
+    #moduleReleaseRecords th:nth-child(6),#moduleReleaseRecords td:nth-child(6),
+    #moduleReleaseRecords th:nth-child(8),#moduleReleaseRecords td:nth-child(8){white-space:nowrap}
+    .tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:center;margin:0 0 14px}
+    .tab{border:1px solid var(--line);border-radius:12px;background:#fff;color:#334155;font-weight:900;min-height:46px;padding:9px 12px;display:flex;align-items:center;gap:9px;justify-content:center;box-shadow:var(--shadow-soft)}
+    .tab-icon{width:24px;height:24px;border-radius:8px;display:inline-grid;place-items:center;background:var(--panel-2);color:var(--blue);font-size:12px}
+    .tab.active{background:var(--brand);border-color:var(--brand);color:#fff}.tab.active .tab-icon{background:rgba(255,255,255,.14);color:#fff}
+    [data-tab-panel]{display:none}
+    [hidden]{display:none!important}
+    [data-tab-panel].active-panel{display:block}
+    aside[data-tab-panel].active-panel{display:block}
+    .toast{position:fixed;right:18px;bottom:18px;background:#111827;color:#fff;padding:11px 14px;border-radius:10px;display:none;box-shadow:0 12px 28px rgba(15,23,42,.22);z-index:20}.toast.show{display:block}.toast.error{background:var(--red)}
+    .dialog-backdrop{position:fixed;inset:0;background:rgba(16,42,67,.46);display:flex;align-items:center;justify-content:center;padding:18px;z-index:30}
+    .dialog-backdrop[hidden]{display:none}.dialog{width:min(560px,100%);max-height:min(720px,92vh);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 28px 90px rgba(16,42,67,.28)}
+    .dialog-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start;justify-content:space-between}.dialog-title{font-size:18px;font-weight:950;margin:0}.dialog-body{padding:18px 20px;color:var(--text)}
+    .dialog-body p{margin:0 0 12px}.dialog-impact{display:grid;gap:8px;margin:12px 0}.dialog-impact div{border:1px solid var(--line);border-radius:10px;background:var(--panel-2);padding:9px 10px;color:var(--muted)}
+    .dialog-field{display:flex;flex-direction:column;gap:6px;margin-top:10px}.dialog-field label{font-size:12px;color:var(--muted);font-weight:900}.dialog-actions{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--line);background:#fbfcfe}.dialog.danger .dialog-title{color:var(--red)}
+    .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    #appView{display:none}
+    @media(max-width:1100px){.cards{grid-template-columns:repeat(3,1fr)}.detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:720px){body{overflow-x:hidden}.shell{padding:12px;max-width:100%}.topbar{align-items:flex-start;flex-direction:column}.topbar-actions{justify-content:flex-start}.runtime-note{border-left:none;border-top:1px solid rgba(255,255,255,.18);padding:10px 0 0;width:100%}.cards,.release-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.panel-head{align-items:flex-start;flex-direction:column}.panel-body{min-width:0;overflow-x:auto}.detail-grid{grid-template-columns:1fr}.date,.small{width:100%}.grow{min-width:100%}.tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.tab{padding:8px 10px}}
+  </style>
+</head>
+<body>
+  <section id="loginView" class="login">
+    <div class="login-card">
+      <h1>曜程管理中心</h1>
+      <p>平台管理员处理客户开通、模块授权、账号安全、发布与数据备份。</p>
+      <form class="stack" onsubmit="login();return false;">
+        <input id="loginUser" aria-label="管理员账号" placeholder="管理员账号" autocomplete="username">
+        <input id="loginPass" aria-label="管理员密码" placeholder="管理员密码" type="password" autocomplete="current-password">
+        <button class="btn primary" type="submit">登录</button>
+      </form>
+      <p class="muted" style="margin-top:16px">使用首次启用曜程时创建的平台管理员账号登录。</p>
+    </div>
+  </section>
+
+  <main id="appView" class="shell">
+    <header class="topbar">
+      <div class="brand-row">
+        <div class="brand-mark" aria-hidden="true">曜</div>
+        <div class="brand">
+          <h1>曜程运营控制台</h1>
+          <div class="sub">新未来（天津）教育科技有限公司 · 客户开通、账号管控、发布门禁与数据备份</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <div class="runtime-note"><span id="runtimeMode">本机开发环境</span><b id="runtimeAddress">127.0.0.1:8776</b></div>
+        <span class="badge" id="currentRole">平台管理员</span>
+        <span class="muted" id="currentUser"></span>
+        <button class="btn" onclick="changePlatformPassword()">修改密码</button>
+        <button class="btn" onclick="refreshAll()">刷新</button>
+        <button class="btn" onclick="logout()">退出</button>
+      </div>
+    </header>
+
+    <div id="defaultPasswordWarning" class="security-warning" style="display:none">建议定期修改平台管理员密码，并仅授权给系统负责人。</div>
+
+    <section class="cards" id="overviewCards" data-unit-name="运营总览" data-unit-note="汇总平台当前客户单位数量、启停状态、待审核申请和到期风险，用于平台方每天先看整体情况。">
+      <span class="visually-hidden">运营总览：汇总平台当前客户单位数量、启停状态、待审核申请和到期风险。</span>
+    </section>
+
+    <nav class="tabs" id="adminTabs" aria-label="后台功能分区">
+      <button class="tab active" data-tab="customers" data-permission="read_tenants" onclick="switchAdminTab('customers')"><span class="tab-icon">客</span>客户管理</button>
+      <button class="tab" data-tab="operators" data-permission="manage_platform_operators" onclick="switchAdminTab('operators')"><span class="tab-icon">权</span>维护人员</button>
+      <button class="tab" data-tab="logs" data-permission="read_logs" onclick="switchAdminTab('logs')"><span class="tab-icon">志</span>操作日志</button>
+      <button class="tab" data-tab="maintenance" data-permission="read_releases" onclick="switchAdminTab('maintenance')"><span class="tab-icon">发</span>发布工作台</button>
+      <button class="tab" data-tab="backup" data-permission="manage_backups" onclick="switchAdminTab('backup')"><span class="tab-icon">备</span>数据备份</button>
+    </nav>
+
+    <section class="main-grid" id="adminMainGrid">
+      <div class="work-grid">
+        <section class="panel active-panel" data-tab-panel="customers" data-permission="create_tenant" data-unit-name="开通客户单位" data-unit-note="平台方直接给客户创建租户、客户超级管理员账号、用户数上限和到期时间。">
+          <div class="panel-head">
+            <div>
+              <h2>开通客户单位</h2>
+              <div class="muted">用于平台方直接开通客户；客户自申请走下面的审核列表。</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <form class="stack" onsubmit="createTenant();return false;">
+              <div class="row">
+                <input id="tenantName" class="grow" placeholder="客户单位名称">
+                <input id="tenantMaxUsers" class="small" type="number" min="1" value="10" placeholder="用户数">
+                <input id="tenantExpires" class="date" type="date">
+              </div>
+              <div class="row">
+                <input id="tenantAdminUser" class="grow" placeholder="客户超级管理员账号" autocomplete="off">
+                <input id="tenantAdminPass" class="grow" type="password" placeholder="初始密码，至少 6 位" autocomplete="new-password">
+                <button class="btn primary" type="submit">开通</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="panel active-panel" data-tab-panel="customers" data-permission="read_signup_requests" data-unit-name="客户注册申请" data-unit-note="客户从使用入口提交自助开通申请后，平台方在这里审核通过、拒绝或删除记录。">
+          <div class="panel-head">
+            <div>
+              <h2>客户注册申请</h2>
+              <div class="muted">只处理待审核申请；已处理记录可删除。</div>
+            </div>
+          </div>
+          <div class="panel-body" id="signupRequestList"></div>
+        </section>
+
+        <section class="panel active-panel" data-tab-panel="customers" data-permission="read_tenants" data-unit-name="客户单位列表" data-unit-note="平台方查看每个客户单位的账号使用、业务数据量、到期时间，并进行详情、停用、启用和删除操作。">
+          <div class="panel-head">
+            <div>
+              <h2>客户单位</h2>
+              <div class="muted">点击“详情”查看账号和业务使用情况。</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="row" style="margin-bottom:12px">
+              <input id="tenantSearch" class="grow" placeholder="搜索客户单位名称" oninput="loadTenants()">
+              <select id="tenantStatusFilter" onchange="loadTenants()">
+                <option value="">全部状态</option>
+                <option value="active">正常客户</option>
+                <option value="disabled">已停用客户</option>
+              </select>
+              <select id="tenantExpiryFilter" onchange="loadTenants()">
+                <option value="">全部到期状态</option>
+                <option value="expired">已到期</option>
+                <option value="soon">30天内到期</option>
+                <option value="none">未设置到期</option>
+              </select>
+              <select id="tenantSort" onchange="loadTenants()">
+                <option value="">默认排序</option>
+                <option value="expires_asc">按到期时间排序</option>
+              </select>
+            </div>
+            <div id="tenantList"></div>
+          </div>
+        </section>
+
+        <section class="panel" data-tab-panel="operators" data-permission="manage_platform_operators" data-unit-name="维护人员权限" data-unit-note="超级管理员为内部维护人员创建账号，并按岗位授予客户开通、财务续费、发布管理或只读审计权限。">
+          <div class="panel-head">
+            <div>
+              <h2>维护人员</h2>
+              <div class="muted">给内部人员分配后台岗位权限；超级管理员保留备份恢复、彻底删除和账号授权。</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <form class="stack" onsubmit="createPlatformOperator();return false;">
+              <div class="row">
+                <input id="operatorUsername" class="grow" placeholder="维护人员账号" autocomplete="off">
+                <input id="operatorPassword" class="grow" type="password" placeholder="初始密码，至少 8 位" autocomplete="new-password">
+                <select id="operatorRole">
+                  <option value="platform_customer_ops">客户开通维护</option>
+                  <option value="platform_finance">财务续费维护</option>
+                  <option value="platform_release_manager">发布管理员</option>
+                  <option value="platform_auditor">只读审计</option>
+                  <option value="platform_admin">超级管理员</option>
+                </select>
+                <button class="btn primary" type="submit">创建维护人员</button>
+              </div>
+            </form>
+            <div class="status-note" style="margin:12px 0">普通维护人员登录同一个管理中心，只能看到被授权的菜单和按钮。不要多人共用同一个超级管理员账号。</div>
+            <div id="platformOperatorList"></div>
+          </div>
+        </section>
+
+        <section class="panel" data-tab-panel="logs" data-permission="read_logs" data-unit-name="操作日志" data-unit-note="记录平台管理员对客户单位做过的开通、停用、启用、删除等关键动作，方便事后追溯。">
+          <div class="panel-head">
+            <div>
+              <h2>操作日志</h2>
+              <div class="muted">记录平台方关键维护动作，可按客户、动作和时间追溯。</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="row" style="margin-bottom:12px">
+              <input id="logKeyword" class="grow" placeholder="搜索对象、操作人或动作" onkeydown="if(event.key==='Enter')applyLogFilters()">
+              <select id="logActionFilter" onchange="applyLogFilters()">
+                <option value="">全部动作</option>
+                <option value="create_tenant">开通客户单位</option>
+                <option value="disable_tenant">停用客户单位</option>
+                <option value="enable_tenant">启用客户单位</option>
+                <option value="renew_tenant">续费/延期客户单位</option>
+                <option value="update_tenant_quota">调整客户用户数</option>
+                <option value="update_tenant_profile">修改客户资料</option>
+                <option value="delete_tenant">删除客户单位</option>
+                <option value="purge_tenant">彻底删除客户数据</option>
+                <option value="reset_tenant_admin_password">重置客户管理员密码</option>
+                <option value="reset_tenant_user_password">重置员工密码</option>
+                <option value="disable_tenant_user">停用员工账号</option>
+                <option value="enable_tenant_user">启用员工账号</option>
+                <option value="update_tenant_modules">调整客户模块授权</option>
+                <option value="update_module_config">更新模块配置</option>
+                <option value="build_module">生成客户最新版</option>
+                <option value="accept_module_release">验收模块版本</option>
+                <option value="create_platform_backup">创建平台备份</option>
+                <option value="restore_platform_backup">恢复平台备份</option>
+                <option value="create_platform_operator">创建平台维护人员</option>
+                <option value="update_platform_operator_role">调整平台维护权限</option>
+                <option value="disable_platform_operator">停用平台维护人员</option>
+                <option value="enable_platform_operator">启用平台维护人员</option>
+                <option value="reset_platform_operator_password">重置平台维护人员密码</option>
+              </select>
+              <select id="logTargetTypeFilter" onchange="applyLogFilters()">
+                <option value="">全部类型</option>
+                <option value="tenant">客户单位</option>
+                <option value="user">员工账号</option>
+                <option value="module">模块</option>
+                <option value="platform_operator">维护人员</option>
+              </select>
+              <input id="logStartDate" class="date" type="date" onchange="applyLogFilters()">
+              <input id="logEndDate" class="date" type="date" onchange="applyLogFilters()">
+              <select id="logPageSize" onchange="applyLogFilters()">
+                <option value="10">10 条/页</option>
+                <option value="20">20 条/页</option>
+                <option value="50">50 条/页</option>
+              </select>
+              <button class="btn primary" onclick="applyLogFilters()">筛选</button>
+              <button class="btn" onclick="exportPlatformLogs()">导出</button>
+            </div>
+            <div id="operationLogList"></div>
+            <div class="row" style="justify-content:space-between;margin-top:12px">
+              <span class="muted" id="operationLogPager">暂无日志</span>
+              <div class="actions">
+                <button class="btn" onclick="prevLogPage()">上一页</button>
+                <button class="btn" onclick="nextLogPage()">下一页</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-tab-panel="backup" data-permission="manage_backups" data-unit-name="数据备份" data-unit-note="平台方创建线上 SaaS 数据库备份，并下载备份文件用于迁移或灾备留档。">
+          <div class="panel-head">
+            <div>
+              <h2>数据备份</h2>
+              <div class="muted">创建当前 SaaS 数据库备份；恢复前会自动生成保护备份，仍需谨慎操作。</div>
+            </div>
+            <button class="btn primary" onclick="createPlatformBackup()">创建备份</button>
+          </div>
+          <div class="panel-body" id="platformBackupList">
+            <div class="empty">正在读取备份记录</div>
+          </div>
+        </section>
+
+        <section class="panel" data-tab-panel="maintenance" data-permission="read_releases" data-unit-name="发布工作台" data-unit-note="集中查看单日大研学 SaaS 的交付规则、候选版本、验收证据和发布动作。">
+          <div class="panel-head">
+            <div>
+              <h2>发布工作台</h2>
+              <div class="muted">在一个工作台完成发布说明、候选生成、五项验收和正式发布。</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="releaseCenter">
+              <div class="empty">正在读取升级规则</div>
+            </div>
+            <div id="moduleWorkbench" style="margin-top:24px">
+              <div class="empty">正在读取模块状态</div>
+            </div>
+          </div>
+          <span class="visually-hidden">SaaS 客户打开客户使用入口就是最新版，私有化客户需要单独生成升级包后交付。兼容接口 /api/platform/modules/day1；客户刷新 /app.html 使用最新版。</span>
+        </section>
+      </div>
+
+      <aside class="panel detail-panel active-panel" data-tab-panel="customers" data-permission="read_tenants" data-unit-name="客户详情" data-unit-note="显示选中客户单位的账号、客户库、供方库、方案、预采买台账和管理员维护动作。">
+        <div class="panel-head">
+          <div>
+            <div class="detail-title" id="detailName">客户详情</div>
+            <div class="muted" id="detailSub">选择左侧客户单位查看</div>
+          </div>
+        </div>
+        <div class="panel-body" id="tenantDetail">
+          <div class="empty">还没有选择客户单位</div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <div id="adminDialog" class="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="adminDialogTitle" hidden>
+    <div id="adminDialogPanel" class="dialog">
+      <div class="dialog-head">
+        <h2 id="adminDialogTitle" class="dialog-title">确认操作</h2>
+        <button type="button" class="btn" onclick="closeAdminDialog(null)">关闭</button>
+      </div>
+      <div id="adminDialogBody" class="dialog-body"></div>
+      <div class="dialog-actions">
+        <button type="button" class="btn" onclick="closeAdminDialog(null)">取消</button>
+        <button type="button" id="adminDialogConfirm" class="btn primary" onclick="submitAdminDialog()">确认</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+localStorage.removeItem('yx_saas_admin_token');
+document.getElementById('runtimeAddress').textContent=window.location.host||'127.0.0.1:8776';
+var runtimeDeployment='local-development';
+fetch('/api/health',{credentials:'same-origin'}).then(function(res){return res.json();}).then(function(data){
+  var labels={'local-development':'本机开发环境','public-test':'公网测试环境','online-saas':'线上 SaaS'};
+  runtimeDeployment=data.deployment||runtimeDeployment;
+  document.getElementById('runtimeMode').textContent=labels[data.deployment]||'曜程运行环境';
+}).catch(function(){document.getElementById('runtimeMode').textContent='运行状态待确认';});
+var currentUser=null;
+var moduleWorkbenchKey='day1';
+var moduleWorkbenchEntry='/app.html';
+var selectedTenantId=null;
+var tenants=[];
+var signupRequestsById={};
+var currentTenantDetail=null;
+var logPage=1;
+var signupAutoRefreshTimer=null;
+var signupAutoRefreshInFlight=false;
+var SIGNUP_AUTO_REFRESH_MS=4000;
+var platformRoleLabels={
+  platform_admin:'超级管理员',
+  platform_customer_ops:'客户开通维护',
+  platform_finance:'财务续费维护',
+  platform_release_manager:'发布管理员',
+  platform_auditor:'只读审计'
+};
+var platformRoleDescriptions={
+  platform_admin:'全权限：维护人员、客户、续费、发布、日志、备份恢复和高危删除。',
+  platform_customer_ops:'客户开通、申请审核、客户启停、客户资料、模块授权和客户账号维护。',
+  platform_finance:'查看客户、续费延期、调整客户用户数和查看操作日志。',
+  platform_release_manager:'查看发布工作台、生成候选版本、保存模块配置和提交发布验收。',
+  platform_auditor:'只读查看客户、申请、发布状态和操作日志，可导出日志。'
+};
+
+function apiFetch(path,opt){
+  opt=opt||{};
+  var method=(opt.method||'GET').toUpperCase();
+  var headers={'Content-Type':'application/json','X-Yaocheng-Session-Scope':'platform'};
+  var csrf=csrfToken();
+  if((method==='POST'||method==='PATCH'||method==='DELETE')&&csrf)headers['X-CSRF-Token']=csrf;
+  return fetch(path,{method:method,headers:headers,credentials:'same-origin',body:opt.body?JSON.stringify(opt.body):undefined}).then(function(res){
+    var type=res.headers.get('content-type')||'';
+    var data=type.indexOf('application/json')>=0?res.json():res.text();
+    return data.then(function(payload){
+      if(!res.ok)throw new Error((payload&&payload.error)||('请求失败 '+res.status));
+      return payload;
+    });
+  });
+}
+function csrfToken(){var cookie=String(document.cookie||''),match=cookie.match(/(?:^|;\s*)yaocheng_platform_csrf=([^;]+)/)||cookie.match(/(?:^|;\s*)yaocheng_csrf=([^;]+)/);return match?decodeURIComponent(match[1]):'';}
+function text(id){return document.getElementById(id).value.trim();}
+function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
+function showToast(msg,isError){var t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(isError?' error':'');setTimeout(function(){t.className='toast';},2600);}
+function isPlatformUser(){return !!(currentUser&&currentUser.role&&currentUser.role.indexOf('platform_')===0);}
+function platformPermissions(){return (currentUser&&currentUser.platform_permissions)||[];}
+function can(permission){return platformPermissions().indexOf(permission)>=0;}
+function requirePerm(permission,label){if(can(permission))return true;showToast('当前维护账号无权'+(label||'执行该操作'),true);return false;}
+function clearBox(id,message){var el=document.getElementById(id);if(el)el.innerHTML='<div class="empty">'+esc(message||'当前账号无权查看')+'</div>';}
+function stopSignupAutoRefresh(){
+  if(signupAutoRefreshTimer){clearTimeout(signupAutoRefreshTimer);signupAutoRefreshTimer=null;}
+}
+function scheduleSignupAutoRefresh(){
+  stopSignupAutoRefresh();
+  if(!currentUser||!can('read_signup_requests')||document.hidden)return;
+  signupAutoRefreshTimer=setTimeout(function(){
+    signupAutoRefreshTimer=null;
+    refreshSignupInbox().then(scheduleSignupAutoRefresh,scheduleSignupAutoRefresh);
+  },SIGNUP_AUTO_REFRESH_MS);
+}
+function startSignupAutoRefresh(refreshNow){
+  stopSignupAutoRefresh();
+  if(!currentUser||!can('read_signup_requests')||document.hidden)return;
+  if(refreshNow){refreshSignupInbox().then(scheduleSignupAutoRefresh,scheduleSignupAutoRefresh);return;}
+  scheduleSignupAutoRefresh();
+}
+function refreshSignupInbox(){
+  if(signupAutoRefreshInFlight||!currentUser||!can('read_signup_requests')||document.hidden||adminDialogState)return Promise.resolve();
+  signupAutoRefreshInFlight=true;
+  return Promise.all([loadOverview({silent:true}),loadSignupRequests({silent:true})]).then(function(result){
+    signupAutoRefreshInFlight=false;
+    return result;
+  },function(error){
+    signupAutoRefreshInFlight=false;
+    throw error;
+  });
+}
+var adminDialogState=null;
+function showAdminDialog(options){
+  options=options||{};
+  return new Promise(function(resolve){
+    adminDialogState={options:options,resolve:resolve};
+    var backdrop=document.getElementById('adminDialog');
+    var panel=document.getElementById('adminDialogPanel');
+    document.getElementById('adminDialogTitle').textContent=options.title||'确认操作';
+    panel.className='dialog'+(options.tone==='danger'?' danger':'');
+    document.getElementById('adminDialogConfirm').textContent=options.confirmLabel||'确认';
+    document.getElementById('adminDialogConfirm').className='btn '+(options.tone==='danger'?'red':'primary');
+    document.getElementById('adminDialogBody').innerHTML=dialogBodyHtml(options);
+    backdrop.hidden=false;
+    setTimeout(function(){
+      var first=backdrop.querySelector('input,textarea,select,button');
+      if(first)first.focus();
+    },0);
+  });
+}
+function dialogBodyHtml(options){
+  var html=options.body?'<p>'+esc(options.body)+'</p>':'';
+  if(options.impact&&options.impact.length){
+    html+='<div class="section-title">影响范围</div><div class="dialog-impact">'+options.impact.map(function(item){return '<div>'+esc(item)+'</div>';}).join('')+'</div>';
+  }
+  if(options.reason)html+='<div class="section-title">操作原因</div><p class="muted">'+esc(options.reason)+'</p>';
+  (options.fields||[]).forEach(function(field){
+    var type=field.type||'text';
+    var tag=type==='textarea'?'textarea':'input';
+    var attrs=' data-dialog-field="'+esc(field.name)+'"';
+    if(tag==='input')attrs+=' type="'+esc(type)+'"';
+    if(field.placeholder)attrs+=' placeholder="'+esc(field.placeholder)+'"';
+    if(field.autocomplete)attrs+=' autocomplete="'+esc(field.autocomplete)+'"';
+    if(field.min!=null)attrs+=' min="'+esc(field.min)+'"';
+    if(field.max!=null)attrs+=' max="'+esc(field.max)+'"';
+    if(field.minlength!=null)attrs+=' minlength="'+esc(field.minlength)+'"';
+    if(field.required)attrs+=' required';
+    var value=field.value==null?'':String(field.value);
+    html+='<div class="dialog-field"><label>'+esc(field.label||field.name)+'</label>';
+    html+=tag==='textarea'
+      ? '<textarea'+attrs+'>'+esc(value)+'</textarea>'
+      : '<input'+attrs+' value="'+esc(value)+'">';
+    html+='</div>';
+  });
+  if(options.confirmText){
+    html+='<div class="dialog-field"><label>确认文字</label><input data-dialog-field="confirm_text" placeholder="请输入 '+esc(options.confirmText)+'" autocomplete="off"></div>';
+  }
+  return html||'<p>确认继续执行该操作？</p>';
+}
+function closeAdminDialog(result){
+  var state=adminDialogState;
+  adminDialogState=null;
+  document.getElementById('adminDialog').hidden=true;
+  document.getElementById('adminDialogBody').innerHTML='';
+  if(state&&state.resolve)state.resolve(result);
+}
+function submitAdminDialog(){
+  if(!adminDialogState)return;
+  var options=adminDialogState.options||{};
+  var values={};
+  var missing=null;
+  var invalid=null;
+  document.querySelectorAll('#adminDialog [data-dialog-field]').forEach(function(input){
+    var key=input.getAttribute('data-dialog-field');
+    values[key]=input.value.trim();
+    if(input.hasAttribute('required')&&!values[key]&&!missing)missing=input;
+    if(!input.checkValidity()&&!invalid)invalid=input;
+  });
+  if(missing){showToast('请填写必填项',true);missing.focus();return;}
+  if(invalid){showToast('请检查填写内容',true);invalid.focus();return;}
+  if(options.confirmText&&values.confirm_text!==options.confirmText){
+    showToast('确认文字不匹配，已取消操作',true);
+    var confirmInput=document.querySelector('#adminDialog [data-dialog-field="confirm_text"]');
+    if(confirmInput)confirmInput.focus();
+    return;
+  }
+  closeAdminDialog(values);
+}
+document.addEventListener('keydown',function(event){
+  if(event.key==='Escape'&&adminDialogState)closeAdminDialog(null);
+});
+function roleName(role){return (platformRoleLabels[role]||{tenant_admin:'客户超级管理员',day1_admin:'单日模块管理员',user:'业务操作员',viewer:'查看人员'}[role]||role);}
+function statusName(status){return status==='active'?'正常':'已停用';}
+function badgeStatus(status){return '<span class="badge '+(status==='active'?'active':'disabled')+'">'+esc(statusName(status))+'</span>';}
+function tableRaw(headers,rows,tableClass){var className=tableClass?' class="'+esc(tableClass)+'"':'';var h='<table'+className+'><thead><tr>'+headers.map(function(x){return '<th>'+esc(x)+'</th>';}).join('')+'</tr></thead><tbody>';h+=rows.map(function(row){return '<tr'+(row._attrs||'')+'>'+row.cells.map(function(cell){return '<td>'+String(cell==null?'':cell)+'</td>';}).join('')+'</tr>';}).join('');return h+'</tbody></table>';}
+function actionButton(label,action,id,name,extraClass){
+  var classes='btn'+(extraClass?' '+extraClass:'');
+  return '<button type="button" class="'+classes+'" data-action="'+esc(action)+'" data-id="'+esc(id)+'" data-name="'+esc(name||'')+'">'+esc(label)+'</button>';
+}
+function metric(label,value){return '<div class="metric"><div class="label">'+esc(label)+'</div><div class="value">'+esc(value)+'</div></div>';}
+function accountUsage(used,limit){
+  return '<span class="nowrap" title="当前启用账号数 / 允许创建账号数">已用 '+esc(used)+' / 上限 '+esc(limit)+'</span>';
+}
+
+function login(){
+  apiFetch('/api/login',{method:'POST',body:{username:text('loginUser'),password:document.getElementById('loginPass').value}}).then(function(data){
+    currentUser=data.user;renderShell();showToast('登录成功');
+  }).catch(function(e){showToast(e.message,true);});
+}
+function showLoggedOut(){stopSignupAutoRefresh();currentUser=null;selectedTenantId=null;document.getElementById('loginView').style.display='flex';document.getElementById('appView').style.display='none';}
+function logout(){apiFetch('/api/logout',{method:'POST',body:{}}).catch(function(){}).then(showLoggedOut);}
+function boot(){if(!csrfToken()){showLoggedOut();return;}apiFetch('/api/me').then(function(data){currentUser=data.user;renderShell();}).catch(showLoggedOut);}
+function ensureSetupReady(){fetch('/api/setup/status').then(function(res){return res.json();}).then(function(data){if(data.required){location.replace('/setup.html');return;}boot();}).catch(function(){boot();});}
+function renderShell(){
+  if(!isPlatformUser()){logout();showToast('客户账号请从客户使用入口登录',true);return;}
+  document.getElementById('loginView').style.display='none';
+  document.getElementById('appView').style.display='block';
+  document.getElementById('currentUser').textContent=currentUser.username;
+  document.getElementById('currentRole').textContent=currentUser.role_label||roleName(currentUser.role);
+  document.getElementById('defaultPasswordWarning').style.display='none';
+  applyPlatformPermissions();
+  refreshAll();
+  startSignupAutoRefresh(false);
+}
+function applyPlatformPermissions(){
+  document.querySelectorAll('[data-permission]').forEach(function(el){
+    el.hidden=!can(el.getAttribute('data-permission'));
+  });
+  var active=document.querySelector('#adminTabs .tab.active');
+  if(active&&active.hidden){
+    var first=document.querySelector('#adminTabs .tab:not([hidden])');
+    if(first)switchAdminTab(first.getAttribute('data-tab'));
+  }
+}
+function refreshAll(){
+  var tasks=[loadOverview()];
+  if(can('read_signup_requests'))tasks.push(loadSignupRequests());else clearBox('signupRequestList','当前账号不负责客户申请审核');
+  if(can('read_tenants'))tasks.push(loadTenants());else clearBox('tenantList','当前账号不负责客户管理');
+  if(can('read_logs'))tasks.push(loadOperationLogs());else clearBox('operationLogList','当前账号无权查看操作日志');
+  if(can('manage_backups'))tasks.push(loadPlatformBackups());else clearBox('platformBackupList','只有超级管理员可查看和恢复平台备份');
+  if(can('read_releases')){tasks.push(loadReleaseCenter());tasks.push(loadModuleWorkbench());}else{clearBox('releaseCenter','当前账号不负责发布工作台');clearBox('moduleWorkbench','当前账号不负责模块发布');}
+  if(can('manage_platform_operators'))tasks.push(loadPlatformOperators());else clearBox('platformOperatorList','只有超级管理员可管理维护人员');
+  return Promise.all(tasks);
+}
+function switchAdminTab(tab){
+  document.querySelectorAll('#adminTabs .tab').forEach(function(button){
+    button.classList.toggle('active',button.getAttribute('data-tab')===tab);
+  });
+  document.querySelectorAll('[data-tab-panel]').forEach(function(panel){
+    panel.classList.toggle('active-panel',panel.getAttribute('data-tab-panel')===tab);
+  });
+  var grid=document.getElementById('adminMainGrid');
+  if(grid)grid.classList.toggle('single-column',tab!=='customers');
+}
+
+function loadOverview(options){
+  options=options||{};
+  return apiFetch('/api/platform/overview').then(function(data){
+    document.getElementById('overviewCards').innerHTML=[
+      metric('客户单位',data.tenant_count),
+      metric('启用客户',data.active_tenant_count),
+      metric('停用客户',data.disabled_tenant_count),
+      metric('待审核',data.pending_signup_count),
+      metric('已到期',data.expired_tenant_count),
+      metric('30天内到期',data.expiring_soon_count)
+    ].join('');
+  }).catch(function(e){if(!options.silent)showToast(e.message,true);});
+}
+function createTenant(){
+  if(!requirePerm('create_tenant','开通客户单位'))return;
+  if(!text('tenantName')||!text('tenantAdminUser')){showToast('请填写客户单位和管理员账号',true);return;}
+  apiFetch('/api/platform/tenants',{method:'POST',body:{name:text('tenantName'),admin_username:text('tenantAdminUser'),admin_password:document.getElementById('tenantAdminPass').value,max_users:text('tenantMaxUsers')||10,expires_at:text('tenantExpires')}}).then(function(data){
+    showToast('客户单位已开通');selectedTenantId=data.id;
+    document.getElementById('tenantName').value='';document.getElementById('tenantAdminUser').value='';document.getElementById('tenantAdminPass').value='';
+    return refreshAll().then(function(){return loadTenantDetail(data.id);});
+  }).catch(function(e){showToast(e.message,true);});
+}
+function tenantActions(t){
+  var actions=actionButton('详情','view-tenant',t.id,t.name,'primary')+' ';
+  if(can('renew_tenant'))actions+=actionButton('续费','renew-tenant',t.id,t.name,'')+' ';
+  if(can('update_tenant_quota'))actions+=actionButton('调名额','quota-tenant',t.id,t.name,'')+' ';
+  if(can('set_tenant_status')){
+    actions+=t.status==='active'
+      ? actionButton('停用客户','disable-tenant',t.id,t.name,'')
+      : actionButton('启用客户','enable-tenant',t.id,t.name,'green');
+  }
+  if(can('delete_tenant'))actions+=' '+actionButton('删除空客户','delete-tenant',t.id,t.name,'red');
+  return '<div class="tenant-actions">'+actions+'</div>';
+}
+function loadTenants(){
+  if(!can('read_tenants'))return Promise.resolve();
+  var params=new URLSearchParams();
+  var search=document.getElementById('tenantSearch')?text('tenantSearch'):'';
+  var status=document.getElementById('tenantStatusFilter')?document.getElementById('tenantStatusFilter').value:'';
+  var expiry=document.getElementById('tenantExpiryFilter')?document.getElementById('tenantExpiryFilter').value:'';
+  var sort=document.getElementById('tenantSort')?document.getElementById('tenantSort').value:'';
+  if(search)params.set('search',search);
+  if(status)params.set('status',status);
+  if(expiry)params.set('expiry',expiry);
+  if(sort)params.set('sort',sort);
+  var path='/api/platform/tenants'+(params.toString()?'?'+params.toString():'');
+  return apiFetch(path).then(function(data){
+    tenants=data.items||[];
+    var rows=tenants.map(function(t){
+      return {
+        _attrs:' class="selectable '+(String(t.id)===String(selectedTenantId)?'selected':'')+'"',
+        cells:[
+          '<div class="tenant-name-cell"><span class="strong">'+esc(t.name)+'</span><span class="muted">ID '+esc(t.id)+'</span></div>',
+          badgeStatus(t.status),
+          accountUsage(t.user_count,t.max_users),
+          esc(t.customer_count)+' / '+esc(t.supplier_count),
+          esc(t.scheme_count),
+          esc(t.prepurchase_ledger_count),
+          expiryText(t),
+          tenantActions(t)
+        ]
+      };
+    });
+    document.getElementById('tenantList').innerHTML=rows.length?tableRaw(['客户单位','状态','账号使用','客户/供方','方案','预采买','到期','操作'],rows,'tenant-table'):'<div class="empty">暂无客户单位</div>';
+  }).catch(function(e){showToast(e.message,true);});
+}
+function expiryText(t){
+  if(!t.expires_at)return '未设置';
+  var state=t.expiry_state&&t.expiry_state!=='正常'?' / '+esc(t.expiry_state):'';
+  return esc(t.expires_at)+state;
+}
+
+function loadOperationLogs(){
+  if(!can('read_logs'))return Promise.resolve();
+  var params=platformLogParams();
+  params.set('page',logPage);
+  params.set('page_size',document.getElementById('logPageSize')?document.getElementById('logPageSize').value:'10');
+  return apiFetch('/api/platform/logs?'+params.toString()).then(function(data){
+    var rows=(data.items||[]).map(function(log){
+      return {cells:[esc(log.created_at),esc(log.actor_username),esc(actionName(log.action)),esc(log.target_name||''),esc(log.target_type)]};
+    });
+    document.getElementById('operationLogList').innerHTML=rows.length?tableRaw(['时间','操作人','动作','对象','类型'],rows):'<div class="empty">暂无操作日志</div>';
+    var total=data.total||0;
+    var page=data.page||logPage;
+    var pageSize=data.page_size||10;
+    var pages=Math.max(1,Math.ceil(total/pageSize));
+    document.getElementById('operationLogPager').textContent='共 '+total+' 条 / 第 '+page+' 页，共 '+pages+' 页';
+  }).catch(function(e){showToast(e.message,true);});
+}
+function platformLogParams(){
+  var params=new URLSearchParams();
+  var keyword=document.getElementById('logKeyword')?text('logKeyword'):'';
+  var action=document.getElementById('logActionFilter')?document.getElementById('logActionFilter').value:'';
+  var targetType=document.getElementById('logTargetTypeFilter')?document.getElementById('logTargetTypeFilter').value:'';
+  var startDate=document.getElementById('logStartDate')?document.getElementById('logStartDate').value:'';
+  var endDate=document.getElementById('logEndDate')?document.getElementById('logEndDate').value:'';
+  if(keyword)params.set('keyword',keyword);
+  if(action)params.set('action',action);
+  if(targetType)params.set('target_type',targetType);
+  if(startDate)params.set('start_date',startDate);
+  if(endDate)params.set('end_date',endDate);
+  return params;
+}
+function applyLogFilters(){logPage=1;return loadOperationLogs();}
+function prevLogPage(){if(logPage>1){logPage-=1;loadOperationLogs();}}
+function nextLogPage(){logPage+=1;loadOperationLogs();}
+function exportPlatformLogs(){
+  if(!requirePerm('export_logs','导出操作日志'))return;
+  var params=platformLogParams();
+  var url='/api/platform/logs.xlsx'+(params.toString()?'?'+params.toString():'');
+  fetch(url,{credentials:'same-origin'}).then(function(res){
+    if(!res.ok)throw new Error('导出失败 '+res.status);
+    return res.blob().then(function(blob){
+      var link=document.createElement('a');
+      link.href=URL.createObjectURL(blob);
+      link.download='platform-logs.xlsx';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(function(){URL.revokeObjectURL(link.href);},1000);
+      showToast('操作日志已导出');
+    });
+  }).catch(function(e){showToast(e.message,true);});
+}
+function actionName(action){
+  return ({create_tenant:'开通客户单位',approve_signup_request:'审核通过客户申请',disable_tenant:'停用客户单位',enable_tenant:'启用客户单位',renew_tenant:'续费/延期客户单位',update_tenant_quota:'调整客户用户数',update_tenant_profile:'修改客户资料',delete_tenant:'删除客户单位',purge_tenant:'彻底删除客户数据',reset_tenant_admin_password:'重置客户管理员密码',reset_tenant_user_password:'重置员工密码',disable_tenant_user:'停用员工账号',enable_tenant_user:'启用员工账号',update_tenant_modules:'调整客户模块授权',build_module:'生成客户最新版',accept_module_release:'验收模块版本',update_module_config:'更新模块配置',create_platform_backup:'创建平台备份',restore_platform_backup:'恢复平台备份',change_platform_password:'修改平台管理员密码',create_platform_operator:'创建平台维护人员',update_platform_operator_role:'调整平台维护权限',disable_platform_operator:'停用平台维护人员',enable_platform_operator:'启用平台维护人员',reset_platform_operator_password:'重置平台维护人员密码'}[action]||action);
+}
+
+function changePlatformPassword(){
+  showAdminDialog({
+    title:'修改平台管理员密码',
+    body:'该操作会立即更新当前平台管理员登录凭据，完成后需要重新登录。',
+    impact:['仅修改当前平台管理员账号密码','不会重置未知管理员，也不会写入客户业务数据'],
+    reason:'请只在确认当前登录人拥有平台管理权限时执行。',
+    confirmLabel:'修改并退出登录',
+    fields:[
+      {name:'current_password',label:'当前密码',type:'password',required:true,autocomplete:'current-password'},
+      {name:'new_password',label:'新密码',type:'password',required:true,autocomplete:'new-password'},
+      {name:'confirm_password',label:'再次输入新密码',type:'password',required:true,autocomplete:'new-password'}
+    ]
+  }).then(function(values){
+    if(!values)return;
+    if(values.new_password!==values.confirm_password){showToast('两次输入的新密码不一致',true);return;}
+    apiFetch('/api/me/password',{method:'POST',body:{current_password:values.current_password,new_password:values.new_password}}).then(function(){
+      showToast('平台管理员密码已修改，请重新登录');
+      logout();
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+
+function platformRoleOptions(selected){
+  return ['platform_customer_ops','platform_finance','platform_release_manager','platform_auditor','platform_admin'].map(function(role){
+    return '<option value="'+role+'" '+(role===selected?'selected':'')+'>'+esc(roleName(role))+'</option>';
+  }).join('');
+}
+function platformPermissionSummary(role){
+  return platformRoleDescriptions[role]||'自定义维护权限';
+}
+function loadPlatformOperators(){
+  if(!can('manage_platform_operators'))return Promise.resolve();
+  return apiFetch('/api/platform/operators').then(function(data){
+    var rows=(data.items||[]).map(function(op){
+      var isSelf=currentUser&&Number(currentUser.id)===Number(op.id);
+      var status=op.is_active?'<span class="badge active">正常</span>':'<span class="badge disabled">已停用</span>';
+      var roleSelect='<select data-operator-role="'+esc(op.id)+'">'+platformRoleOptions(op.role)+'</select>';
+      var actions='<button class="btn" onclick="updatePlatformOperatorRole('+op.id+')">保存权限</button> ';
+      if(isSelf){
+        actions+='<span class="muted">当前登录账号</span>';
+      }else{
+        actions+='<button class="btn" onclick="resetPlatformOperatorPassword('+op.id+',&quot;'+esc(op.username)+'&quot;)">重置密码</button> ';
+        actions+=op.is_active?'<button class="btn" onclick="disablePlatformOperator('+op.id+',&quot;'+esc(op.username)+'&quot;)">停用</button>':'<button class="btn green" onclick="enablePlatformOperator('+op.id+',&quot;'+esc(op.username)+'&quot;)">启用</button>';
+      }
+      return {cells:[
+        '<span class="strong">'+esc(op.username)+'</span><div class="muted">ID '+esc(op.id)+'</div>',
+        roleSelect,
+        status,
+        '<span class="muted">'+esc(platformPermissionSummary(op.role))+'</span>',
+        '<div class="actions">'+actions+'</div>'
+      ]};
+    });
+    document.getElementById('platformOperatorList').innerHTML=rows.length?tableRaw(['账号','岗位权限','状态','权限说明','操作'],rows):'<div class="empty">暂无维护人员账号</div>';
+  }).catch(function(e){document.getElementById('platformOperatorList').innerHTML='<div class="empty">'+esc(e.message)+'</div>';});
+}
+function createPlatformOperator(){
+  if(!requirePerm('manage_platform_operators','创建维护人员'))return;
+  var username=text('operatorUsername');
+  var password=document.getElementById('operatorPassword').value;
+  var role=document.getElementById('operatorRole').value;
+  if(!username||!password){showToast('请填写维护人员账号和初始密码',true);return;}
+  apiFetch('/api/platform/operators',{method:'POST',body:{username:username,password:password,role:role}}).then(function(){
+    showToast('维护人员已创建');
+    document.getElementById('operatorUsername').value='';
+    document.getElementById('operatorPassword').value='';
+    return Promise.all([loadPlatformOperators(),loadOperationLogs()]);
+  }).catch(function(e){showToast(e.message,true);});
+}
+function updatePlatformOperatorRole(id){
+  if(!requirePerm('manage_platform_operators','调整维护人员权限'))return;
+  var select=document.querySelector('[data-operator-role="'+id+'"]');
+  if(!select)return;
+  apiFetch('/api/platform/operators/'+id,{method:'PATCH',body:{role:select.value}}).then(function(){
+    showToast('维护人员权限已更新');
+    return Promise.all([loadPlatformOperators(),loadOperationLogs()]);
+  }).catch(function(e){showToast(e.message,true);});
+}
+function resetPlatformOperatorPassword(id,username){
+  if(!requirePerm('manage_platform_operators','重置维护人员密码'))return;
+  showAdminDialog({
+    title:'重置维护人员密码',
+    tone:'danger',
+    body:'该操作会替换维护人员后台登录密码，并清理该账号现有会话。',
+    impact:['目标账号：'+username,'不会读取或展示原密码'],
+    confirmLabel:'重置密码',
+    fields:[
+      {name:'new_password',label:'新密码，至少 8 位',type:'password',required:true,autocomplete:'new-password'},
+      {name:'confirm_password',label:'再次输入新密码',type:'password',required:true,autocomplete:'new-password'}
+    ]
+  }).then(function(values){
+    if(!values)return;
+    if(values.new_password!==values.confirm_password){showToast('两次输入的新密码不一致',true);return;}
+    apiFetch('/api/platform/operators/'+id+'/password',{method:'POST',body:{new_password:values.new_password}}).then(function(){
+      showToast('维护人员密码已重置');
+      return Promise.all([loadPlatformOperators(),loadOperationLogs()]);
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function disablePlatformOperator(id,username){
+  if(!requirePerm('manage_platform_operators','停用维护人员'))return;
+  showAdminDialog({
+    title:'停用维护人员',
+    tone:'danger',
+    body:'停用后该维护人员不能继续登录后台。',
+    impact:['目标账号：'+username,'该账号现有服务端会话会失效'],
+    confirmLabel:'停用账号'
+  }).then(function(values){
+    if(!values)return;
+    apiFetch('/api/platform/operators/'+id+'/disable',{method:'POST',body:{}}).then(function(){
+      showToast('维护人员已停用');
+      return Promise.all([loadPlatformOperators(),loadOperationLogs()]);
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function enablePlatformOperator(id,username){
+  if(!requirePerm('manage_platform_operators','启用维护人员'))return;
+  apiFetch('/api/platform/operators/'+id+'/enable',{method:'POST',body:{}}).then(function(){
+    showToast('维护人员已启用');
+    return Promise.all([loadPlatformOperators(),loadOperationLogs()]);
+  }).catch(function(e){showToast(e.message,true);});
+}
+
+function loadPlatformBackups(){
+  if(!can('manage_backups'))return Promise.resolve();
+  return apiFetch('/api/platform/backups').then(function(data){
+    var rows=(data.items||[]).map(function(item){
+      var safe=esc(item.filename);
+      return {cells:[esc(item.created_at),safe,formatBytes(item.size),backupValidationText(item.validation),backupSummaryText(item.validation),'<div class="actions"><button class="btn" onclick="downloadPlatformBackup(&quot;'+safe+'&quot;)">下载</button><button class="btn red" onclick="restorePlatformBackup(&quot;'+safe+'&quot;)"'+((item.validation||{}).status==='failed'?' disabled':'')+'>恢复</button></div>']};
+    });
+    document.getElementById('platformBackupList').innerHTML=rows.length?tableRaw(['时间','文件','大小','校验','核心数据摘要','操作'],rows):'<div class="empty">暂无备份</div>';
+  }).catch(function(e){document.getElementById('platformBackupList').innerHTML='<div class="empty">'+esc(e.message)+'</div>';});
+}
+function createPlatformBackup(){
+  if(!requirePerm('manage_backups','创建平台备份'))return;
+  apiFetch('/api/platform/backups',{method:'POST',body:{}}).then(function(data){
+    showToast('备份已创建并校验通过：'+data.filename);
+    return Promise.all([loadPlatformBackups(),loadOperationLogs()]);
+  }).catch(function(e){showToast(e.message,true);});
+}
+function downloadPlatformBackup(filename){
+  if(!requirePerm('manage_backups','下载平台备份'))return;
+  fetch('/api/platform/backups/'+encodeURIComponent(filename),{credentials:'same-origin'}).then(function(res){
+    if(!res.ok)throw new Error('下载失败 '+res.status);
+    return res.blob().then(function(blob){
+      var link=document.createElement('a');
+      link.href=URL.createObjectURL(blob);
+      link.download=filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(function(){URL.revokeObjectURL(link.href);},1000);
+    });
+  }).catch(function(e){showToast(e.message,true);});
+}
+function restorePlatformBackup(filename){
+  if(!requirePerm('manage_backups','恢复平台备份'))return;
+  showAdminDialog({
+    title:'恢复平台备份',
+    tone:'danger',
+    body:'恢复会覆盖当前 SaaS 数据库，系统会先自动创建当前数据的保护备份。',
+    impact:['目标备份：'+filename,'当前所有客户、账号、资料、方案和日志会回到该备份状态','恢复后当前登录会话可能失效，需要重新登录'],
+    reason:'仅在确认该备份来源可靠、且已通知相关操作人后执行。',
+    confirmText:'恢复备份',
+    confirmLabel:'恢复备份'
+  }).then(function(values){
+    if(!values)return;
+    apiFetch('/api/platform/restore',{method:'POST',body:{filename:filename,confirm_text:values.confirm_text}}).then(function(data){
+      showToast('已恢复并校验通过：'+data.restored);
+      setTimeout(function(){window.location.reload();},500);
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function backupValidationText(validation){
+  validation=validation||{};
+  if(validation.status==='ok')return '<span class="status active">校验通过</span>';
+  return '<span class="status disabled" title="'+esc(validation.message||'校验失败')+'">校验失败</span>';
+}
+function backupSummaryText(validation){
+  var summary=(validation||{}).core_summary||{};
+  if((validation||{}).status!=='ok')return '<span class="muted">不可读取</span>';
+  var schemes=Number(summary.day1_schemes||0)+Number(summary.module_schemes||0);
+  return esc('客户 '+Number(summary.tenants||0)+' · 账号 '+Number(summary.users||0)+' · 客户资料 '+Number(summary.customers||0)+' · 供方 '+Number(summary.suppliers||0)+' · 方案 '+schemes);
+}
+function formatBytes(size){
+  size=Number(size||0);
+  if(size>=1024*1024)return (size/1024/1024).toFixed(1)+' MB';
+  if(size>=1024)return (size/1024).toFixed(1)+' KB';
+  return size+' B';
+}
+
+function loadReleaseCenter(){
+  if(!can('read_releases'))return Promise.resolve();
+  return apiFetch('/api/platform/releases').then(function(data){
+    var modules=data.modules||[];
+    var checklist=data.handoff_checklist||[];
+    var rows=modules.map(function(m){
+      return {cells:[
+        '<span class="strong">'+esc(m.name)+'</span><div class="muted">'+esc(m.status)+'</div>',
+        esc(m.admin_window),
+        esc(m.customer_window),
+        esc(m.release_method),
+        '<button class="btn primary" onclick="scrollToModuleWorkbench()">查看发布操作</button>'
+      ]};
+    });
+    document.getElementById('releaseCenter').innerHTML=
+      '<div class="release-grid">'+
+        releaseCard('交付阶段',data.phase||'线上 SaaS 首发版')+
+        releaseCard('当前模式',data.current_runtime)+
+        releaseCard('客户使用入口',data.customer_entry)+
+        releaseCard('版本窗口',data.release_window)+
+      '</div>'+
+      '<div class="section-title">线上 SaaS 上线检查</div>'+
+      (checklist.length?tableRaw(['事项','状态','说明'],checklist.map(function(item){return {cells:[esc(item.name),esc(item.status),esc(item.note)]};})):'<div class="empty">暂无交付检查项</div>')+
+      '<div class="section-title">正式上线边界</div>'+
+      '<div class="status-note">'+esc(data.production_boundary||'正式服务必须使用独立服务器、独立数据和 HTTPS 域名。')+'</div>'+
+      '<div class="section-title">客户交付方式</div>'+
+      '<div class="status-note">'+esc(data.delivery_rule||'客户通过正式网址登录使用，不再以安装包作为主要交付方式。')+'</div>'+
+      '<div class="section-title">客户升级规则</div>'+
+      '<div class="status-note">'+
+        '<div><span class="strong">SaaS：</span>'+esc(data.customer_upgrade_rule)+'</div>'+
+        '<div style="margin-top:6px"><span class="strong">私有化：</span>'+esc(data.private_upgrade_rule)+'</div>'+
+      '</div>'+
+      '<div class="section-title">模块交付清单</div>'+
+      (rows.length?tableRaw(['模块','维护窗口','客户窗口','升级方式','操作'],rows):'<div class="empty">暂无模块</div>');
+  }).catch(function(e){document.getElementById('releaseCenter').innerHTML='<div class="empty">'+esc(e.message)+'</div>';});
+}
+function scrollToModuleWorkbench(){
+  var target=document.getElementById('moduleWorkbench');
+  if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function loadModuleWorkbench(){
+  if(!can('read_releases'))return Promise.resolve();
+  return apiFetch('/api/platform/modules/'+moduleWorkbenchKey).then(function(m){
+    var c=m.config||{};
+    var latest=m.latest_release||null;
+    var current=m.current_release||null;
+    var file=m.file_status||{};
+    var configDisabled=can('manage_module_config')?'':' disabled';
+    var releaseDisabled=can('manage_releases')?'':' disabled';
+    var configSave=can('manage_module_config')?'<button class="btn primary" onclick="saveDay1ModuleConfig()">保存配置</button>':'<span class="muted">只读查看配置</span>';
+    var releaseActions=can('manage_releases')
+      ? '<div class="status-note" style="margin-bottom:10px"><label class="strong" for="releaseNotes">本次更新说明（必填）</label><textarea id="releaseNotes" required aria-required="true" maxlength="500" placeholder="例如：优化打印明细，新增报价导出，修复启用按钮点击问题。"></textarea></div><div class="actions"><button class="btn primary" onclick="generateDay1CustomerApp()">生成客户最新版</button><button class="btn" onclick="openCustomerApp()">打开客户使用页验收</button></div>'
+      : '<div class="status-note" style="margin-bottom:10px">当前账号可查看发布状态，不能生成候选版本或提交验收。</div><div class="actions"><button class="btn" onclick="openCustomerApp()">打开客户使用页查看</button></div>';
+    moduleWorkbenchEntry=m.customer_entry||'/modules.html';
+    var moduleOptions=[['day1','单日大研学'],['multiday','多日大研学'],['dispatch','派车宝']].map(function(item){return '<option value="'+item[0]+'" '+(moduleWorkbenchKey===item[0]?'selected':'')+'>'+item[1]+'</option>';}).join('');
+    var day1FeatureToggles=moduleWorkbenchKey==='day1'?('<label class="badge"><input id="day1ConfigSupplierStats" data-config-key="supplier_stats_enabled" type="checkbox" '+(c.supplier_stats_enabled!==false?'checked':'')+configDisabled+'> 供方统计</label><label class="badge"><input id="day1ConfigPrepurchase" data-config-key="prepurchase_enabled" type="checkbox" '+(c.prepurchase_enabled!==false?'checked':'')+configDisabled+'> 预采买台账</label>'):'';
+    document.getElementById('moduleWorkbench').innerHTML=
+      '<div class="row" style="margin-bottom:14px"><label class="strong" for="moduleWorkbenchSelect">当前维护模块</label><select id="moduleWorkbenchSelect" onchange="moduleWorkbenchKey=this.value;loadModuleWorkbench()">'+moduleOptions+'</select><a class="btn" href="/modules.html" target="_blank">打开客户模块中心</a></div>'+
+      '<div class="release-grid">'+
+        releaseCard('当前客户版',current?current.version_label:'暂无正式版')+
+        releaseCard('最近生成',latest?latest.version_label:'暂无生成记录')+
+        releaseCard('客户页文件',file.exists?('已生成 '+formatBytes(file.size||0)):'未生成')+
+        releaseCard('验收状态',current?'已发布':'待验收')+
+      '</div>'+
+      '<div class="section-title">发布流程</div>'+
+      tableRaw(['步骤','操作窗口','结果'],[
+        {cells:['1. 修改模块',esc(m.source_entry),'先在源页面或构建脚本完成业务功能修改']},
+        {cells:['2. 生成最新版','发布工作台','填写必填的本次更新说明，点击生成客户最新版']},
+        {cells:['3. 打开验收','客户使用页 '+esc(m.customer_entry),'检查客户登录、保存、调出、打印、导出五项实际流程']},
+        {cells:['4. 确认发布','发布记录','勾选五项验收证据，再发布或回滚为当前客户版']}
+      ])+
+      '<div class="section-title">维护链路</div>'+
+      tableRaw(['项目','位置'],[
+        {cells:['维护源头',esc(m.source_entry)]},
+        {cells:['生成页面',esc(m.generated_entry)]},
+        {cells:['当前客户页文件',esc(file.label||'未生成')]},
+        {cells:['客户怎么用新版',esc(m.customer_usage)]},
+        {cells:['维护规则',esc(m.maintenance_rule)]}
+        ])+
+      '<div class="section-title">模块配置</div>'+
+      '<div class="status-note">'+
+        '<div class="row" style="margin-bottom:10px">'+
+          '<input id="day1ConfigModuleTitle" class="grow" value="'+esc(c.module_title||m.name)+'" placeholder="模块显示名称"'+configDisabled+'>'+
+          '<input id="day1ConfigCustomerEntryLabel" class="grow" value="'+esc(c.customer_entry_label||'客户使用入口')+'" placeholder="客户入口名称"'+configDisabled+'>'+
+        '</div>'+
+        '<div class="row">'+
+          day1FeatureToggles+
+          configSave+
+        '</div>'+
+      '</div>'+
+      '<div class="section-title">发布操作</div>'+
+      releaseActions+
+      '<div class="status-note" style="margin-top:12px">'+
+        '<div>构建命令：'+esc(m.build_command)+'</div>'+
+        '<div>重启命令：'+esc(m.restart_command)+'</div>'+
+        '<div>客户刷新 '+esc(m.customer_entry)+' 使用最新版</div>'+
+      '</div>'+
+      '<div id="moduleBuildResult" class="status-note" style="display:none;margin-top:12px"></div>'+
+      '<div class="section-title">发布验收门槛</div>'+
+      '<div class="status-note" id="acceptanceEvidenceGate">'+
+        '<div class="strong" style="margin-bottom:8px">本次发布前请逐项完成并确认</div>'+
+        '<div class="row">'+
+          '<label class="badge"><input id="acceptanceEvidenceCustomerLogin" type="checkbox"'+releaseDisabled+'> 客户登录</label>'+
+          '<label class="badge"><input id="acceptanceEvidenceSave" type="checkbox"'+releaseDisabled+'> 保存</label>'+
+          '<label class="badge"><input id="acceptanceEvidenceLoad" type="checkbox"'+releaseDisabled+'> 调出</label>'+
+          '<label class="badge"><input id="acceptanceEvidencePrint" type="checkbox"'+releaseDisabled+'> 打印</label>'+
+          '<label class="badge"><input id="acceptanceEvidenceExport" type="checkbox"'+releaseDisabled+'> 导出</label>'+
+        '</div>'+
+        '<div class="muted" style="margin-top:8px">发布和历史版本回滚都必须提交本次五项验收结果。</div>'+
+      '</div>'+
+      '<div class="section-title">发布记录</div>'+
+      '<div id="moduleReleaseRecords">'+renderModuleReleaseRecords(m.release_records||[])+'</div>';
+  }).catch(function(e){document.getElementById('moduleWorkbench').innerHTML='<div class="empty">'+esc(e.message)+'</div>';});
+}
+function saveDay1ModuleConfig(){
+  if(!requirePerm('manage_module_config','保存模块配置'))return;
+  var body={
+    module_title:text('day1ConfigModuleTitle'),
+    customer_entry_label:text('day1ConfigCustomerEntryLabel')
+  };
+  if(moduleWorkbenchKey==='day1'){
+    body.supplier_stats_enabled=document.getElementById('day1ConfigSupplierStats').checked;
+    body.prepurchase_enabled=document.getElementById('day1ConfigPrepurchase').checked;
+  }
+  apiFetch('/api/platform/modules/'+moduleWorkbenchKey+'/config',{method:'PATCH',body:body}).then(function(){
+    showToast('模块配置已保存');
+    return Promise.all([loadModuleWorkbench(),loadOperationLogs()]);
+  }).catch(function(e){showToast(e.message,true);});
+}
+function generateDay1CustomerApp(){
+  if(!requirePerm('manage_releases','生成客户最新版'))return;
+  var releaseNotes=text('releaseNotes');
+  if(!releaseNotes){
+    showToast('请填写本次更新说明',true);
+    var input=document.getElementById('releaseNotes');
+    if(input)input.focus();
+    return;
+  }
+  renderModuleBuildResult({status:'running',message:'正在生成客户最新版'});
+  apiFetch('/api/platform/modules/'+moduleWorkbenchKey+'/build',{method:'POST',body:{release_notes:releaseNotes}}).then(function(data){
+    showToast('已生成客户最新版');
+    return Promise.all([loadModuleWorkbench(),loadOperationLogs()]).then(function(){renderModuleBuildResult(data);});
+  }).catch(function(e){renderModuleBuildResult({status:'failed',message:'生成失败',error:e.message});showToast(e.message,true);});
+}
+function candidateShaDigest(value){
+  value=String(value||'');
+  return value?value.slice(0,12)+'…':'无';
+}
+function candidateReleaseResult(r){
+  if(r.status!=='built')return '<span class="breakable muted">'+esc(r.error||'生成失败')+'</span>';
+  return '<div class="muted">候选 SHA-256 摘要：'+esc(candidateShaDigest(r.candidate_sha256))+'</div>'+ 
+    '<div class="muted">大小：'+esc(formatBytes(r.candidate_size||0))+'</div>'+ 
+    '<div class="muted">生成时间：'+esc(r.candidate_generated_at||'未记录')+'</div>'+ 
+    '<div class="muted">回滚：'+esc(r.rollback_available?'可回滚':'不可回滚')+'</div>';
+}
+function renderModuleReleaseRecords(records){
+  if(!records.length)return '<div class="empty">暂无发布记录</div>';
+  return tableRaw(['版本','时间','操作人','状态','发布说明','验收','结果','操作'],records.map(function(r){
+    var status=r.status==='built'?'成功':'失败';
+    var accepted=r.acceptance_status==='accepted';
+    var evidence=r.acceptance_evidence||{};
+    var evidenceCount=['customer_login','save','load','print','export'].filter(function(key){return evidence[key]===true;}).length;
+    var acceptance=accepted?'当前正式版':(r.accepted_at?('曾发布 '+esc(r.accepted_at)):'未验收');
+    if(r.accepted_at)acceptance+='<div class="muted">验收证据 '+evidenceCount+'/5</div>';
+    var action='';
+    if(can('manage_releases')&&r.status==='built'&&!accepted&&r.rollback_available){
+      action='<button class="btn green" onclick="acceptDay1Release('+r.id+')">'+(r.accepted_at?'重新验收并回滚':'验收通过并发布')+'</button>';
+    }else if(r.status==='built'&&!accepted){
+      action='<span class="muted">候选不可用</span>';
+    }
+    return {cells:[
+      '<span class="nowrap strong">'+esc(r.version_label||('客户版 #'+r.id))+'</span>',
+      '<span class="nowrap">'+esc(r.created_at)+'</span>',
+      esc(r.actor_username),
+      esc(status),
+      esc(r.release_notes||'未填写'),
+      '<span class="nowrap">'+acceptance+'</span>',
+      candidateReleaseResult(r),
+      action
+    ]};
+  }));
+}
+function collectDay1AcceptanceEvidence(){
+  return {
+    customer_login:document.getElementById('acceptanceEvidenceCustomerLogin').checked,
+    save:document.getElementById('acceptanceEvidenceSave').checked,
+    load:document.getElementById('acceptanceEvidenceLoad').checked,
+    print:document.getElementById('acceptanceEvidencePrint').checked,
+    export:document.getElementById('acceptanceEvidenceExport').checked
+  };
+}
+function acceptDay1Release(id){
+  if(!requirePerm('manage_releases','提交发布验收'))return;
+  var evidence=collectDay1AcceptanceEvidence();
+  var labels={customer_login:'客户登录',save:'保存',load:'调出',print:'打印',export:'导出'};
+  var missing=Object.keys(labels).filter(function(key){return evidence[key]!==true;}).map(function(key){return labels[key];});
+  if(missing.length){showToast('请先完成五项验收：'+missing.join('、'),true);return;}
+  showAdminDialog({
+    title:'发布验收确认',
+    tone:'danger',
+    body:'确认该候选版本已经完成客户登录、保存、调出、打印、导出五项真实验收。',
+    impact:['模块：'+moduleWorkbenchKey,'发布记录 ID：'+id,'通过后会替换为当前客户使用版本'],
+    reason:'未完成管理员验收时不得发布，也不得把本机代码更新说成正式发布。',
+    confirmText:'发布当前版本',
+    confirmLabel:'验收通过并发布'
+  }).then(function(values){
+    if(!values)return;
+    apiFetch('/api/platform/modules/'+moduleWorkbenchKey+'/releases/'+id+'/accept',{method:'POST',body:{acceptance_evidence:evidence}}).then(function(){
+      showToast('已标记为当前正式版');
+      return Promise.all([loadModuleWorkbench(),loadOperationLogs()]);
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function renderModuleBuildResult(data){
+  var box=document.getElementById('moduleBuildResult');
+  if(!box)return;
+  var isFailed=data.status==='failed';
+  box.style.display='block';
+  box.style.borderColor=isFailed?'#efb4b0':'var(--line)';
+  box.innerHTML=
+    '<div class="strong">'+esc(isFailed?'生成失败':data.message||'生成结果')+'</div>'+
+    (data.candidate_sha256?'<div>候选 SHA-256 摘要：'+esc(candidateShaDigest(data.candidate_sha256))+'</div>':'')+
+    (data.candidate_size?'<div>大小：'+esc(formatBytes(data.candidate_size))+'</div>':'')+
+    (data.candidate_generated_at?'<div>生成时间：'+esc(data.candidate_generated_at)+'</div>':'')+
+    (data.candidate_sha256?'<div>回滚：'+esc(data.rollback_available?'可回滚':'不可回滚')+'</div>':'')+
+    (data.error?'<div>错误：'+esc(data.error)+'</div>':'');
+}
+function openCustomerApp(){window.open(moduleWorkbenchEntry,'_blank');}
+function releaseCard(title,text){return '<div class="release-card"><div class="title">'+esc(title)+'</div><div class="text">'+esc(text||'未设置')+'</div></div>';}
+
+function signupActions(r){
+  var actions='';
+  if(can('manage_signup_requests')&&r.status==='pending'){
+    actions+=actionButton('通过','approve-signup',r.id,r.name,'primary')+' ';
+    actions+=actionButton('拒绝','reject-signup',r.id,r.name,'red')+' ';
+  }
+  if(can('manage_signup_requests'))actions+=actionButton('删除记录','delete-signup-request',r.id,r.name,'');
+  if(!actions)actions='<span class="muted">只读</span>';
+  return '<div class="signup-actions">'+actions+'</div>';
+}
+function signupModuleNames(r){
+  var labels={day1:'单日大研学',multiday:'多日大研学',dispatch:'派车宝'};
+  return (r.requested_modules||[]).map(function(key){return labels[key]||key;}).join('、')||'单日大研学';
+}
+function signupStatusName(status){return {pending:'待审核',approved:'已通过',rejected:'已拒绝'}[status]||status;}
+function signupModulesCell(r){
+  return '<div class="signup-modules">'+signupModuleNames(r).split('、').map(function(name){return '<span>'+esc(name)+'</span>';}).join('')+'</div>';
+}
+function signupStatusCell(status){
+  var statusClass={pending:'pending',approved:'approved',rejected:'rejected'}[status]||'';
+  return '<span class="signup-status '+statusClass+'">'+esc(signupStatusName(status))+'</span>';
+}
+function signupDateTimeCell(value){
+  var parts=String(value||'').trim().replace('T',' ').replace(/Z$/,'').split(/\s+/);
+  if(!parts[0])return '<span class="muted">未记录</span>';
+  return '<div class="signup-datetime"><span>'+esc(parts[0])+'</span>'+(parts[1]?'<span>'+esc(parts[1])+'</span>':'')+'</div>';
+}
+function loadSignupRequests(options){
+  options=options||{};
+  if(!can('read_signup_requests'))return Promise.resolve();
+  return apiFetch('/api/platform/signup-requests').then(function(data){
+    signupRequestsById={};
+    var rows=(data.items||[]).map(function(r){
+      signupRequestsById[String(r.id)]=r;
+      var contact='<div class="signup-contact"><span>'+esc(r.contact_name||'未填写')+'</span><span class="muted">'+esc(r.contact_phone||'未填写')+'</span></div>';
+      return {cells:[
+        esc(r.name),
+        contact,
+        esc(r.admin_username),
+        signupModulesCell(r),
+        esc(r.estimated_users||10),
+        esc(r.notes||'无'),
+        signupStatusCell(r.status),
+        signupDateTimeCell(r.created_at),
+        signupActions(r)
+      ]};
+    });
+    document.getElementById('signupRequestList').innerHTML=rows.length?tableRaw(['客户单位','联系人','拟用管理员账号','所需模块','预计账号数','备注','状态','申请时间','操作'],rows,'signup-request-table'):'<div class="empty">暂无客户申请</div>';
+  }).catch(function(e){if(!options.silent)showToast(e.message,true);});
+}
+function approveSignup(id){
+  if(!requirePerm('manage_signup_requests','审核客户申请'))return;
+  var request=signupRequestsById[String(id)]||{};
+  var browserAccess=runtimeDeployment==='public-test'&&Boolean(request.browser_access);
+  var fields=[
+    {name:'max_users',label:'客户用户数上限',type:'number',value:String(request.estimated_users||10),min:1,max:10000,required:true},
+    {name:'expires_at',label:'到期日期，可留空',type:'date'}
+  ];
+  if(!browserAccess)fields.unshift({name:'admin_password',label:'客户管理员初始密码',type:'password',autocomplete:'new-password',minlength:6,required:true});
+  showAdminDialog({
+    title:'通过客户注册申请',
+    body:browserAccess?'通过后会创建客户单位，客户原申请页面将自动进入曜程。':'通过后会创建客户单位和客户超级管理员账号。',
+    impact:[
+      '联系人：'+(request.contact_name||'未填写')+' '+(request.contact_phone||''),
+      '拟用管理员账号：'+(request.admin_username||'未填写'),
+      '开通模块：'+signupModuleNames(request),
+      browserAccess?'无需设置或传递密码；仅申请时的浏览器可以直接进入':'该申请没有浏览器试用凭证，需要设置初始密码'
+    ],
+    confirmLabel:'通过申请',
+    fields:fields
+  }).then(function(values){
+    if(!values)return;
+    var body={max_users:values.max_users,expires_at:values.expires_at};
+    if(values.admin_password)body.admin_password=values.admin_password;
+    apiFetch('/api/platform/signup-requests/'+id+'/approve',{method:'POST',body:body}).then(function(data){
+      selectedTenantId=data.tenant_id;showToast('申请已通过');return refreshAll().then(function(){return loadTenantDetail(data.tenant_id);});
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function rejectSignup(id,name){
+  if(!requirePerm('manage_signup_requests','拒绝客户申请'))return;
+  showAdminDialog({
+    title:'拒绝客户申请',
+    tone:'danger',
+    body:'拒绝后该申请会标记为 rejected，不会创建客户单位。',
+    impact:['客户单位：'+name],
+    confirmLabel:'拒绝申请',
+    fields:[{name:'reason',label:'拒绝原因',type:'textarea',value:'客户信息填写错误',required:true}]
+  }).then(function(values){
+    if(!values)return;
+    apiFetch('/api/platform/signup-requests/'+id+'/reject',{method:'POST',body:{reason:values.reason}}).then(function(){showToast('申请已拒绝');return refreshAll();}).catch(function(e){showToast(e.message,true);});
+  });
+}
+function deleteSignupRequest(id,name){
+  if(!requirePerm('manage_signup_requests','删除客户申请记录'))return;
+  showAdminDialog({
+    title:'删除申请记录',
+    tone:'danger',
+    body:'删除后该申请记录不再出现在审核列表。',
+    impact:['客户单位：'+name,'不会删除已创建客户单位；如已通过，请到客户单位列表维护'],
+    confirmLabel:'删除记录'
+  }).then(function(values){
+    if(!values)return;
+    apiFetch('/api/platform/signup-requests/'+id,{method:'DELETE'}).then(function(){showToast('申请记录已删除');return refreshAll();}).catch(function(e){showToast(e.message,true);});
+  });
+}
+
+function loadTenantDetail(id){
+  if(!can('read_tenants'))return Promise.resolve();
+  selectedTenantId=id;
+  return apiFetch('/api/platform/tenants/'+id).then(function(data){
+    currentTenantDetail=data;
+    var t=data.tenant;
+    document.getElementById('detailName').textContent=t.name;
+    document.getElementById('detailSub').textContent='ID '+t.id+' / '+statusName(t.status);
+    var impact=data.delete_impact||{};
+    var users=(data.users||[]).map(function(u){return {cells:[esc(u.username),esc(roleName(u.role)),u.is_active?'正常':'已停用',userAccountActions(u)]};});
+    var schemes=(data.recent_schemes||[]).map(function(s){return {cells:[esc(s.project_date),esc(s.customer_name),esc(s.scheme_name),esc(s.version)]};});
+    var module=data.day1_module||{};
+    var moduleDisabled=can('update_tenant_modules')?'':' disabled';
+    var moduleSave=can('update_tenant_modules')?'<button class="btn primary" onclick="saveTenantModules()">保存模块授权</button>':'<span class="muted">只读查看模块授权</span>';
+    var moduleAuthorizations=(data.modules||[]).map(function(item){return '<label class="badge"><input type="checkbox" data-tenant-module="'+esc(item.key)+'" '+(item.enabled?'checked':'')+moduleDisabled+'> '+esc(item.name)+'</label>';}).join('');
+    var logs=(data.recent_logs||[]).map(function(log){return {cells:[esc(log.created_at),esc(actionName(log.action)),esc(log.actor_username||''),esc(log.target_name||'')]};});
+    var deleteImpactAction=can('purge_tenant')?'<div class="actions" style="margin-top:10px"><button class="btn red" onclick="purgeTenant(selectedTenantId)">高危彻底删除</button></div>':'';
+    var maintenanceRows=[];
+    if(can('update_tenant_profile')){
+      maintenanceRows.push('<input id="editTenantName" value="'+esc(t.name)+'" placeholder="客户单位名称"><div class="row"><input id="editTenantMaxUsers" class="small" type="number" min="1" value="'+esc(t.max_users)+'"><input id="editTenantExpires" class="date" type="date" value="'+esc(t.expires_at||'')+'"></div><div class="row"><button class="btn primary" onclick="updateTenant()">保存修改</button></div>');
+    }
+    var maintenanceButtons=[];
+    if(can('renew_tenant'))maintenanceButtons.push('<button class="btn" onclick="renewTenant(selectedTenantId)">续费/延期</button>');
+    if(can('update_tenant_quota'))maintenanceButtons.push('<button class="btn" onclick="updateTenantQuota(selectedTenantId)">调整名额</button>');
+    if(can('reset_tenant_accounts'))maintenanceButtons.push('<button class="btn" onclick="resetTenantAdminPassword()">重置管理员密码</button>');
+    if(maintenanceButtons.length)maintenanceRows.push('<div class="row">'+maintenanceButtons.join('')+'</div>');
+    var maintenanceHtml=maintenanceRows.length?('<div class="section-title">维护</div><div class="stack">'+maintenanceRows.join('')+'</div>'):'<div class="section-title">维护</div><div class="empty">当前账号只读或不负责该客户维护动作</div>';
+    document.getElementById('tenantDetail').innerHTML=
+      '<div class="detail-grid">'+
+        infoRaw('账号使用',accountUsage(t.user_count,t.max_users))+info('到期',t.expires_at||'未设置')+
+        info('客户库',t.customer_count)+info('供方库',t.supplier_count)+
+        info('单日方案',t.scheme_count)+info('预采买台账',t.prepurchase_ledger_count)+
+      '</div>'+
+      '<div class="section-title">模块状态</div>'+
+      '<div class="status-note"><div class="strong" style="margin-bottom:8px">客户模块授权</div><div class="row">'+moduleAuthorizations+moduleSave+'</div><div class="muted" style="margin-top:8px">关闭后该客户及其员工会立即失去模块入口；重新开启后按账号模块角色恢复。</div></div>'+
+      '<div class="detail-grid">'+
+        info('客户入口名称',module.customer_entry_label||'客户使用入口')+
+        info('单日模块名称',module.module_title||'单日大研学')+
+        info('供方统计',module.supplier_stats_enabled===false?'关闭':'启用')+
+        info('预采买台账',module.prepurchase_enabled===false?'关闭':'启用')+
+      '</div>'+
+      '<div class="section-title">删除影响</div>'+
+      '<div class="status-note">'+
+        '删除该客户单位将删除：'+esc(data.delete_impact_summary||('账号 '+(impact.total_user_count||0)+' 个、客户档案 '+(impact.customer_count||0)+' 条、供方 '+(impact.supplier_count||0)+' 条、方案 '+(impact.scheme_count||0)+' 个、预采买台账 '+(impact.prepurchase_ledger_count||0)+' 条'))+'。有业务数据时请先停用观察，再使用高危彻底删除。'+
+        deleteImpactAction+
+      '</div>'+
+      maintenanceHtml+
+      '<div class="section-title">账号</div>'+(users.length?tableRaw(['账号','角色','状态','操作'],users):'<div class="empty">暂无账号</div>')+
+      '<div class="section-title">最近方案</div>'+(schemes.length?tableRaw(['日期','客户','方案','版本'],schemes):'<div class="empty">暂无方案</div>')+
+      '<div class="section-title">最近维护记录</div>'+(logs.length?tableRaw(['时间','动作','操作人','对象'],logs):'<div class="empty">暂无维护记录</div>');
+    return loadTenants();
+  }).catch(function(e){showToast(e.message,true);});
+}
+function saveTenantModules(){
+  if(!requirePerm('update_tenant_modules','保存客户模块授权'))return;
+  if(!selectedTenantId)return;
+  var modules={};
+  document.querySelectorAll('[data-tenant-module]').forEach(function(input){modules[input.getAttribute('data-tenant-module')]=input.checked;});
+  apiFetch('/api/platform/tenants/'+selectedTenantId+'/modules',{method:'PATCH',body:{modules:modules}}).then(function(){showToast('客户模块授权已更新');return Promise.all([loadTenantDetail(selectedTenantId),loadOperationLogs()]);}).catch(function(e){showToast(e.message,true);});
+}
+function userAccountActions(u){
+  if(!can('reset_tenant_accounts'))return '<span class="muted">只读</span>';
+  var actions='<button class="btn" onclick="resetTenantUserPassword('+u.id+')">重置密码</button> ';
+  actions+=u.is_active?'<button class="btn" onclick="disableTenantUser('+u.id+')">停用</button>':'<button class="btn green" onclick="enableTenantUser('+u.id+')">启用</button>';
+  return '<div class="actions">'+actions+'</div>';
+}
+function tenantUserName(userId){
+  var users=(currentTenantDetail&&currentTenantDetail.users)||[];
+  var user=users.find(function(u){return Number(u.id)===Number(userId);});
+  return user?user.username:'该账号';
+}
+function resetTenantUserPassword(userId){
+  if(!requirePerm('reset_tenant_accounts','重置员工密码'))return;
+  if(!selectedTenantId)return;
+  var username=tenantUserName(userId);
+  showAdminDialog({
+    title:'重置员工密码',
+    tone:'danger',
+    body:'该操作会替换目标员工账号密码，并使其使用新密码登录。',
+    impact:['目标账号：'+username,'不会读取或展示原密码'],
+    reason:'请确认已通过线下方式核验账号归属。',
+    confirmLabel:'重置密码',
+    fields:[
+      {name:'new_password',label:'新密码，至少 6 位',type:'password',required:true,autocomplete:'new-password'},
+      {name:'confirm_password',label:'再次输入新密码',type:'password',required:true,autocomplete:'new-password'}
+    ]
+  }).then(function(values){
+    if(!values)return;
+    if(values.new_password!==values.confirm_password){showToast('两次输入的新密码不一致',true);return;}
+    apiFetch('/api/platform/tenants/'+selectedTenantId+'/users/'+userId+'/password',{method:'POST',body:{new_password:values.new_password}}).then(function(){
+      showToast('员工密码已重置');
+      return Promise.all([loadTenantDetail(selectedTenantId),loadOperationLogs()]);
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function disableTenantUser(userId){
+  if(!requirePerm('reset_tenant_accounts','停用员工账号'))return;
+  if(!selectedTenantId)return;
+  var username=tenantUserName(userId);
+  showAdminDialog({
+    title:'停用员工账号',
+    tone:'danger',
+    body:'停用后该员工不能继续登录客户模块。',
+    impact:['目标账号：'+username,'该账号现有服务端会话会失效'],
+    confirmLabel:'停用账号'
+  }).then(function(values){
+    if(!values)return;
+    apiFetch('/api/platform/tenants/'+selectedTenantId+'/users/'+userId+'/disable',{method:'POST',body:{}}).then(function(){
+      showToast('员工账号已停用');
+      return Promise.all([loadOverview(),loadTenantDetail(selectedTenantId),loadOperationLogs()]);
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function enableTenantUser(userId){
+  if(!requirePerm('reset_tenant_accounts','启用员工账号'))return;
+  if(!selectedTenantId)return;
+  apiFetch('/api/platform/tenants/'+selectedTenantId+'/users/'+userId+'/enable',{method:'POST',body:{}}).then(function(){
+    showToast('员工账号已启用');
+    return Promise.all([loadOverview(),loadTenantDetail(selectedTenantId),loadOperationLogs()]);
+  }).catch(function(e){showToast(e.message,true);});
+}
+function info(k,v){return '<div class="info"><div class="k">'+esc(k)+'</div><div class="v">'+esc(v)+'</div></div>';}
+function infoRaw(k,v){return '<div class="info"><div class="k">'+esc(k)+'</div><div class="v">'+String(v==null?'':v)+'</div></div>';}
+function updateTenant(){
+  if(!requirePerm('update_tenant_profile','修改客户资料'))return;
+  if(!selectedTenantId)return;
+  apiFetch('/api/platform/tenants/'+selectedTenantId,{method:'PATCH',body:{name:text('editTenantName'),max_users:text('editTenantMaxUsers'),expires_at:text('editTenantExpires')}}).then(function(){
+    showToast('客户信息已更新');return Promise.all([loadOverview(),loadTenantDetail(selectedTenantId),loadOperationLogs()]);
+  }).catch(function(e){showToast(e.message,true);});
+}
+function resetTenantAdminPassword(){
+  if(!requirePerm('reset_tenant_accounts','重置客户管理员密码'))return;
+  if(!selectedTenantId)return;
+  var name=currentTenantDetail&&currentTenantDetail.tenant?currentTenantDetail.tenant.name:'当前客户';
+  showAdminDialog({
+    title:'重置客户超级管理员密码',
+    tone:'danger',
+    body:'该操作会替换客户超级管理员密码，不会读取或展示原密码。',
+    impact:['客户单位：'+name,'客户超级管理员需要使用新密码重新登录'],
+    reason:'仅在客户负责人明确申请或平台方完成身份核验后执行。',
+    confirmLabel:'重置管理员密码',
+    fields:[
+      {name:'new_password',label:'新密码，至少 6 位',type:'password',required:true,autocomplete:'new-password'},
+      {name:'confirm_password',label:'再次输入新密码',type:'password',required:true,autocomplete:'new-password'}
+    ]
+  }).then(function(values){
+    if(!values)return;
+    if(values.new_password!==values.confirm_password){showToast('两次输入的新密码不一致',true);return;}
+    apiFetch('/api/platform/tenants/'+selectedTenantId+'/admin-password',{method:'POST',body:{new_password:values.new_password}}).then(function(data){
+      showToast('已重置管理员密码：'+data.username);
+      return loadOperationLogs();
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function disableTenant(id,name){
+  if(!requirePerm('set_tenant_status','停用客户单位'))return;
+  showAdminDialog({
+    title:'停用客户单位',
+    tone:'danger',
+    body:'停用后该客户单位及其员工不能继续登录客户模块。',
+    impact:['客户单位：'+name,'该客户单位所有服务端会话会失效'],
+    confirmLabel:'停用客户'
+  }).then(function(values){
+    if(!values)return;
+    apiFetch('/api/platform/tenants/'+id+'/disable',{method:'POST',body:{}}).then(function(){showToast('客户单位已停用');return Promise.all([refreshAll(),selectedTenantId?loadTenantDetail(selectedTenantId):Promise.resolve()]);}).catch(function(e){showToast(e.message,true);});
+  });
+}
+function enableTenant(id,name){if(!requirePerm('set_tenant_status','启用客户单位'))return;apiFetch('/api/platform/tenants/'+id+'/enable',{method:'POST',body:{}}).then(function(){showToast('客户单位已启用');return Promise.all([refreshAll(),selectedTenantId?loadTenantDetail(selectedTenantId):Promise.resolve()]);}).catch(function(e){showToast(e.message,true);});}
+function renewTenant(id){
+  if(!requirePerm('renew_tenant','续费客户单位'))return;
+  if(!id)return;
+  var tenant=tenants.find(function(t){return Number(t.id)===Number(id);});
+  var detailTenant=currentTenantDetail&&currentTenantDetail.tenant;
+  var name=tenant?tenant.name:(detailTenant?detailTenant.name:'该客户');
+  var current=tenant?(tenant.expires_at||''):(detailTenant?(detailTenant.expires_at||''):'');
+  showAdminDialog({
+    title:'续费/延期客户',
+    body:'更新客户到期日期，留空表示暂不设置到期时间。',
+    impact:['客户单位：'+name,'当前到期日期：'+(current||'未设置')],
+    confirmLabel:'更新到期日期',
+    fields:[{name:'expires_at',label:'新的到期日期，可留空',type:'date',value:current}]
+  }).then(function(values){
+    if(!values)return;
+    apiFetch('/api/platform/tenants/'+id+'/renew',{method:'POST',body:{expires_at:values.expires_at}}).then(function(){
+      showToast('客户到期日期已更新');
+      return Promise.all([refreshAll(),selectedTenantId?loadTenantDetail(selectedTenantId):Promise.resolve()]);
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function updateTenantQuota(id){
+  if(!requirePerm('update_tenant_quota','调整客户用户数'))return;
+  if(!id)return;
+  var tenant=tenants.find(function(t){return Number(t.id)===Number(id);});
+  var detailTenant=currentTenantDetail&&currentTenantDetail.tenant;
+  var name=tenant?tenant.name:(detailTenant?detailTenant.name:'该客户');
+  var current=tenant?(tenant.max_users||''):(detailTenant?(detailTenant.max_users||''):'');
+  showAdminDialog({
+    title:'调整客户用户数',
+    body:'调整该客户可用账号上限。',
+    impact:['客户单位：'+name,'当前用户数上限：'+(current||'未设置')],
+    confirmLabel:'调整名额',
+    fields:[{name:'max_users',label:'新的用户数上限',type:'number',value:current,required:true}]
+  }).then(function(values){
+    if(!values)return;
+    apiFetch('/api/platform/tenants/'+id+'/quota',{method:'POST',body:{max_users:values.max_users}}).then(function(){
+      showToast('客户用户数上限已更新');
+      return Promise.all([refreshAll(),selectedTenantId?loadTenantDetail(selectedTenantId):Promise.resolve()]);
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function deleteTenant(id,name){
+  if(!requirePerm('delete_tenant','删除空客户'))return;
+  apiFetch('/api/platform/tenants/'+id).then(function(data){
+    var impact=data.delete_impact||{};
+    return showAdminDialog({
+      title:'删除空客户',
+      tone:'danger',
+      body:'已有业务数据的客户请先停用，系统会阻止直接删除。',
+      impact:[
+        '客户单位：'+name,
+        '账号 '+(impact.total_user_count||0)+' 个、客户档案 '+(impact.customer_count||0)+' 条、供方 '+(impact.supplier_count||0)+' 条',
+        '方案 '+(impact.scheme_count||0)+' 个、预采买台账 '+(impact.prepurchase_ledger_count||0)+' 条'
+      ],
+      reason:'请输入客户单位名称确认，避免误删。',
+      confirmLabel:'删除客户',
+      fields:[{name:'confirm_name',label:'客户单位名称',type:'text',required:true,placeholder:name}]
+    }).then(function(values){
+      if(!values)return Promise.resolve();
+      if(values.confirm_name!==name){showToast('名称不匹配，已取消删除',true);return Promise.resolve();}
+      return apiFetch('/api/platform/tenants/'+id,{method:'DELETE',body:{confirm_name:name}}).then(function(){
+        showToast('客户单位已删除');
+        if(String(selectedTenantId)===String(id)){selectedTenantId=null;currentTenantDetail=null;document.getElementById('detailName').textContent='客户详情';document.getElementById('detailSub').textContent='选择左侧客户单位查看';document.getElementById('tenantDetail').innerHTML='<div class="empty">还没有选择客户单位</div>';}
+        return refreshAll();
+      });
+    });
+  }).catch(function(e){showToast(e.message,true);});
+}
+function purgeTenant(id){
+  if(!requirePerm('purge_tenant','彻底删除客户数据'))return;
+  if(!id||!currentTenantDetail)return;
+  var name=currentTenantDetail.tenant.name;
+  if(currentTenantDetail.tenant.status!=='disabled'){showToast('请先停用客户单位，再执行高危彻底删除',true);return;}
+  var impact=(currentTenantDetail&&currentTenantDetail.delete_impact)||{};
+  showAdminDialog({
+    title:'高危彻底删除客户数据',
+    tone:'danger',
+    body:'将彻底删除客户单位及其账号、客户库、供方库、方案和预采买数据。系统会先创建保护备份。',
+    impact:[
+      '客户单位：'+name,
+      '账号 '+(impact.total_user_count||0)+' 个、客户档案 '+(impact.customer_count||0)+' 条、供方 '+(impact.supplier_count||0)+' 条',
+      '方案 '+(impact.scheme_count||0)+' 个、预采买台账 '+(impact.prepurchase_ledger_count||0)+' 条'
+    ],
+    reason:'该动作不可直接撤销。必须先停用客户，再输入客户单位名称和确认文字。',
+    confirmText:'彻底删除客户数据',
+    confirmLabel:'彻底删除',
+    fields:[{name:'confirm_name',label:'客户单位名称',type:'text',required:true,placeholder:name}]
+  }).then(function(values){
+    if(!values)return;
+    if(values.confirm_name!==name){showToast('名称不匹配，已取消删除',true);return;}
+    apiFetch('/api/platform/tenants/'+id+'/purge',{method:'POST',body:{confirm_name:name,confirm_text:'彻底删除客户数据'}}).then(function(data){
+      showToast('客户数据已彻底删除，保护备份：'+data.protection_backup);
+      selectedTenantId=null;currentTenantDetail=null;
+      document.getElementById('detailName').textContent='客户详情';
+      document.getElementById('detailSub').textContent='选择左侧客户单位查看';
+      document.getElementById('tenantDetail').innerHTML='<div class="empty">还没有选择客户单位</div>';
+      return Promise.all([refreshAll(),loadPlatformBackups()]);
+    }).catch(function(e){showToast(e.message,true);});
+  });
+}
+function handlePlatformAction(event){
+  var button=event.target.closest('button[data-action]');
+  if(!button)return;
+  var id=parseInt(button.getAttribute('data-id'),10);
+  var name=button.getAttribute('data-name')||'';
+  if(!id)return;
+  var action=button.getAttribute('data-action');
+  if(action==='view-tenant')loadTenantDetail(id);
+  if(action==='approve-signup')approveSignup(id);
+  if(action==='reject-signup')rejectSignup(id,name);
+  if(action==='delete-signup-request')deleteSignupRequest(id,name);
+  if(action==='disable-tenant')disableTenant(id,name);
+  if(action==='enable-tenant')enableTenant(id,name);
+  if(action==='renew-tenant')renewTenant(id);
+  if(action==='quota-tenant')updateTenantQuota(id);
+  if(action==='delete-tenant')deleteTenant(id,name);
+}
+document.addEventListener('click',handlePlatformAction);
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden)stopSignupAutoRefresh();else startSignupAutoRefresh(true);
+});
+ensureSetupReady();
+</script>
+</body>
+</html>

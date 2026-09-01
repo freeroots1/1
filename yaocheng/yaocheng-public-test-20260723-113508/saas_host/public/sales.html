@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="曜程是新未来（天津）教育科技有限公司推出的研学业务线上 SaaS 平台。">
+  <title>曜程 - 研学业务线上 SaaS 平台</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{
+      --page:#f3f7f7;
+      --surface:#ffffff;
+      --surface-soft:#eaf1f1;
+      --ink:#102a36;
+      --muted:#587078;
+      --line:#d5e1e2;
+      --accent:#087f75;
+      --accent-strong:#05685f;
+      --accent-soft:#d8eeeb;
+      --deep:#12384a;
+      --deep-strong:#092735;
+      --danger-bg:#fbe8e8;
+      --danger-ink:#8e2525;
+      --radius:8px;
+      --shadow:0 18px 45px rgba(15,42,54,.12);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;line-height:1.7}
+    button,input,textarea{font:inherit}
+    button{letter-spacing:0}
+    img{max-width:100%}
+    .wrap{width:min(1180px,calc(100% - 40px));margin:0 auto}
+    .skip-link{position:absolute;left:-9999px;top:8px}
+    .skip-link:focus{left:16px;z-index:50;padding:8px 12px;background:var(--surface);color:var(--ink);border-radius:var(--radius);outline:3px solid var(--accent)}
+
+    .site-header{position:sticky;top:0;z-index:12;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+    .header-inner{min-height:72px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:36px}
+    .brand{display:inline-flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none;font-weight:800}
+    .brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:var(--radius);background:var(--deep);color:#fff;font-size:17px}
+    .brand-copy{display:grid;line-height:1.05}
+    .brand-copy small{margin-top:4px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:0}
+    .nav{display:flex;justify-content:center;align-items:center;gap:28px}
+    .nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:700}
+    .nav a:hover,.nav a:focus-visible{color:var(--accent-strong)}
+    .header-login{border:0;background:none;padding:10px 0;color:var(--ink);font-size:14px;font-weight:800;cursor:pointer}
+    .header-login:hover,.header-login:focus-visible{color:var(--accent-strong)}
+
+    .button{min-height:46px;display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:var(--radius);padding:0 20px;font-size:15px;font-weight:800;white-space:nowrap;cursor:pointer;transition:transform .18s ease,background-color .18s ease,border-color .18s ease,color .18s ease}
+    .button[hidden]{display:none}
+    .button:active{transform:translateY(1px)}
+    .button:focus-visible,.nav a:focus-visible,.header-login:focus-visible,.close:focus-visible{outline:3px solid rgba(8,127,117,.28);outline-offset:3px}
+    .button.primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px rgba(8,127,117,.2)}
+    .button.primary:hover{background:var(--accent-strong)}
+    .button.secondary{border-color:rgba(255,255,255,.62);background:rgba(255,255,255,.1);color:#fff}
+    .button.secondary:hover{background:#fff;color:var(--deep-strong)}
+
+    .hero{position:relative;height:clamp(520px,calc(100dvh - 132px),700px);min-height:520px;isolation:isolate;background:var(--deep-strong) url('/assets/yaocheng-sales-hero.png') center 54%/cover no-repeat;color:#fff}
+    .hero::before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,rgba(5,24,34,.97) 0%,rgba(5,24,34,.88) 38%,rgba(5,24,34,.34) 72%,rgba(5,24,34,.12) 100%)}
+    .hero-inner{height:100%;display:flex;align-items:center}
+    .hero-copy{max-width:640px;padding:40px 0}
+    .eyebrow{margin:0 0 20px;padding-left:12px;border-left:3px solid #58c2b7;color:#cbe7e4;font-size:13px;font-weight:800}
+    .hero h1{margin:0;font-size:clamp(58px,6vw,78px);line-height:1;letter-spacing:0}
+    .hero-category{margin:15px 0 0;color:#fff;font-size:clamp(24px,2.6vw,34px);font-weight:700;line-height:1.25}
+    .hero-lead{max-width:560px;margin:20px 0 0;color:#d6e5e7;font-size:17px;line-height:1.75}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+
+    .foundation{background:var(--surface);border-bottom:1px solid var(--line)}
+    .foundation-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+    .foundation-item{padding:25px 30px}
+    .foundation-item:first-child{padding-left:0}
+    .foundation-item+.foundation-item{border-left:1px solid var(--line)}
+    .foundation-item b{display:block;font-size:16px}
+    .foundation-item span{display:block;margin-top:4px;color:var(--muted);font-size:13px}
+
+    .section{padding:82px 0}
+    .section-heading{max-width:720px;margin-bottom:34px}
+    .section-kicker{margin:0 0 8px;color:var(--accent-strong);font-size:13px;font-weight:800}
+    .section-heading h2,.workflow-copy h2,.assurance-copy h2{margin:0;font-size:clamp(30px,3.3vw,42px);line-height:1.25;letter-spacing:0}
+    .section-heading>p,.workflow-copy>p,.assurance-copy>p{margin:12px 0 0;color:var(--muted);font-size:15px;line-height:1.8}
+
+    .module-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .module{min-width:0;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:0 12px 30px rgba(15,42,54,.06)}
+    .module-media{aspect-ratio:16/9;overflow:hidden;background:var(--deep-strong)}
+    .module-media img{width:100%;height:100%;display:block;object-fit:cover}
+    .module-body{padding:23px 24px 24px}
+    .module-index{display:block;margin-bottom:10px;color:var(--accent-strong);font-size:11px;font-weight:900}
+    .module h3{margin:0;font-size:22px;line-height:1.3;letter-spacing:0}
+    .module p{margin:9px 0 0;color:var(--muted);font-size:14px;line-height:1.75}
+    .module-outcome{display:block;margin-top:17px;padding-top:14px;border-top:1px solid var(--line);color:var(--ink);font-size:13px;font-weight:800;line-height:1.55}
+
+    .workflow{background:var(--surface-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .workflow-layout{display:grid;grid-template-columns:minmax(260px,.7fr) minmax(0,1.3fr);gap:72px;align-items:start}
+    .workflow-copy>p{margin-top:14px}
+    .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+    .flow-item{position:relative;padding:4px 22px 0 24px;border-left:1px solid #c7d7d8}
+    .flow-item:first-child{border-left:0;padding-left:0}
+    .flow-number{display:grid;place-items:center;width:36px;height:36px;margin-bottom:18px;border-radius:50%;background:var(--deep);color:#fff;font-size:13px;font-weight:900}
+    .flow-item strong{display:block;font-size:17px}
+    .flow-item span{display:block;margin-top:7px;color:var(--muted);font-size:13px;line-height:1.7}
+
+    .assurance{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:72px;align-items:center}
+    .assurance-image{margin:0;aspect-ratio:4/3;overflow:hidden;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+    .assurance-image img{width:100%;height:100%;display:block;object-fit:cover}
+    .assurance-copy>p{margin-top:16px}
+    .assurance-points{display:grid;gap:0;margin-top:28px;border-top:1px solid var(--line)}
+    .assurance-point{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:18px 0;border-bottom:1px solid var(--line)}
+    .assurance-mark{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent-strong);font-size:13px;font-weight:900}
+    .assurance-point b{display:block;font-size:15px}
+    .assurance-point span{display:block;margin-top:2px;color:var(--muted);font-size:13px}
+
+    .closing{background:var(--deep);color:#fff}
+    .closing-layout{min-height:152px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:30px;padding-top:30px;padding-bottom:30px}
+    .closing h2{margin:0;font-size:clamp(25px,3vw,36px);line-height:1.2;letter-spacing:0}
+    .closing p{margin:7px 0 0;color:#c7dade;font-size:14px}
+    .closing .button{background:#fff;color:var(--deep-strong);box-shadow:none}
+    .closing .button:hover{background:var(--accent-soft);color:var(--deep-strong)}
+
+    .site-footer{background:var(--surface);color:var(--muted);font-size:13px}
+    .footer-row{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .footer-brand{color:var(--ink);font-weight:800}
+
+    .modal{display:none;position:fixed;z-index:30;inset:0;padding:20px;background:rgba(8,25,35,.62);align-items:center;justify-content:center}
+    .modal.open{display:flex}
+    .modal-panel{position:relative;width:min(680px,100%);max-height:min(820px,calc(100dvh - 40px));overflow:auto;border-radius:var(--radius);background:var(--surface);box-shadow:0 28px 90px rgba(0,0,0,.28);padding:32px}
+    .modal-panel h2{margin:0;font-size:28px;letter-spacing:0}
+    .modal-panel>p{margin:8px 0 22px;color:var(--muted);font-size:14px}
+    .close{position:absolute;right:18px;top:18px;width:36px;height:36px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--ink);font-size:22px;line-height:1;cursor:pointer}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+    .field{margin-top:16px}
+    .field.full{grid-column:1/-1}
+    .field label,.module-options legend{display:block;margin-bottom:6px;color:var(--ink);font-size:14px;font-weight:800}
+    .field input,.field textarea{width:100%;min-height:46px;padding:0 12px;border:1px solid #b9cbcd;border-radius:var(--radius);background:#f7f9f9;color:var(--ink)}
+    .field textarea{min-height:88px;padding-top:10px;resize:vertical}
+    .field input:focus,.field textarea:focus{border-color:var(--accent);outline:3px solid rgba(8,127,117,.2)}
+    .module-options{grid-column:1/-1;margin:16px 0 0;padding:0;border:0}
+    .module-choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .module-choice{display:flex;align-items:center;gap:9px;min-height:46px;padding:0 12px;border:1px solid #b9cbcd;border-radius:var(--radius);background:#f7f9f9;font-size:14px;font-weight:700;cursor:pointer}
+    .module-choice input{width:18px;height:18px;margin:0;accent-color:var(--accent)}
+    .hint{margin:5px 0 0;color:var(--muted);font-size:12px}
+    .form-error{display:none;margin-top:16px;padding:10px 12px;border-radius:var(--radius);background:var(--danger-bg);color:var(--danger-ink);font-size:13px}
+    .form-success{display:none;margin-top:16px;padding:14px;border-radius:var(--radius);background:var(--accent-soft);color:var(--ink);font-size:14px}
+    .form-success strong{display:block;font-size:17px}
+    .form-success span{display:block;margin-top:5px;color:var(--muted)}
+    .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+    .modal-actions .button{min-width:112px}
+    .modal-actions .button.secondary{border-color:var(--line);background:var(--surface);color:var(--ink)}
+    .modal-actions .button.secondary:hover{border-color:var(--accent);color:var(--accent-strong)}
+
+    @media(max-width:900px){
+      .header-inner{grid-template-columns:auto 1fr;gap:20px}.nav{display:none}.header-login{justify-self:end}
+      .hero{height:620px;background-position:64% center}.hero::before{background:linear-gradient(90deg,rgba(5,24,34,.96) 0%,rgba(5,24,34,.82) 62%,rgba(5,24,34,.34) 100%)}
+      .workflow-layout,.assurance{grid-template-columns:1fr;gap:26px}.section-heading>p{max-width:640px}
+      .module-grid{grid-template-columns:1fr 1fr}.module:last-child{grid-column:1/-1}.module:last-child{display:grid;grid-template-columns:1fr 1fr}.module:last-child .module-media{aspect-ratio:auto;min-height:250px}
+      .workflow-layout{gap:38px}.assurance{gap:38px}
+    }
+    @media(max-width:640px){
+      .wrap{width:min(100% - 28px,560px)}
+      .header-inner{min-height:64px}.brand-mark{width:34px;height:34px}.header-login{font-size:13px}
+      .hero{height:580px;min-height:580px;background-position:67% center}.hero::before{background:linear-gradient(90deg,rgba(5,24,34,.96) 0%,rgba(5,24,34,.86) 72%,rgba(5,24,34,.58) 100%)}
+      .hero h1{font-size:56px}.hero-category{font-size:25px}.hero-lead{font-size:15px;line-height:1.7}.hero-actions{display:grid;grid-template-columns:1fr}.hero-actions .button{width:100%}
+      .foundation-grid{grid-template-columns:1fr}.foundation-item,.foundation-item:first-child{padding:18px 0}.foundation-item+.foundation-item{border-left:0;border-top:1px solid var(--line)}
+      .section{padding:60px 0}.section-heading{margin-bottom:26px}.section-heading h2,.workflow-copy h2,.assurance-copy h2{font-size:30px;line-height:1.3}
+      .module-grid{grid-template-columns:1fr}.module:last-child{grid-column:auto;display:block}.module:last-child .module-media{aspect-ratio:16/9;min-height:0}
+      .flow{grid-template-columns:1fr}.flow-item,.flow-item:first-child{display:grid;grid-template-columns:42px 1fr;padding:18px 0;border-left:0;border-top:1px solid #c7d7d8}.flow-item:first-child{border-top:0;padding-top:0}.flow-number{grid-row:1/3;margin:0}.flow-item span{grid-column:2}
+      .assurance-image{aspect-ratio:5/4}.assurance-point{grid-template-columns:32px 1fr}
+      .closing-layout{grid-template-columns:1fr;gap:20px;min-height:0;padding-top:34px;padding-bottom:34px}.closing .button{width:100%}
+      .footer-row{min-height:92px;display:grid;align-content:center;gap:2px}
+      .modal-panel{padding:28px 20px}.form-grid,.module-choice-grid{grid-template-columns:1fr}.field.full,.module-options{grid-column:auto}.modal-actions{display:grid;grid-template-columns:1fr}.modal-actions .button{width:100%}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.button{transition:none}}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/sales.html" aria-label="曜程客户入口首页"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-copy">曜程<small>YAOCHENG</small></span></a>
+      <nav class="nav" aria-label="页面导航"><a href="#modules">产品模块</a><a href="#workflow">开通流程</a><a href="#assurance">使用保障</a></nav>
+      <button class="header-login" type="button" data-login>已有账号登录</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">新未来教育科技出品</p>
+          <h1 id="hero-title">曜程</h1>
+          <p class="hero-category">研学机构业务云平台</p>
+          <p class="hero-lead">把方案、报价、资料与分车协同放进同一套系统，让团队更从容地完成每一次交付。</p>
+          <div class="hero-actions"><button class="button primary" type="button" data-trial>申请试用</button><button class="button secondary" type="button" data-login>已有账号登录</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="foundation" aria-label="曜程统一业务底座">
+      <div class="wrap foundation-grid">
+        <div class="foundation-item"><b>统一账号与权限</b><span>客户单位、员工和模块权限集中管理。</span></div>
+        <div class="foundation-item"><b>业务资料跨模块共享</b><span>客户与供方资料统一沉淀，方案独立管理。</span></div>
+        <div class="foundation-item"><b>平台持续维护</b><span>开通、备份、更新和日志由平台统一负责。</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="modules" aria-labelledby="module-title">
+      <div class="wrap">
+        <div class="section-heading">
+          <div><p class="section-kicker">核心业务</p><h2 id="module-title">三项业务，一套入口。</h2></div>
+          <p>客户按需开通模块，团队登录后只看到本单位获授权的业务工作台。</p>
+        </div>
+        <div class="module-grid">
+          <article class="module">
+            <div class="module-media"><img src="/assets/yaocheng-module-day1-dark.png" alt="单日大研学方案与线路协同示意" loading="lazy" decoding="async"></div>
+            <div class="module-body"><span class="module-index">01</span><h3>单日大研学</h3><p>集中管理客户、供方、方案、成本和报价，班级明细可直接形成分车建议。</p><span class="module-outcome">适合一日研学项目的报价与执行协同</span></div>
+          </article>
+          <article class="module">
+            <div class="module-media"><img src="/assets/yaocheng-module-multiday-dark.png" alt="多日大研学跨城行程协同示意" loading="lazy" decoding="async"></div>
+            <div class="module-body"><span class="module-index">02</span><h3>多日大研学</h3><p>按天配置餐饮、住宿、交通与服务，复杂行程仍能清楚核算并持续调整。</p><span class="module-outcome">适合跨城、多天数项目的逐日核算</span></div>
+          </article>
+          <article class="module">
+            <div class="module-media"><img src="/assets/yaocheng-module-dispatch-dark.png" alt="派车宝车辆与人员分配示意" loading="lazy" decoding="async"></div>
+            <div class="module-body"><span class="module-index">03</span><h3>派车宝</h3><p>导入班级后推荐车型与数量，支持拆班策略、人工调整和分车执行单打印。</p><span class="module-outcome">适合出发前的车辆与随车人员安排</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section workflow" id="workflow" aria-labelledby="workflow-title">
+      <div class="wrap workflow-layout">
+        <div class="workflow-copy"><p class="section-kicker">开通流程</p><h2 id="workflow-title">从申请到使用，三步完成。</h2><p>申请时无需设置密码。测试申请通过后，原申请页面即可进入已开通模块。</p></div>
+        <div class="flow" aria-label="开通流程">
+          <article class="flow-item"><span class="flow-number">01</span><strong>提交申请</strong><span>填写单位、联系人、所需模块和预计账号数。</span></article>
+          <article class="flow-item"><span class="flow-number">02</span><strong>平台审核</strong><span>确认使用范围、服务期限和需要开通的模块。</span></article>
+          <article class="flow-item"><span class="flow-number">03</span><strong>直接进入</strong><span>原申请页面自动获取结果，通过后进入模块中心。</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="assurance" aria-labelledby="assurance-title">
+      <div class="wrap assurance">
+        <figure class="assurance-image"><img src="/assets/yaocheng-sales-planning.png" alt="研学业务团队共同核对方案与执行资料" loading="lazy" decoding="async"></figure>
+        <div class="assurance-copy">
+          <p class="section-kicker">使用保障</p>
+          <h2 id="assurance-title">客户专注业务，平台负责稳定运行。</h2>
+          <p>曜程按客户单位隔离数据，并统一维护账号、模块、备份和升级。客户无需安装软件，通过浏览器即可使用。</p>
+          <div class="assurance-points">
+            <div class="assurance-point"><span class="assurance-mark">1</span><div><b>数据范围清楚</b><span>客户账号仅访问本单位已授权的资料和业务方案。</span></div></div>
+            <div class="assurance-point"><span class="assurance-mark">2</span><div><b>模块按需开通</b><span>单日、多日和派车宝可按实际业务组合授权。</span></div></div>
+            <div class="assurance-point"><span class="assurance-mark">3</span><div><b>更新统一完成</b><span>平台完成维护和发布，客户无需自行安装升级。</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="wrap closing-layout">
+        <div><h2 id="closing-title">准备开始试用曜程？</h2><p>提交需求后留在原页面等待审核，通过后即可进入。</p></div>
+        <button class="button" type="button" data-trial>申请试用</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-row"><span class="footer-brand">曜程 YAOCHENG</span><span>新未来（天津）教育科技有限公司</span></div></footer>
+
+  <div class="modal" id="trialModal" role="dialog" aria-modal="true" aria-labelledby="trialTitle" aria-hidden="true">
+    <div class="modal-panel">
+      <button class="close" type="button" aria-label="关闭申请窗口" data-close>&times;</button>
+      <h2 id="trialTitle">申请试用</h2>
+      <p id="trialIntro">只需提交开通需求，无需在申请时设置密码。</p>
+      <form id="trialForm" novalidate>
+        <div class="form-grid">
+          <div class="field full"><label for="companyName">客户单位名称</label><input id="companyName" name="name" autocomplete="organization" required maxlength="100"><p class="hint">请填写营业主体或实际使用单位名称。</p></div>
+          <div class="field"><label for="contactName">联系人</label><input id="contactName" name="contact_name" autocomplete="name" required maxlength="50"></div>
+          <div class="field"><label for="contactPhone">联系电话</label><input id="contactPhone" name="contact_phone" type="tel" autocomplete="tel" required maxlength="30"></div>
+          <div class="field"><label for="adminUsername">拟用管理员账号</label><input id="adminUsername" name="admin_username" autocomplete="username" required minlength="3" maxlength="80"><p class="hint">建议使用便于团队识别的英文、数字或拼音账号。</p></div>
+          <div class="field"><label for="estimatedUsers">预计账号数</label><input id="estimatedUsers" name="estimated_users" type="number" min="1" max="10000" value="10" required><p class="hint">包含客户管理员和后续员工账号。</p></div>
+          <fieldset class="module-options"><legend>所需模块</legend><div class="module-choice-grid"><label class="module-choice"><input type="checkbox" name="requested_modules" value="day1" checked>单日大研学</label><label class="module-choice"><input type="checkbox" name="requested_modules" value="multiday">多日大研学</label><label class="module-choice"><input type="checkbox" name="requested_modules" value="dispatch">派车宝</label></div><p class="hint">可多选，审核通过后按申请内容开通。</p></fieldset>
+          <div class="field full"><label for="trialNotes">备注</label><textarea id="trialNotes" name="notes" maxlength="500" placeholder="例如：预计试用时间、业务场景或其他需求"></textarea></div>
+        </div>
+        <div class="form-error" id="trialError" role="alert"></div>
+        <div class="form-success" id="trialSuccess" role="status"><strong id="trialStatusTitle"></strong><span id="trialStatusText"></span></div>
+        <div class="modal-actions">
+          <button class="button secondary" id="trialClose" type="button" data-close>暂不申请</button>
+          <button class="button secondary" id="trialRetry" type="button" hidden>重新申请</button>
+          <button class="button primary" id="trialEnter" type="button" hidden>进入曜程</button>
+          <button class="button primary" id="trialSubmit" type="submit">提交申请</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+    const modal=document.getElementById('trialModal');
+    const form=document.getElementById('trialForm');
+    const errorBox=document.getElementById('trialError');
+    const successBox=document.getElementById('trialSuccess');
+    const statusTitle=document.getElementById('trialStatusTitle');
+    const statusText=document.getElementById('trialStatusText');
+    const submitButton=document.getElementById('trialSubmit');
+    const enterButton=document.getElementById('trialEnter');
+    const retryButton=document.getElementById('trialRetry');
+    const closeButton=document.getElementById('trialClose');
+    let passwordlessTrial=false;
+    let trackedTrial=null;
+    let pollTimer=null;
+    let enteringTrial=false;
+
+    function setTrialButtonLabel(label){document.querySelectorAll('[data-trial]').forEach(button=>{button.textContent=label;});}
+    function openModal(){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}
+    function showNewApplication(){
+      trackedTrial=null;
+      form.reset();
+      form.querySelectorAll('.field,.module-options').forEach(field=>field.style.display='');
+      errorBox.style.display='none';
+      successBox.style.display='none';
+      submitButton.hidden=false;
+      enterButton.hidden=true;
+      retryButton.hidden=true;
+      closeButton.textContent='暂不申请';
+      setTrialButtonLabel('申请试用');
+      document.getElementById('companyName').focus();
+    }
+    function showTrackedTrial(data){
+      trackedTrial=data;
+      form.querySelectorAll('.field,.module-options').forEach(field=>field.style.display='none');
+      errorBox.style.display='none';
+      successBox.style.display='block';
+      submitButton.hidden=true;
+      enterButton.hidden=true;
+      retryButton.hidden=true;
+      closeButton.textContent='关闭';
+      if(data.status==='approved'){
+        statusTitle.textContent='试用申请已通过';
+        statusText.textContent='正在进入曜程模块中心。当前资格仅限申请时使用的浏览器。';
+        enterButton.hidden=false;
+        setTrialButtonLabel('进入曜程');
+      }else if(data.status==='rejected'){
+        statusTitle.textContent='本次申请未通过';
+        statusText.textContent='请核对申请资料后重新提交，或联系曜程运营人员。';
+        retryButton.hidden=false;
+        setTrialButtonLabel('重新申请');
+      }else{
+        statusTitle.textContent='申请已提交，正在等待审核';
+        statusText.textContent='无需设置或等待运营人员发送密码。审核通过后，本页面会自动进入曜程。';
+        setTrialButtonLabel('查看审核进度');
+      }
+    }
+    async function fetchJson(path,options={}){
+      const response=await fetch(path,{credentials:'same-origin',...options});
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data.error||'操作失败，请稍后重试');
+      return data;
+    }
+    function scheduleStatusCheck(){
+      if(pollTimer||!passwordlessTrial)return;
+      pollTimer=window.setInterval(()=>{refreshTrialStatus(true);},5000);
+    }
+    function stopStatusCheck(){if(pollTimer){window.clearInterval(pollTimer);pollTimer=null;}}
+    async function refreshTrialStatus(autoEnter){
+      if(!passwordlessTrial)return null;
+      try{
+        const data=await fetchJson('/api/signup-requests/current');
+        if(!data.tracked)return null;
+        trackedTrial=data;
+        if(modal.classList.contains('open'))showTrackedTrial(data);
+        if(data.status==='pending')scheduleStatusCheck();else stopStatusCheck();
+        if(data.status==='approved'&&data.can_enter&&autoEnter)await enterTrial();
+        return data;
+      }catch(error){return null;}
+    }
+    async function openTrial(){
+      openModal();
+      await trialInitialization;
+      const current=await refreshTrialStatus(false);
+      if(current)showTrackedTrial(current);else showNewApplication();
+    }
+    function closeTrial(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}
+    document.querySelectorAll('[data-trial]').forEach(button=>button.addEventListener('click',openTrial));
+    document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',closeTrial));
+    document.querySelectorAll('[data-login]').forEach(button=>button.addEventListener('click',()=>{window.location.href='/modules.html';}));
+    retryButton.addEventListener('click',showNewApplication);
+    enterButton.addEventListener('click',enterTrial);
+    modal.addEventListener('click',event=>{if(event.target===modal)closeTrial();});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&modal.classList.contains('open'))closeTrial();});
+    async function enterTrial(){
+      if(enteringTrial)return;
+      enteringTrial=true;
+      enterButton.disabled=true;
+      enterButton.textContent='正在进入';
+      try{
+        await fetchJson('/api/signup-requests/enter',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+        window.location.href='/modules.html';
+      }catch(error){
+        errorBox.textContent=error.message;
+        errorBox.style.display='block';
+        enterButton.disabled=false;
+        enterButton.textContent='进入曜程';
+        enteringTrial=false;
+      }
+    }
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();
+      errorBox.style.display='none';
+      successBox.style.display='none';
+      if(!form.reportValidity())return;
+      const requestedModules=Array.from(form.querySelectorAll('input[name="requested_modules"]:checked')).map(input=>input.value);
+      if(!requestedModules.length){errorBox.textContent='请至少选择一个所需模块';errorBox.style.display='block';return;}
+      submitButton.disabled=true;
+      submitButton.textContent='正在提交';
+      try{
+        const body={
+          name:form.elements.name.value.trim(),
+          contact_name:form.elements.contact_name.value.trim(),
+          contact_phone:form.elements.contact_phone.value.trim(),
+          admin_username:form.elements.admin_username.value.trim(),
+          requested_modules:requestedModules,
+          estimated_users:Number(form.elements.estimated_users.value),
+          notes:form.elements.notes.value.trim()
+        };
+        const data=await fetchJson('/api/signup-requests',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+        if(passwordlessTrial){
+          showTrackedTrial({...data,tracked:true,status:'pending'});
+          scheduleStatusCheck();
+        }else{
+          showTrackedTrial({...data,tracked:true,status:'pending'});
+          statusText.textContent='平台审核完成后会按申请资料开通客户账号。';
+        }
+      }catch(error){errorBox.textContent=error.message;errorBox.style.display='block';}
+      finally{submitButton.disabled=false;submitButton.textContent='提交申请';}
+    });
+
+    const trialInitialization=fetchJson('/api/health').then(data=>{
+      passwordlessTrial=data.deployment==='public-test';
+      if(passwordlessTrial){
+        document.getElementById('trialIntro').textContent='提交后留在当前浏览器等待审核；通过后无需密码即可进入曜程。';
+        return refreshTrialStatus(false);
+      }
+      return null;
+    }).catch(()=>null);
+  </script>
+</body>
+</html>

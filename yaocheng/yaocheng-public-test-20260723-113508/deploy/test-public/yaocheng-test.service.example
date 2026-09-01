@@ -1,0 +1,25 @@
+[Unit]
+Description=Yaocheng Public Test
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=yaochengtest
+Group=yaochengtest
+WorkingDirectory=/opt/yaocheng-test
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 /opt/yaocheng-test/saas_host/server.py --host 127.0.0.1 --port 8777 --root /srv/yaocheng-test --public-url https://example.com --deployment public-test --trusted-proxy --session-hours 12
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=30
+UMask=0027
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/srv/yaocheng-test /opt/yaocheng-test/saas_host/public
+
+[Install]
+WantedBy=multi-user.target

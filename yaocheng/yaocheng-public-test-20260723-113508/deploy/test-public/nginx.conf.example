@@ -1,0 +1,27 @@
+# 公网测试版入口。首次安装时由 Certbot 自动补齐 HTTPS 配置。
+limit_req_zone $binary_remote_addr zone=yaocheng_test_login:10m rate=10r/m;
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com;
+
+    client_max_body_size 10m;
+
+    location = /api/login {
+        limit_req zone=yaocheng_test_login burst=5 nodelay;
+        proxy_pass http://127.0.0.1:8777;
+        include proxy_params;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:8777;
+        include proxy_params;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 120s;
+    }
+}

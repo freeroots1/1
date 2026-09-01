@@ -1,0 +1,1578 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>单日大研学 SaaS 客户版</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{--bg:#edf3f8;--panel:#fff;--line:#d7e2ee;--line-soft:#edf2f7;--text:#172033;--muted:#64748b;--blue:#2563eb;--blue-soft:#e8f1ff;--green:#0f8f62;--green-soft:#eefaf4;--red:#c2413a;--red-soft:#fff1f1;--amber:#b45309;--amber-soft:#fff7ed;--shadow:0 12px 32px rgba(15,23,42,.08)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.45}
+    button,input,select,textarea{font:inherit}
+    button{white-space:nowrap}
+    input,select,textarea{min-height:38px}
+    input,select,textarea{outline:none}
+    input:focus,select:focus,textarea:focus{border-color:#8fb3f4!important;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+    input[type=number]{appearance:textfield;-moz-appearance:textfield}input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:13px 22px;background:linear-gradient(180deg,#fff,#f8fbff);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;box-shadow:0 6px 18px rgba(15,23,42,.05)}
+    .brand{display:flex;align-items:center;gap:12px}.brand:before{content:"";width:38px;height:38px;border-radius:12px;background:var(--blue);box-shadow:0 9px 20px rgba(37,99,235,.25)}.brand h1{font-size:20px;margin:0;line-height:1.1}.brand span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+    .btn{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:9px;padding:8px 13px;cursor:pointer;font-weight:700;min-height:38px;box-shadow:0 1px 0 rgba(15,23,42,.03)}
+    .btn:hover{border-color:#a9bdd7;background:#f8fbff}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 8px 18px rgba(37,99,235,.18)}.btn.green{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 8px 18px rgba(15,143,98,.16)}.btn.red{background:#fff;border-color:#efb4b0;color:var(--red);box-shadow:none}.btn.red:hover{background:var(--red-soft)}
+    .customer-dashboard{max-width:1480px;margin:18px auto 0;padding:0 18px}.dashboard-panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:var(--shadow)}.dashboard-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:12px}.dashboard-head h2{font-size:18px;margin:0 0 4px}.dashboard-head p{margin:0;color:var(--muted);font-size:12px}.identity-grid,.overview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.mini-card{border:1px solid var(--line);border-radius:12px;background:#f8fbff;padding:11px;min-width:0}.mini-card .label{font-size:12px;color:var(--muted);font-weight:800}.mini-card .value{font-size:16px;font-weight:900;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.quick-actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:12px}.quick-actions .btn{width:100%;min-height:42px}.status-note{border:1px solid var(--line);background:#f8fbff;border-radius:12px;padding:10px;color:#475569;font-size:12px;line-height:1.7}.status-note b{color:#0f172a}.workbench-shell{max-width:1480px;margin:0 auto;padding:16px 18px 18px;display:grid;grid-template-columns:172px minmax(0,1fr) 340px;gap:16px;align-items:start}
+    .module-nav{position:sticky;top:78px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
+    .module-nav a{display:flex;align-items:center;gap:9px;text-decoration:none;color:#475569;font-weight:800;border-radius:11px;padding:10px 11px;margin-bottom:6px}
+    .module-nav a:before{content:"";width:7px;height:7px;border-radius:999px;background:#b8c6d8}.module-nav a:hover{background:#f3f7fb;color:var(--text)}.module-nav a.active{background:var(--blue-soft);color:var(--blue);border:1px solid #bfd2f4}.module-nav a.active:before{background:var(--blue)}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+    .quote-workspace{min-width:0}.quote-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line-soft)}.quote-heading h2{font-size:18px;margin:0}.quote-heading p{margin:5px 0 0;color:var(--muted);font-size:12px}.quote-status{border:1px solid var(--line);border-radius:10px;background:#f8fbff;padding:7px 10px;color:#475569;font-size:12px;font-weight:800}.quote-status.dirty{border-color:#f2c97d;background:#fff8e8;color:#92400e}.quote-status.saved{border-color:#9fd8bf;background:var(--green-soft);color:#08724d}.quote-status.loaded{border-color:#b7cdf4;background:var(--blue-soft);color:#1d4ed8}
+    .section{border-top:1px solid var(--line-soft);padding-top:16px;margin-top:16px;scroll-margin-top:88px}.quote-heading+.section{border-top:none;margin-top:0;padding-top:0}.section h2{display:flex;align-items:center;gap:8px;font-size:16px;margin:0 0 12px;letter-spacing:0}.section h2:before{content:"";display:block;width:5px;height:20px;border-radius:5px;background:var(--blue)}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .field{display:flex;flex-direction:column;gap:6px}.field label{color:var(--muted);font-size:12px;font-weight:700}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:#fff;color:var(--text)}
+    .input-note{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}.free-note{font-size:12px;font-weight:900;color:var(--green);white-space:nowrap}
+    .cost-row{display:grid;grid-template-columns:1.18fr .66fr .78fr .76fr;gap:9px;align-items:center;margin-bottom:9px}
+    .cost-row label{color:var(--muted);font-size:12px;font-weight:700}.cost-row input,.cost-row select{border:1px solid var(--line);border-radius:9px;padding:8px 10px;width:100%;background:#fff}
+    .traffic-grid{display:grid;grid-template-columns:1.05fr .66fr .62fr 1.05fr .66fr .62fr;gap:9px;align-items:center;margin-bottom:8px}
+    .traffic-grid label{color:var(--muted);font-size:12px;font-weight:700}.traffic-grid input,.traffic-grid select{border:1px solid var(--line);border-radius:9px;padding:8px 10px;width:100%;background:#fff}.traffic-supplier{grid-column:2/span 2}.traffic-unit{grid-column:4/span 3}
+    .sub-title{font-size:13px;font-weight:900;color:#334155;margin:12px 0 8px}
+    .room-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+    .personnel-row{display:grid;grid-template-columns:1.18fr .66fr .78fr auto minmax(96px,.76fr) 72px;gap:9px;align-items:center;margin-bottom:9px}
+    .personnel-row label{color:var(--muted);font-size:12px;font-weight:700}.personnel-row input{border:1px solid var(--line);border-radius:9px;padding:8px 10px;width:100%;background:#fff}.personnel-empty-action{display:block}
+    .meal-service-row{display:grid;grid-template-columns:1.18fr .66fr .78fr .76fr;gap:9px;align-items:center;margin-bottom:9px}
+    .meal-service-row label,.meal-service-spacer{color:var(--muted);font-size:12px;font-weight:700}.meal-service-controls{grid-column:2/5;display:grid;grid-template-columns:minmax(120px,1fr) minmax(96px,.82fr) minmax(72px,.52fr) auto minmax(86px,.52fr) auto auto;gap:9px;align-items:center}.meal-service-controls input{border:1px solid var(--line);border-radius:9px;padding:8px 10px;width:100%;background:#fff}.meal-service-spacer{min-height:1px}.meal-service-actions{display:grid;grid-template-columns:1.18fr .66fr .78fr .76fr;gap:9px;align-items:center;margin-bottom:9px}.meal-service-actions .btn{grid-column:2/5;justify-self:start}
+    .service-row{display:grid;grid-template-columns:1.18fr .66fr .78fr .76fr;gap:9px;align-items:center;margin-bottom:9px}
+    .service-row label,.service-spacer{color:var(--muted);font-size:12px;font-weight:700}.service-controls{grid-column:2/5;display:grid;grid-template-columns:minmax(120px,1fr) minmax(96px,.82fr) minmax(72px,.52fr) auto minmax(86px,.52fr) auto auto;gap:9px;align-items:center}.service-controls input{border:1px solid var(--line);border-radius:9px;padding:8px 10px;width:100%;background:#fff}.service-spacer{min-height:1px}.service-actions{display:grid;grid-template-columns:1.18fr .66fr .78fr .76fr;gap:9px;align-items:center;margin-bottom:9px}.service-actions .btn{grid-column:2/5;justify-self:start}.venue-session-row .service-controls{grid-template-columns:minmax(150px,1fr) minmax(76px,.52fr) auto minmax(96px,.52fr) auto auto}
+    .hint{font-size:12px;color:var(--muted)}.quote-summary{position:sticky;top:78px}.quote-summary .section:first-child{border-top:none;margin-top:0;padding-top:0}.quote-summary .section h2{font-size:15px}
+    .kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kpi div{border:1px solid var(--line);border-radius:13px;padding:12px;background:#f8fbff;color:#5f6f83;font-size:12px;font-weight:700}.kpi div:nth-child(2){background:var(--green-soft)}.kpi div:nth-child(3){background:var(--amber-soft)}.kpi b{display:block;font-size:20px;margin-top:6px;color:var(--text);line-height:1.1}
+    table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}th,td{border-bottom:1px solid var(--line-soft);padding:9px 8px;text-align:left;vertical-align:top}th{background:#f7fafc;color:#475467;font-weight:900}tr:last-child td{border-bottom:none}tbody tr:hover{background:#f9fbff}
+    .modal-mask{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:20;padding:18px}.modal{background:#fff;border-radius:16px;max-width:980px;width:100%;max-height:88vh;overflow:auto;padding:18px;border:1px solid var(--line);box-shadow:0 24px 70px rgba(15,23,42,.24)}.modal.small{max-width:540px}
+    .modal h3{margin:0 0 14px;font-size:20px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.row input,.row select{border:1px solid var(--line);border-radius:9px;padding:8px 10px}.grow{flex:1}.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:14px}.tab{border:none;background:transparent;padding:9px 12px;cursor:pointer;color:var(--muted);font-weight:800}.tab.active{color:var(--blue);border-bottom:3px solid var(--blue)}
+    .toast{position:fixed;right:18px;bottom:18px;background:#111827;color:#fff;padding:11px 14px;border-radius:10px;display:none;z-index:40;box-shadow:0 12px 28px rgba(15,23,42,.22)}.toast.show{display:block}.toast.error{background:var(--red)}
+    #loginView{min-height:100vh;display:none;align-items:center;justify-content:center;padding:20px;background:var(--bg)}.login-card{width:430px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:var(--shadow)}.login-card h1{font-size:26px;margin:0 0 18px}
+    #appView{display:none}.tenant-admin-only,.day1-manager-only,.day1-manager-block{display:none}body.tenant_admin .tenant-admin-only{display:inline-flex}body.tenant_admin .day1-manager-only,body.day1_admin .day1-manager-only,body.module-manager .day1-manager-only{display:inline-flex}body.tenant_admin .day1-manager-block,body.day1_admin .day1-manager-block,body.module-manager .day1-manager-block{display:block}body.viewer .write-action{display:none!important}body.module-viewer .write-action{display:none!important}body.viewer .quick-actions{grid-template-columns:repeat(3,minmax(0,1fr))}body.module-viewer .quick-actions{grid-template-columns:repeat(3,minmax(0,1fr))}body.viewer main button{display:none!important}body.module-viewer main button{display:none!important}body.viewer main input:disabled,body.viewer main select:disabled,body.viewer main textarea:disabled{color:var(--text);background:#f8fafc;opacity:1;-webkit-text-fill-color:var(--text);cursor:not-allowed}body.module-viewer main input:disabled,body.module-viewer main select:disabled,body.module-viewer main textarea:disabled{color:var(--text);background:#f8fafc;opacity:1;-webkit-text-fill-color:var(--text);cursor:not-allowed}
+    @media(max-width:1180px){.workbench-shell{grid-template-columns:minmax(0,1fr) 320px}.module-nav{display:none}}
+    @media(max-width:900px){.workbench-shell{grid-template-columns:1fr;padding:12px}.grid,.grid.two,.room-grid{grid-template-columns:1fr}.cost-row,.traffic-grid,.meal-service-row,.meal-service-controls,.meal-service-actions,.service-row,.service-controls,.service-actions,.personnel-row{grid-template-columns:1fr}.meal-service-controls,.meal-service-actions .btn,.service-controls,.service-actions .btn{grid-column:auto}.venue-session-row .service-controls{grid-template-columns:1fr}.personnel-empty-action{display:none}.traffic-supplier,.traffic-unit{grid-column:auto}.top{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.quote-summary{position:static}.quote-heading{flex-direction:column}.panel{border-radius:14px}}
+    .print-report{display:none}@media print{@page{margin:12mm}.top,.actions,.modal-mask,#loginView,.no-print,.module-nav,.customer-dashboard{display:none!important}.workbench-shell{display:block;padding:0}.panel{border:none;box-shadow:none}.quote-summary{display:none}body.printing-report{background:#fff;color:#111}body.printing-report .workbench-shell,body.printing-report .customer-dashboard,body.printing-report .top,body.printing-report .modal-mask{display:none!important}body.printing-report #printReport{display:block!important}.print-report{font-size:12px;line-height:1.55;color:#111}.print-report h1{font-size:20px;margin:0 0 4px}.print-report h2{font-size:14px;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid #d7e2ee}.print-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0 12px}.print-kpi div{border:1px solid #d7e2ee;border-radius:8px;padding:8px}.print-kpi b{display:block;font-size:16px;margin-top:4px}.print-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px}.print-table th,.print-table td{border:1px solid #d7e2ee;padding:5px 6px;text-align:left;vertical-align:top}.print-table th{background:#f5f7fb;font-weight:700}.print-muted{color:#64748b}}
+  
+    /* SaaS customer responsive layout */
+    .session-boot{position:fixed;inset:0;z-index:1600;display:flex;align-items:center;justify-content:center;background:#061d31;color:#f4fbff}.session-boot-inner{display:grid;justify-items:center;gap:14px;font-size:15px;font-weight:800}.session-boot-spinner{width:34px;height:34px;border:3px solid rgba(118,217,209,.26);border-top-color:#76d9d1;border-radius:50%;animation:session-boot-spin .75s linear infinite}@keyframes session-boot-spin{to{transform:rotate(360deg)}}
+    .modal-table-scroll{width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}
+    .modal-table-scroll table{min-width:100%}
+    .nested-modal{z-index:30;background:rgba(15,23,42,.52)}
+    .library-edit-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+    .library-edit-form .field.full{grid-column:1/-1}.library-edit-form textarea{min-height:92px;resize:vertical}.edit-form-error{display:none;margin-bottom:11px;color:#b42318;border-color:#fecaca;background:#fff1f2}
+    .header-duplicate-action{display:none!important}
+    @media(max-width:900px){body{overflow-x:hidden}.customer-dashboard{margin-top:12px;padding:0 12px}.dashboard-panel{padding:12px}.dashboard-head{flex-direction:column;align-items:stretch}.dashboard-head>div:first-child{width:100%}.identity-grid,.overview-grid,.quick-actions{grid-template-columns:repeat(2,minmax(0,1fr));width:100%}body.viewer .quick-actions{grid-template-columns:1fr}body.module-viewer .quick-actions{grid-template-columns:1fr}.mini-card{padding:10px}.mini-card .value{font-size:14px}.quick-actions .btn{min-width:0;padding-left:8px;padding-right:8px;white-space:normal}.top{padding:12px}.top .brand{width:100%}.top .actions{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.top .actions .btn{width:100%;min-width:0;padding-left:7px;padding-right:7px}.modal-mask{padding:10px;align-items:flex-start}.modal{width:calc(100vw - 20px);max-width:calc(100vw - 20px);max-height:calc(100vh - 20px);margin:0 auto;padding:14px;overflow-x:hidden;overflow-y:auto}.modal.small{max-width:calc(100vw - 20px)}.modal .row{align-items:stretch}.modal .row>input,.modal .row>select{min-width:0;max-width:100%}.modal .row>.grow{flex:1 1 180px}.modal .row>input:not(.grow),.modal .row>select{flex:1 1 130px;width:auto!important}.modal .row>.btn{flex:0 0 auto}.library-edit-form{grid-template-columns:1fr}.library-edit-form .field.full{grid-column:auto}.modal-table-scroll{width:100%;max-width:100%;overflow-x:auto}.modal-table-scroll table{width:max-content;min-width:100%}#customerList table{min-width:560px}#schemeList table{min-width:720px}#supplierList table{min-width:780px}#statsSummary table,#statsDetail table{min-width:900px}#prepurchaseSummary table,#prepurchaseDetails table{min-width:760px}#userList table{min-width:620px}}
+    @media(max-width:900px){.dashboard-head>div:first-child p{display:none}.identity-grid .mini-card:nth-child(1),.identity-grid .mini-card:nth-child(3){display:none}.quick-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}.quick-actions .btn{padding:6px 4px;font-size:12px}.top .actions{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+
+    /* Day1 customer workbench: one clear path from actions to quote analysis */
+    :root{--workspace-max:1440px;--workspace-surface:#f6f8fb;--workspace-border:#dbe4ee;--workspace-radius:14px}
+    body{background:#f3f6fa}
+    .top{min-height:64px;padding:10px max(18px,calc((100vw - var(--workspace-max))/2));background:#fff;box-shadow:none}
+    .brand:before{width:34px;height:34px;border-radius:9px;box-shadow:none}.brand h1{font-size:18px}.brand span{margin-top:3px}
+    .top .actions .btn{min-height:34px;padding:6px 11px;box-shadow:none}
+    .customer-dashboard{max-width:var(--workspace-max);margin:14px auto 0;padding:0 18px}
+    .dashboard-panel{display:grid;grid-template-columns:260px minmax(0,1fr);grid-template-areas:"head actions" "head overview";gap:12px 18px;padding:18px;border-color:var(--workspace-border);border-radius:var(--workspace-radius);box-shadow:0 4px 16px rgba(15,23,42,.045)}
+    .dashboard-head{grid-area:head;align-self:stretch;display:flex;flex-direction:column;justify-content:space-between;gap:14px;margin:0;padding-right:18px;border-right:1px solid var(--line-soft)}
+    .dashboard-head h2{font-size:22px;letter-spacing:-.02em;margin:0 0 5px}.dashboard-head p{max-width:220px;line-height:1.6}
+    .identity-grid{width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px 8px;padding-top:10px;border-top:1px solid var(--line-soft)}
+    .identity-grid .mini-card{border:0;border-radius:0;background:transparent;padding:4px 0}.identity-grid .mini-card .label{font-size:10px;font-weight:700}.identity-grid .mini-card .value{margin-top:2px;font-size:12px;font-weight:800}
+    .quick-actions{grid-area:actions;align-self:start;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:0}.quick-actions .btn{min-height:40px;box-shadow:none}
+    .dashboard-panel>.section{grid-area:overview;border-top:1px solid var(--line-soft);margin:0;padding:11px 0 0}
+    .dashboard-panel>.section h2{margin:0 0 8px;color:var(--muted);font-size:11px}.dashboard-panel>.section h2:before{display:none}
+    .overview-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .overview-grid .mini-card{display:flex;align-items:center;justify-content:space-between;gap:10px;border:0;border-radius:10px;background:var(--workspace-surface);padding:8px 10px}.overview-grid .mini-card .label{font-size:11px}.overview-grid .mini-card .value{margin:0;font-size:14px}
+    .status-note{border-radius:10px;background:var(--workspace-surface)}
+    .workbench-shell{max-width:var(--workspace-max);margin:0 auto;padding:14px 18px 18px;display:grid;grid-template-columns:206px minmax(0,1fr);grid-template-areas:"nav summary" "nav workspace";gap:14px 16px;align-items:start}
+    .module-nav{grid-area:nav;top:78px;padding:10px;border-color:var(--workspace-border);border-radius:var(--workspace-radius);box-shadow:none}
+    .module-nav-head{padding:5px 7px 11px;margin-bottom:5px;border-bottom:1px solid var(--line-soft)}.module-nav-head b{display:block;font-size:13px}.module-nav-head span{display:block;margin-top:3px;color:var(--muted);font-size:10px}
+    .module-nav a{gap:10px;margin:0 0 3px;padding:9px 10px;border:1px solid transparent;border-radius:9px;font-size:12px}.module-nav a:before{width:6px;height:6px}.module-nav a.active{box-shadow:none}
+    .quote-summary{grid-area:summary;position:static;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;padding:13px 16px;border-color:var(--workspace-border);border-radius:var(--workspace-radius);box-shadow:none}
+    .quote-summary>.section{border:0;margin:0;padding:0}.quote-summary>.section:first-child{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:14px}.quote-summary>.section:first-child h2{margin:0;white-space:nowrap}.quote-summary>.section h2:before{display:none}
+    .quote-summary>.section:nth-child(2),.quote-summary>.section:nth-child(3){display:none}
+    .quote-summary>.section:last-child .btn{width:auto!important;min-height:40px;padding-inline:16px;box-shadow:none}
+    .quote-summary .kpi{grid-template-columns:repeat(4,minmax(0,1fr));gap:0}.quote-summary .kpi div{min-width:0;border:0;border-left:1px solid var(--line-soft);border-radius:0;background:transparent!important;padding:2px 14px;font-size:10px}.quote-summary .kpi b{margin-top:3px;font-size:18px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .quote-workspace{grid-area:workspace;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;min-width:0;padding:0;border:0;background:transparent;box-shadow:none}
+    .quote-heading{grid-column:1/-1;margin:0;padding:17px 19px;border:1px solid var(--workspace-border);border-radius:var(--workspace-radius);background:#fff;box-shadow:0 4px 16px rgba(15,23,42,.04)}.quote-heading h2{font-size:19px;letter-spacing:-.01em}.quote-heading p{font-size:12px;line-height:1.6}.quote-status{border-radius:8px}
+    .quote-workspace>.section,.quote-heading+.section{grid-column:1/-1;margin:0;padding:18px;border:1px solid var(--workspace-border);border-radius:var(--workspace-radius);background:#fff;box-shadow:0 4px 16px rgba(15,23,42,.04);scroll-margin-top:80px}
+    .quote-workspace>.section h2{margin:0 0 16px;padding:0 0 11px;border-bottom:1px solid var(--line-soft);font-size:16px}.quote-workspace>.section h2:before{display:none}
+    #section-base .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px 12px}#section-base .field:first-child{grid-column:span 2}
+    .field{gap:5px}.field label,.cost-row label,.traffic-grid label,.personnel-row label,.meal-service-row label,.service-row label{color:#536276;font-size:11px;font-weight:750}
+    .field input,.field select,.field textarea,.cost-row input,.cost-row select,.traffic-grid input,.traffic-grid select,.personnel-row input,.meal-service-controls input,.service-controls input{min-height:40px;border-color:#d6e0eb;border-radius:8px}
+    .form-column-head{display:grid;align-items:center;gap:9px;margin-bottom:5px;padding:0 10px;color:#8a99aa;font-size:10px;font-weight:800}.personnel-row,.personnel-column-head{grid-template-columns:1.18fr .66fr .78fr 64px minmax(140px,.76fr) 72px}.cost-column-head{grid-template-columns:1.18fr .66fr .78fr .76fr}
+    #section-personnel .personnel-row{margin:0;padding:8px 10px;border-bottom:1px solid var(--line-soft)}#section-personnel .personnel-row:nth-child(odd){background:#fafcff}#section-personnel .personnel-row:last-of-type{border-bottom:0}#section-personnel>#customPersonnelList{margin-bottom:10px}
+    #section-bonus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 12px}#section-bonus>h2{grid-column:1/-1}#section-bonus .cost-row{grid-template-columns:minmax(0,1fr) minmax(84px,.65fr) auto;gap:8px;margin:0;padding:12px;border:1px solid var(--line-soft);border-radius:10px;background:var(--workspace-surface)}#section-bonus .cost-row>span:last-child{display:none}
+    #section-traffic .sub-title:first-of-type{margin-top:0}.traffic-grid{margin:0 0 12px;padding:13px;border:1px solid var(--line-soft);border-radius:10px;background:var(--workspace-surface)}
+    #section-meal .cost-row,#section-venue>.cost-row{margin:0;padding:8px 10px;border-bottom:1px solid var(--line-soft)}#section-meal .cost-row:nth-of-type(even),#section-venue>.cost-row:nth-of-type(even){background:#fafcff}
+    #section-meal .meal-service-actions,#section-venue .service-actions{margin:11px 0}.room-grid{margin-top:14px;padding-top:14px;border-top:1px solid var(--line-soft)}
+    .day1-analysis{max-width:var(--workspace-max)}
+    @media(max-width:1180px){
+      .dashboard-panel{grid-template-columns:1fr;grid-template-areas:"head" "actions" "overview"}.dashboard-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(380px,.9fr);align-items:end;padding:0 0 13px;border-right:0;border-bottom:1px solid var(--line-soft)}.dashboard-head p{max-width:none}.identity-grid{padding:0 0 1px;border-top:0;grid-template-columns:repeat(4,minmax(0,1fr))}
+      .workbench-shell{grid-template-columns:minmax(0,1fr);grid-template-areas:"summary" "workspace"}.module-nav{display:none}
+    }
+    @media(max-width:900px){
+      .top{position:relative;padding:11px 12px}.customer-dashboard{margin-top:12px;padding:0 12px}.dashboard-panel{padding:14px;gap:11px}.dashboard-head{display:flex;align-items:stretch;padding-bottom:11px}.dashboard-head>div:first-child p{display:block}.dashboard-head h2{font-size:19px}.identity-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.identity-grid .mini-card:nth-child(1),.identity-grid .mini-card:nth-child(3){display:block}
+      .quick-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}.quick-actions .btn{min-height:38px;padding:7px 5px}.quick-actions .btn:last-child{grid-column:1/-1}.overview-grid{grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+      .workbench-shell{padding:12px;gap:12px}.quote-summary{grid-template-columns:1fr;padding:14px}.quote-summary>.section:first-child{display:block}.quote-summary>.section:first-child h2{margin-bottom:10px}.quote-summary .kpi{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.quote-summary .kpi div{border:1px solid var(--line-soft);border-radius:9px;padding:8px 10px}.quote-summary>.section:last-child .btn{width:100%!important}
+      .quote-workspace{grid-template-columns:minmax(0,1fr);gap:12px}.quote-heading,.quote-workspace>.section,.quote-heading+.section{grid-column:1;min-width:0;padding:15px}.quote-heading{flex-direction:column}.quote-workspace>.section h2{margin-bottom:13px}
+      #section-base .grid{grid-template-columns:repeat(2,minmax(0,1fr))}#section-base .field:first-child{grid-column:1/-1}
+      .form-column-head{display:none}
+      #section-personnel .personnel-row{grid-template-columns:minmax(0,.65fr) minmax(0,.9fr) auto;padding:11px 0}#section-personnel .personnel-fixed>label{grid-column:1/-1}#section-personnel .personnel-fixed>.personnel-supplier{grid-column:1/-1}#section-personnel .personnel-fixed>.personnel-empty-action{display:none}
+      #customPersonnelList .personnel-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}#customPersonnelList .personnel-row>input:first-child{grid-column:1/-1}#customPersonnelList .personnel-supplier{grid-column:1/3}
+      #section-bonus{grid-template-columns:1fr}#section-bonus .cost-row{grid-template-columns:minmax(0,1fr) minmax(92px,.7fr) auto}
+      .traffic-grid{grid-template-columns:minmax(86px,1fr) minmax(92px,1fr) auto;padding:11px}.traffic-supplier,.traffic-unit{grid-column:auto}
+      #section-meal .cost-row,#section-venue>.cost-row{grid-template-columns:minmax(0,.72fr) minmax(0,1fr) auto;padding:10px 0}#section-meal .cost-row>label,#section-venue>.cost-row>label{grid-column:1/-1}
+      .room-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.meal-service-row,.service-row{grid-template-columns:1fr}.meal-service-controls,.service-controls{grid-column:auto;grid-template-columns:1fr}.meal-service-actions,.service-actions{grid-template-columns:1fr}.meal-service-actions .btn,.service-actions .btn{grid-column:auto;width:100%}
+    }
+    @media(max-width:560px){#section-base .grid,.room-grid{grid-template-columns:1fr}#section-base .field:first-child{grid-column:auto}.top .actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.top .actions .btn{padding:6px 2px;font-size:12px}.overview-grid .mini-card{align-items:flex-start;flex-direction:column}.overview-grid .mini-card .value{font-size:13px}}
+
+
+    /* Day1 business analysis, aligned with the multiday result surface */
+    .day1-analysis{max-width:1480px;margin:0 auto;padding:0 18px 28px;scroll-margin-top:82px}
+    .day1-analysis-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:0 0 12px;padding:0 2px}
+    .day1-analysis-head h2{margin:0;font-size:20px;letter-spacing:-.02em}.day1-analysis-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+    .day1-analysis-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+    .day1-analysis-stack{display:flex;flex-direction:column;gap:14px;min-width:0}
+    .day1-analysis-card{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:var(--shadow)}
+    .day1-analysis-card h3{margin:0 0 12px;font-size:15px;color:var(--text)}
+    .day1-metric-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+    .day1-metric{min-width:0;padding:12px 7px;text-align:center;border-right:1px solid var(--line)}.day1-metric:nth-child(5n){border-right:none}.day1-metric:nth-child(-n+5){border-bottom:1px solid var(--line)}
+    .day1-metric-label{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap}.day1-metric-value{margin-top:4px;font-size:17px;line-height:1.2;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .day1-metric-value.positive{color:#20a765}.day1-metric-value.negative{color:#df4d5f}.day1-metric-value.accent{color:#2f80d9}
+    .day1-profit-health{border-radius:16px;padding:24px 16px;text-align:center;font-size:20px;font-weight:900;border:1px solid transparent}.day1-profit-health.good{color:#217a50;background:#e8f8f0;border-color:#c9eddc}.day1-profit-health.warn{color:#9a5b08;background:#fff6df;border-color:#f7dfaa}.day1-profit-health.bad{color:#b63743;background:#fff0f1;border-color:#f5cdd1}
+    .day1-cost-bar{display:grid;grid-template-columns:112px minmax(0,1fr) 118px;gap:10px;align-items:center;min-height:26px}.day1-cost-label{color:#64748b;font-size:12px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.day1-cost-track{height:10px;border-radius:999px;background:#edf2f7;overflow:hidden}.day1-cost-fill{height:100%;min-width:2px;border-radius:999px}.day1-cost-value{text-align:right;font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .day1-donut-wrap{display:flex;align-items:center;justify-content:center;gap:24px;min-height:250px}.day1-donut-wrap canvas{width:220px;height:220px;max-width:48%}.day1-donut-legend{display:grid;gap:9px;font-size:12px;min-width:120px}.day1-donut-key{display:flex;align-items:center;gap:8px;white-space:nowrap}.day1-donut-swatch{width:11px;height:11px;border-radius:3px;flex:0 0 auto}
+    .day1-analysis-empty{display:grid;place-items:center;min-height:190px;color:var(--muted);font-size:13px;text-align:center}
+    .day1-sensitivity{grid-column:1/-1}.day1-table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}.day1-sensitivity-table{width:100%;min-width:720px;border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:12px}.day1-sensitivity-table th,.day1-sensitivity-table td{padding:8px 7px;text-align:center;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;white-space:nowrap}.day1-sensitivity-table th{color:#94a3b8;font-size:11px}.day1-sensitivity-table tr:last-child td{border-bottom:none}.day1-sensitivity-table th:first-child,.day1-sensitivity-table td:first-child{position:sticky;left:0;z-index:1;text-align:left;font-weight:900;background:var(--panel);box-shadow:5px 0 8px rgba(61,85,116,.05)}.day1-sensitivity-table .current{background:#eaf2ff;font-weight:900}.day1-sensitivity-table .positive{color:#20a765;font-weight:900}.day1-sensitivity-table .negative{color:#df4d5f;font-weight:900}
+    @media(max-width:1180px){.day1-analysis-grid{grid-template-columns:1fr}.day1-sensitivity{grid-column:auto}}
+    @media(max-width:700px){.day1-analysis{padding:0 12px 22px}.day1-analysis-head{align-items:flex-start;flex-direction:column}.day1-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.day1-metric{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.day1-metric:nth-child(5n){border-right:1px solid var(--line)}.day1-metric:nth-child(2n){border-right:none}.day1-metric:nth-last-child(-n+2){border-bottom:none}.day1-cost-bar{grid-template-columns:86px minmax(0,1fr) 104px;gap:7px}.day1-donut-wrap{align-items:flex-start;gap:14px}.day1-donut-wrap canvas{width:170px;height:170px}.day1-profit-health{font-size:17px;padding:20px 12px}}
+
+
+/* YAOCHENG_COMMERCIAL_THEME_V1 */
+:root{
+  --yc-navy-950:#031427;
+  --yc-navy-900:#061a30;
+  --yc-navy-850:#09213a;
+  --yc-navy-800:#0d2945;
+  --yc-teal:#13b8b2;
+  --yc-teal-strong:#07978f;
+  --yc-ice:#f4f8fb;
+  --yc-card:#fbfdff;
+  --yc-card-line:#cbd9e5;
+  --yc-card-text:#203248;
+  --yc-card-muted:#65768a;
+  --workspace-surface:#eef4f8;
+  --workspace-border:#cbd9e5;
+  --workspace-radius:12px;
+}
+html{background:var(--yc-navy-950)}
+body{
+  background:
+    radial-gradient(circle at 82% 2%,rgba(19,184,178,.09),transparent 28rem),
+    linear-gradient(180deg,var(--yc-navy-950) 0,var(--yc-navy-900) 430px,#eaf0f5 430px,#f3f6f9 100%);
+  color:var(--yc-card-text);
+}
+.top,.saas-module-strip{
+  background:rgba(3,20,39,.98)!important;
+  border-color:rgba(118,167,199,.25)!important;
+  color:#f4fbff!important;
+  box-shadow:0 10px 34px rgba(0,9,20,.24)!important;
+}
+.top{border-bottom:1px solid rgba(118,167,199,.25)!important}
+.brand h1,.saas-brand b{color:#f4fbff!important;letter-spacing:.01em}
+.brand span,.saas-brand span{color:#8fa8bd!important}
+.brand:before,.saas-brand-mark{
+  background:linear-gradient(145deg,var(--yc-teal),#087a8d)!important;
+  box-shadow:0 0 0 1px rgba(109,242,232,.18),0 10px 24px rgba(7,151,143,.22)!important;
+}
+.top .actions .btn,.saas-module-strip .links a,.saas-module-strip .links button{
+  border-color:rgba(129,176,207,.4)!important;
+  background:#081d33!important;
+  color:#d8e8f4!important;
+}
+.top .actions .btn:hover,.saas-module-strip .links a:hover,.saas-module-strip .links button:hover{
+  border-color:rgba(78,225,214,.65)!important;
+  color:#fff!important;
+}
+.top .actions .btn.primary,.top .actions .btn.green{
+  border-color:var(--yc-teal)!important;
+  background:var(--yc-teal-strong)!important;
+  color:#fff!important;
+}
+.customer-dashboard,.module-dashboard{position:relative}
+.dashboard-panel,.module-dashboard{
+  border-color:rgba(118,167,199,.28)!important;
+  background:linear-gradient(145deg,#071c32,#0a223b)!important;
+  color:#f5fbff!important;
+  box-shadow:0 18px 44px rgba(0,13,30,.3)!important;
+}
+.dashboard-head,.module-dashboard-head{border-color:rgba(118,167,199,.22)!important}
+.dashboard-head h2,.module-dashboard h2{color:#f7fbff!important}
+.dashboard-head p,.module-dashboard p{color:#94aabd!important}
+.identity-grid,.module-identity,.dashboard-panel>.section,.module-overview{border-color:rgba(118,167,199,.2)!important}
+.identity-grid .mini-card .label,.module-identity .module-mini span,.dashboard-panel>.section h2,.overview-grid .mini-card .label,.module-overview .module-mini span{color:#89a2b8!important}
+.identity-grid .mini-card .value,.module-identity .module-mini b,.overview-grid .mini-card .value,.module-overview .module-mini b{color:#f4fbff!important}
+.overview-grid .mini-card,.module-overview .module-mini,.status-note{
+  border-color:rgba(118,167,199,.2)!important;
+  background:rgba(12,43,70,.78)!important;
+  color:#d7e6f1!important;
+}
+.status-note b{color:#fff!important}
+.quick-actions .btn,.module-actions button{
+  border-color:rgba(129,176,207,.38)!important;
+  background:#0b2843!important;
+  color:#dbe9f3!important;
+}
+.quick-actions .btn:hover,.module-actions button:hover{border-color:rgba(78,225,214,.7)!important;color:#fff!important}
+.quick-actions .btn.primary,.module-actions .primary{
+  border-color:var(--yc-teal)!important;
+  background:var(--yc-teal-strong)!important;
+  color:#fff!important;
+}
+.quick-actions .btn.green,.module-actions .green{
+  border-color:#157f78!important;
+  background:#0d6f6a!important;
+  color:#fff!important;
+}
+.module-quote-status{
+  border-color:rgba(54,207,196,.38)!important;
+  background:#0a2d43!important;
+  color:#8ce2dc!important;
+  box-shadow:0 10px 26px rgba(0,13,30,.2)!important;
+}
+.workbench-shell,#view_multiDay>.page,.page{position:relative}
+.module-nav,.module-step-nav,.page>.steps{
+  border-color:rgba(118,167,199,.3)!important;
+  background:var(--yc-navy-850)!important;
+  color:#e9f3fa!important;
+  box-shadow:0 16px 38px rgba(0,12,28,.18)!important;
+}
+.module-nav-head,.module-step-nav-head,.page>.steps:before{border-color:rgba(118,167,199,.22)!important;color:#eef7fc!important}
+.module-nav-head span,.module-step-nav-head span,.page>.steps:after{color:#8ca5ba!important}
+.module-nav a,.module-step-nav a,.page>.steps .step{color:#a9bdcc!important}
+.module-nav a:before,.module-step-nav a:before{background:#56738c!important}
+.module-nav a:hover,.module-nav a.active,.module-step-nav a:hover,.module-step-nav a.active,.page>.steps .step:hover,.page>.steps .step.active{
+  border-color:rgba(38,210,198,.36)!important;
+  background:rgba(11,108,111,.38)!important;
+  color:#f0ffff!important;
+}
+.module-nav a.active:before,.module-step-nav a.active:before{background:var(--yc-teal)!important}
+.quote-summary{
+  border-color:rgba(118,167,199,.3)!important;
+  background:linear-gradient(135deg,#071c32,#0b2944)!important;
+  color:#f4fbff!important;
+  box-shadow:0 15px 34px rgba(0,12,28,.2)!important;
+}
+.quote-summary h2,.quote-summary .kpi b{color:#f4fbff!important}
+.quote-summary .kpi div{border-color:rgba(118,167,199,.22)!important;color:#8fa8bc!important}
+.quote-heading,.quote-workspace>.section,.quote-heading+.section,
+#view_multiDay>.page>.g2>.cd,.page .cd,.day1-analysis-card,.day1-metric-grid,
+#md_rp,.page>#statsPanel,.page>#resultArea .gc{
+  border-color:var(--yc-card-line)!important;
+  background:var(--yc-card)!important;
+  box-shadow:0 14px 34px rgba(13,38,61,.1)!important;
+}
+.quote-heading h2,.quote-workspace>.section h2,#view_multiDay>.page>.g2>.cd>h3,.page .cd>h3,.day1-analysis-head h2,.day1-analysis-card h3{color:#172b42!important}
+.quote-heading,.quote-workspace>.section,#view_multiDay>.page>.g2>.cd,.page .cd{color:var(--yc-card-text)!important}
+.quote-heading p,.day1-analysis-head p{color:var(--yc-card-muted)!important}
+.quote-workspace>.section h2,#view_multiDay>.page>.g2>.cd>h3,.page .cd>h3{border-color:#dce6ee!important}
+.field input,.field select,.field textarea,.cost-row input,.cost-row select,.traffic-grid input,.traffic-grid select,.personnel-row input,.meal-service-controls input,.service-controls input,
+.dispatch-field input,.dispatch-field select,.dispatch-extra-grid input{
+  border-color:#c8d6e3!important;
+  background:#fff!important;
+  color:#203248!important;
+}
+.field input:focus,.field select:focus,.field textarea:focus,.cost-row input:focus,.cost-row select:focus,.traffic-grid input:focus,.traffic-grid select:focus,.personnel-row input:focus,.meal-service-controls input:focus,.service-controls input:focus,
+.dispatch-field input:focus,.dispatch-field select:focus,.dispatch-extra-grid input:focus{
+  outline:3px solid rgba(19,184,178,.18)!important;
+  border-color:var(--yc-teal)!important;
+}
+.btn:focus-visible,.module-actions button:focus-visible,.saas-module-strip a:focus-visible,.saas-module-strip button:focus-visible,.module-nav a:focus-visible,.module-step-nav a:focus-visible,.page>.steps .step:focus-visible{
+  outline:3px solid rgba(38,210,198,.3)!important;
+  outline-offset:2px;
+}
+.btn.primary,.btn.green,.btn-b,.btn-p{
+  border-color:var(--yc-teal-strong)!important;
+  background:var(--yc-teal-strong)!important;
+  color:#fff!important;
+}
+.dispatch-entry-grid,.dispatch-extra-grid,#section-bonus .cost-row,.traffic-grid{border-color:#d8e3eb!important;background:#f0f5f8!important}
+.saas-auth{
+  background:radial-gradient(circle at 50% 12%,rgba(19,184,178,.15),transparent 25rem),var(--yc-navy-950)!important;
+}
+.saas-auth-card,.login-card{
+  border-color:rgba(118,167,199,.32)!important;
+  background:#081f36!important;
+  color:#f4fbff!important;
+  box-shadow:0 28px 80px rgba(0,8,20,.48)!important;
+}
+.saas-auth-card h1,.login-card h1{color:#f4fbff!important}
+.saas-auth-card p,.login-card .hint{color:#94aabd!important}
+.saas-auth-card label,.login-card label{color:#dceaf4!important}
+.saas-auth-card input,.login-card input{border-color:#31516a!important;background:#0c2a46!important;color:#f4fbff!important}
+.saas-auth-card a{color:#76d9d1!important}
+@media(max-width:900px){
+  body{background:linear-gradient(180deg,var(--yc-navy-950) 0,var(--yc-navy-900) 360px,#edf2f6 360px,#f4f7f9 100%)}
+  .top,.saas-module-strip{box-shadow:0 8px 24px rgba(0,9,20,.2)!important}
+  .dashboard-panel,.module-dashboard{box-shadow:0 13px 30px rgba(0,13,30,.25)!important}
+}
+@media print{
+  html,body{background:#fff!important;color:#111!important}
+  .quote-heading,.quote-workspace>.section,.quote-heading+.section,#view_multiDay>.page>.g2>.cd,.page .cd,.day1-analysis-card,.day1-metric-grid,#md_rp,.page>#statsPanel,.page>#resultArea .gc{border-color:#d8e0e8!important;background:#fff!important;box-shadow:none!important;color:#111!important}
+}
+
+  </style>
+<script src="/customer-entry-guard.js"></script>
+<script src="/vendor/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="session-boot" id="sessionBootView" role="status" aria-live="polite">
+  <div class="session-boot-inner"><span class="session-boot-spinner" aria-hidden="true"></span><span>正在进入单日大研学</span></div>
+</div>
+<div id="loginView">
+  <div class="login-card">
+    <h1>客户使用入口</h1>
+    <p class="hint">已有客户账号可直接登录。没有账号请先从曜程客户入口提交试用申请。</p>
+    <div class="field"><label for="loginUser">账号</label><input id="loginUser" placeholder="账号"></div>
+    <div class="field" style="margin-top:10px"><label for="loginPass">密码</label><input id="loginPass" type="password" placeholder="密码"></div>
+    <button class="btn primary" style="width:100%;margin-top:14px" onclick="login()">登录</button>
+    <div class="hint" style="margin-top:10px">公网测试申请通过后，原申请页面会直接进入模块中心，无需运营人员传递密码。</div>
+    <div style="margin-top:18px;border-top:1px solid var(--line);padding-top:16px">
+      <a class="btn green" style="width:100%" href="/sales.html">返回曜程客户入口申请试用</a>
+    </div>
+  </div>
+</div>
+<div id="appView">
+  <div class="top">
+    <div class="brand"><div><h1>单日大研学</h1><span>曜程 · 新未来教育科技出品</span></div></div>
+    <div class="actions">
+      <button class="btn primary write-action header-duplicate-action" onclick="openSaveModal()">保存</button>
+      <button class="btn header-duplicate-action" onclick="openLoadModal()">调出</button>
+      <button class="btn header-duplicate-action" onclick="openCustomerModal()">客户</button>
+      <button class="btn green header-duplicate-action" onclick="openSupplierModal()">供方</button>
+      <button class="btn" onclick="printQuoteDetail()">打印</button><button class="btn" onclick="downloadQuoteDetailWorkbook()">导出报价</button><a class="btn" href="/modules.html">模块中心</a>
+      <button class="btn" onclick="openPasswordModal()">修改密码</button>
+      <button class="btn tenant-admin-only" onclick="openAdminModal()">员工账号</button>
+      <button class="btn" onclick="logout()">退出</button>
+    </div>
+  </div>
+  <section class="customer-dashboard no-print">
+    <div class="dashboard-panel">
+      <div class="dashboard-head">
+        <div>
+          <h2>客户工作台</h2>
+          <p>从基础信息开始，成本、供方与利润实时联动。</p>
+        </div>
+        <div class="identity-grid" id="customerIdentity">
+          <div class="mini-card"><div class="label">当前账号</div><div class="value">-</div></div>
+          <div class="mini-card"><div class="label">当前角色</div><div class="value">-</div></div>
+          <div class="mini-card"><div class="label">模块</div><div class="value">单日大研学</div></div>
+          <div class="mini-card"><div class="label">数据范围</div><div class="value">本单位</div></div>
+        </div>
+      </div>
+      <div class="quick-actions">
+        <button class="btn primary write-action" onclick="scrollToQuoteForm()">新建报价</button>
+        <button class="btn green write-action" onclick="openSaveModal()">保存当前方案</button>
+        <button class="btn" onclick="openLoadModal()">调出历史方案</button>
+        <button class="btn" onclick="openCustomerModal()">客户档案</button>
+        <button class="btn" onclick="openSupplierModal()">供方库</button>
+      </div>
+      <div class="section" style="margin-top:14px">
+        <h2>业务概览</h2>
+        <div class="overview-grid" id="workbenchOverview">
+          <div class="mini-card"><div class="label">客户档案</div><div class="value">-</div></div>
+          <div class="mini-card"><div class="label">供方库</div><div class="value">-</div></div>
+          <div class="mini-card"><div class="label">已存方案</div><div class="value">-</div></div>
+          <div class="mini-card"><div class="label">预采买</div><div class="value">-</div></div>
+        </div>
+        <div class="status-note" id="lastSavedScheme" style="display:none;margin-top:10px"></div>
+      </div>
+    </div>
+  </section>
+  <div class="workbench-shell">
+    <nav class="module-nav no-print"><div class="module-nav-head"><b>方案配置</b><span>按业务顺序完成录入</span></div>
+      <a href="#section-base">基础信息</a>
+      <a href="#section-personnel">人员配置</a>
+      <a href="#section-bonus">全职奖金</a>
+      <a href="#section-traffic">交通费</a>
+      <a href="#section-meal">餐饮住宿</a>
+      <a href="#section-venue">场地与服务</a><a href="#day1-analysis">经营分析</a>
+    </nav>
+    <main class="panel quote-workspace">
+      <div class="quote-heading">
+        <div>
+          <h2>方案报价录入</h2>
+          <p>按模块录入成本、绑定供方，上方实时汇总收入、成本和利润。</p>
+        </div>
+        <div class="quote-status no-print">SaaS 数据 · 客户单位隔离</div>
+      </div>
+      <div class="section" id="section-base">
+        <h2>基础信息</h2>
+        <div class="grid">
+          <div class="field"><label for="projectName">项目名称</label><input id="projectName" placeholder="XX学校春季研学"></div>
+          <div class="field"><label for="docDate">项目日期</label><input id="docDate" type="date"></div>
+          <div class="field"><label for="days">活动天数（单日固定）</label><input id="days" type="number" value="1" min="1" max="1" step="1" readonly aria-readonly="true"><span class="hint">单日大研学活动天数固定为 1 天</span></div>
+          <div class="field"><label for="studentCount">学员人数</label><input id="studentCount" type="number" value="30" min="0"></div>
+          <div class="field"><label for="classCount">班级数</label><input id="classCount" type="number" value="1" min="0"></div>
+          <div class="field"><label for="unitPrice">人均报价（元/学员）</label><input id="unitPrice" type="number" value="298" min="0"></div>
+          <div class="field"><label for="teacherCount">学校教师</label><div class="input-note"><input id="teacherCount" type="number" value="2" min="0"><span class="free-note">免费</span></div></div>
+          <div class="field"><label for="schoolLeaderCount">学校领导</label><div class="input-note"><input id="schoolLeaderCount" type="number" value="1" min="0"><span class="free-note">免费</span></div></div>
+          <div class="field"><label for="commissionRate">渠道佣金率 %</label><input id="commissionRate" type="number" value="0" min="0" max="100" step="0.1"></div><div class="field"><label for="vatRate">增值税率 %</label><input id="vatRate" type="number" value="1" min="0" max="100" step="0.1"></div>
+        </div>
+        <div id="day1ClassRoster" class="class-roster no-print"></div>
+      </div>
+      <div class="section" id="section-personnel">
+        <h2>人员配置</h2>
+        <div class="form-column-head personnel-column-head" aria-hidden="true"><span>岗位</span><span>人数</span><span>单价</span><span>单位</span><span>供方</span><span>操作</span></div>
+        <div class="personnel-row personnel-fixed"><label for="guideCount">讲解导游</label><input id="guideCount" type="number" value="0" min="0" title="人数"><input id="guidePrice" type="number" value="300" min="0" title="单价"><span>元/人/天</span><input id="guideSupplier" class="supplier-input personnel-supplier" data-key="personnel_guide" data-type="服务" list="supplierOptions" placeholder="供方" aria-label="讲解导游供方"><span class="personnel-empty-action"></span></div>
+        <div class="personnel-row personnel-fixed"><label for="leaderCount">导游</label><input id="leaderCount" type="number" value="1" min="0" title="人数"><input id="leaderPrice" type="number" value="240" min="0" title="单价"><span>元/人/天</span><input id="leaderSupplier" class="supplier-input personnel-supplier" data-key="personnel_leader" data-type="服务" list="supplierOptions" placeholder="供方" aria-label="导游供方"><span class="personnel-empty-action"></span></div>
+        <div class="personnel-row personnel-fixed"><label for="safetyCount">安全员/教官</label><input id="safetyCount" type="number" value="1" min="0" title="人数"><input id="safetyPrice" type="number" value="240" min="0" title="单价"><span>元/人/天</span><input id="safetySupplier" class="supplier-input personnel-supplier" data-key="personnel_safety" data-type="服务" list="supplierOptions" placeholder="供方" aria-label="安全员/教官供方"><span class="personnel-empty-action"></span></div>
+        <div class="personnel-row personnel-fixed"><label for="photographerCount">摄影师</label><input id="photographerCount" type="number" value="1" min="0" title="人数"><input id="photographerPrice" type="number" value="412" min="0" title="单价"><span>元/人/天</span><input id="photographerSupplier" class="supplier-input personnel-supplier" data-key="personnel_photographer" data-type="服务" list="supplierOptions" placeholder="供方" aria-label="摄影师供方"><span class="personnel-empty-action"></span></div>
+        <div class="personnel-row personnel-fixed"><label for="medicCount">队医</label><input id="medicCount" type="number" value="0" min="0" title="人数"><input id="medicPrice" type="number" value="300" min="0" title="单价"><span>元/人/天</span><input id="medicSupplier" class="supplier-input personnel-supplier" data-key="personnel_medic" data-type="服务" list="supplierOptions" placeholder="供方" aria-label="队医供方"><span class="personnel-empty-action"></span></div>
+        <div class="personnel-row personnel-fixed"><label for="lifeTeacherCount">生活老师</label><input id="lifeTeacherCount" type="number" value="0" min="0" title="人数"><input id="lifeTeacherPrice" type="number" value="240" min="0" title="单价"><span>元/人/天</span><input id="lifeTeacherSupplier" class="supplier-input personnel-supplier" data-key="personnel_life_teacher" data-type="服务" list="supplierOptions" placeholder="供方" aria-label="生活老师供方"><span class="personnel-empty-action"></span></div>
+        <div id="customPersonnelList"></div>
+        <button class="btn no-print" type="button" onclick="addCustomPersonnel()">+ 更多自定义岗位</button>
+      </div>
+      <div class="section" id="section-bonus">
+        <h2>全职奖金</h2>
+        <div class="cost-row"><label for="coordinatorFee">计调补助</label><input id="coordinatorFee" type="number" value="100" min="0"><span>元/单</span><span></span></div>
+        <div class="cost-row"><label for="fullLeaderFee">领队补助</label><input id="fullLeaderFee" type="number" value="150" min="0"><span>元/单</span><span></span></div>
+        <div class="cost-row"><label for="subLeaderFee">副领队补助</label><input id="subLeaderFee" type="number" value="0" min="0"><span>元/单</span><span></span></div>
+      </div>
+      <div class="section" id="section-traffic">
+        <h2>交通费</h2>
+        <div class="sub-title">市内交通费用</div>
+        <div class="traffic-grid"><label for="busFeePerTrip">单趟单车费用</label><input id="busFeePerTrip" type="number" value="900" min="0"><span>元(含高速)</span><label for="busKm">往返里程</label><input id="busKm" type="number" value="50" min="0"><span>公里</span><label for="busCount">车辆数</label><input id="busCount" type="number" value="1" min="0"><span>辆</span><label for="busTrips">往返趟次</label><input id="busTrips" type="number" value="1" min="0"><span>趟</span><label for="busSupplier">绑定供方</label><input id="busSupplier" class="supplier-input traffic-supplier" data-key="bus" data-type="交通" list="supplierOptions" placeholder="选择或输入供方"><span class="hint traffic-unit">单位：车趟</span></div>
+        <div id="day1DispatchAdvisor" class="dispatch-advisor no-print"></div>
+        <div class="sub-title">大交通费用</div>
+        <div class="traffic-grid"><label for="majorTrafficType">交通方式</label><select id="majorTrafficType"><option>高铁</option><option>火车</option><option>飞机</option><option>动车</option><option>其他</option></select><span>类型</span><label for="majorTrafficPeople">乘坐人数</label><input id="majorTrafficPeople" type="number" value="0" min="0"><span>人</span><label for="majorTrafficPrice">人均票价</label><input id="majorTrafficPrice" type="number" value="0" min="0"><span>元/人</span><label for="majorTrafficTrips">往返趟次</label><input id="majorTrafficTrips" type="number" value="1" min="0"><span>趟</span><label for="majorTrafficSupplier">绑定供方</label><input id="majorTrafficSupplier" class="supplier-input traffic-supplier" data-key="major_traffic" data-type="交通" list="supplierOptions" placeholder="选择或输入票务/航司"><span class="hint traffic-unit">单位：人趟</span></div>
+      </div>
+      <div class="section" id="section-meal">
+        <h2>餐饮住宿</h2>
+        <div class="form-column-head cost-column-head" aria-hidden="true"><span>费用项目</span><span>单价</span><span>供方</span><span>单位</span></div>
+        <div class="cost-row"><label for="mealStudent">学员餐费</label><input id="mealStudent" type="number" value="0" min="0"><input class="supplier-input" data-key="meal_student" data-type="餐饮" list="supplierOptions" placeholder="供方"><span>元/人/天</span></div>
+        <div class="cost-row"><label for="mealStaff">全职人员餐费</label><input id="mealStaff" type="number" value="35" min="0"><input class="supplier-input" data-key="meal_staff" data-type="餐饮" list="supplierOptions" placeholder="供方"><span>元/人/天</span></div>
+        <div class="cost-row"><label for="mealParttime">兼职人员餐费</label><input id="mealParttime" type="number" value="35" min="0"><input class="supplier-input" data-key="meal_parttime" data-type="餐饮" list="supplierOptions" placeholder="供方"><span>元/人/天</span></div>
+        <div class="cost-row"><label for="mealDriver">司机餐费</label><input id="mealDriver" type="number" value="0" min="0"><input class="supplier-input" data-key="meal_driver" data-type="餐饮" list="supplierOptions" placeholder="供方"><span>元/人/天</span></div>
+        <div id="mealServiceList"></div>
+        <div class="meal-service-actions no-print"><span></span><button class="btn" type="button" onclick="addMealService()">+ 添加餐饮住宿服务</button><span></span></div>
+        <div class="cost-row"><label for="hotelPrice">住宿单价</label><input id="hotelPrice" type="number" value="0" min="0"><input class="supplier-input" data-key="hotel" data-type="住宿" list="supplierOptions" placeholder="供方"><span>元/间/夜</span></div>
+        <div class="room-grid"><div class="field"><label for="hotelStaffRooms">团队房间</label><input id="hotelStaffRooms" type="number" value="0" min="0"></div><div class="field"><label for="hotelTeacherRooms">教师房间</label><input id="hotelTeacherRooms" type="number" value="0" min="0"></div><div class="field"><label for="hotelStudentRooms">学员房间</label><input id="hotelStudentRooms" type="number" value="0" min="0"></div><div class="field"><label for="hotelNights">住宿晚数</label><input id="hotelNights" type="number" value="1" min="0"></div></div>
+      </div>
+      <div class="section" id="section-venue">
+        <h2>场地与服务</h2>
+        <div class="form-column-head cost-column-head" aria-hidden="true"><span>费用项目</span><span>单价</span><span>供方</span><span>单位</span></div>
+        <div class="cost-row"><label for="ticketPerStudent">门票/场地</label><input id="ticketPerStudent" type="number" value="50" min="0"><input class="supplier-input" data-key="ticket" data-type="场地" list="supplierOptions" placeholder="供方"><span>元/学员</span></div>
+        <div class="cost-row"><label for="ticketPerStudent2">门票/场地2</label><input id="ticketPerStudent2" type="number" value="0" min="0"><input class="supplier-input" data-key="ticket2" data-type="场地" list="supplierOptions" placeholder="供方"><span>元/学员</span></div>
+        <div class="cost-row"><label for="insurancePerStudent">保险费</label><input id="insurancePerStudent" type="number" value="1" min="0"><input class="supplier-input" data-key="insurance" data-type="服务" list="supplierOptions" placeholder="供方"><span>元/人（含司机）</span></div>
+        <div class="service-row venue-session-row"><label for="sessionSupplier">讲解服务</label><div class="service-controls"><input id="sessionSupplier" class="supplier-input" data-key="session" data-type="服务" list="supplierOptions" placeholder="供方"><input id="sessionCount" type="number" value="0" min="0" placeholder="讲解场次"><span>×</span><input id="sessionPrice" type="number" value="0" min="0" placeholder="单场费用"><span>元/场</span><span></span></div></div>
+        <div id="extraSvcList"></div>
+        <div class="service-actions no-print"><span></span><button class="btn" type="button" onclick="addExtraService()">+ 添加自定义服务</button><span></span></div>
+      </div>
+      <datalist id="supplierOptions"></datalist>
+    </main>
+    <aside class="panel side quote-summary">
+      <div class="section"><h2>报价结果</h2><div class="kpi" id="kpiBox"></div></div>
+      <div class="section"><h2>供方绑定提示</h2><p class="hint">选择已有供方会记录供方 ID；输入新名称时，保存前会询问是否新增到供方库。未确认的新名称只作为当前方案临时供方。</p></div>
+      <div class="section"><h2>成本明细</h2><div id="costDetail"></div></div><div class="section no-print"><button class="btn primary" style="width:100%" onclick="scrollToDay1Analysis()">查看完整经营分析</button></div>
+    </aside>
+  </div>
+
+  <section class="day1-analysis no-print" id="day1-analysis" aria-labelledby="day1AnalysisTitle">
+    <div class="day1-analysis-head">
+      <div><h2 id="day1AnalysisTitle">报价经营分析</h2><p>与多日大研学统一展示口径，数据随报价实时更新。</p></div>
+    </div>
+    <div class="day1-analysis-grid">
+      <div class="day1-analysis-card"><h3>成本结构</h3><div id="day1CostBars"></div></div>
+      <div class="day1-analysis-stack">
+        <div class="day1-metric-grid" id="day1MetricGrid">
+          <div class="day1-metric"><div class="day1-metric-label">总收入</div><div class="day1-metric-value" id="day1Revenue">--</div></div>
+          <div class="day1-metric"><div class="day1-metric-label">渠道佣金</div><div class="day1-metric-value negative" id="day1Commission">--</div></div>
+          <div class="day1-metric"><div class="day1-metric-label">增值税</div><div class="day1-metric-value negative" id="day1Vat">--</div></div>
+          <div class="day1-metric"><div class="day1-metric-label">净收入</div><div class="day1-metric-value accent" id="day1NetRevenue">--</div></div>
+          <div class="day1-metric"><div class="day1-metric-label">总成本</div><div class="day1-metric-value" id="day1TotalCost">--</div></div>
+          <div class="day1-metric"><div class="day1-metric-label">毛利润</div><div class="day1-metric-value" id="day1Profit">--</div></div>
+          <div class="day1-metric"><div class="day1-metric-label">毛利率</div><div class="day1-metric-value" id="day1Margin">--</div></div>
+          <div class="day1-metric"><div class="day1-metric-label">人均利润</div><div class="day1-metric-value" id="day1ProfitPer">--</div></div>
+          <div class="day1-metric"><div class="day1-metric-label">人均成本</div><div class="day1-metric-value" id="day1CostPer">--</div></div>
+          <div class="day1-metric"><div class="day1-metric-label">盈亏平衡</div><div class="day1-metric-value accent" id="day1Breakeven">--</div></div>
+        </div>
+        <div class="day1-profit-health" id="day1ProfitHealth" role="status" aria-live="polite">--</div>
+        <div class="day1-analysis-card"><h3>成本占比</h3><div class="day1-donut-wrap"><canvas id="day1CostDonut" width="440" height="440" aria-label="成本占比环形图"></canvas><div class="day1-donut-legend" id="day1CostLegend"></div></div></div>
+      </div>
+      <div class="day1-analysis-card day1-sensitivity"><h3>利润敏感度（不同人数）</h3><div class="day1-table-scroll"><table class="day1-sensitivity-table" id="day1SensitivityTable"></table></div></div>
+    </div>
+  </section>
+</div>
+
+<div id="printReport" class="print-report"></div>
+
+<div class="modal-mask" id="customerModal" aria-hidden="true"><div class="modal small" role="dialog" aria-modal="true" aria-labelledby="customerModalTitle" aria-busy="false">
+  <h3 id="customerModalTitle">客户档案</h3>
+  <div class="row" style="margin-bottom:10px"><input id="customerSearch" class="grow" placeholder="搜索客户名称、联系人或电话" oninput="customerPage=1;renderCustomers()"><select id="customerPageSize" onchange="customerPage=1;renderCustomers()"><option value="10">每页 10 条</option><option value="20">每页 20 条</option><option value="50">每页 50 条</option></select></div>
+  <div class="hint" id="customerListSummary" style="margin-bottom:8px"></div>
+  <div id="customerList" class="modal-table-scroll"></div>
+  <div id="customerPager" style="margin-top:10px"></div>
+  <div class="row write-action" style="margin-top:10px"><input id="newCustomerName" class="grow" placeholder="客户名称"><input id="newCustomerContact" placeholder="联系人" style="width:110px"><input id="newCustomerPhone" placeholder="电话" style="width:130px"><button class="btn primary" onclick="addCustomer()">新增</button></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeModal()">关闭</button></div>
+</div></div>
+
+<div class="modal-mask nested-modal write-action" id="customerEditModal" aria-hidden="true"><div class="modal small" role="dialog" aria-modal="true" aria-labelledby="customerEditModalTitle" aria-busy="false">
+  <h3 id="customerEditModalTitle">编辑客户档案</h3>
+  <div class="status-note edit-form-error" id="customerEditError"></div>
+  <div class="library-edit-form">
+    <div class="field"><label for="editCustomerName">客户名称</label><input id="editCustomerName" maxlength="100" autocomplete="off"></div>
+    <div class="field"><label for="editCustomerContact">联系人</label><input id="editCustomerContact" maxlength="60" autocomplete="off"></div>
+    <div class="field full"><label for="editCustomerPhone">联系电话</label><input id="editCustomerPhone" maxlength="30" inputmode="tel" autocomplete="off"></div>
+    <div class="field full"><label for="editCustomerNotes">备注</label><textarea id="editCustomerNotes" maxlength="500"></textarea></div>
+  </div>
+  <div class="row" style="justify-content:flex-end;margin-top:14px"><button id="customerEditCancel" class="btn" onclick="closeCustomerEditModal()">取消</button><button id="customerEditSave" class="btn primary" onclick="submitCustomerEdit()">保存</button></div>
+</div></div>
+
+<div class="modal-mask nested-modal write-action" id="supplierEditModal" aria-hidden="true"><div class="modal small" role="dialog" aria-modal="true" aria-labelledby="supplierEditModalTitle" aria-busy="false">
+  <h3 id="supplierEditModalTitle">编辑供方资料</h3>
+  <div class="status-note edit-form-error" id="supplierEditError"></div>
+  <div class="library-edit-form">
+    <div class="field"><label for="editSupplierName">供方名称</label><input id="editSupplierName" maxlength="100" autocomplete="off"></div>
+    <div class="field"><label for="editSupplierType">供方类型</label><select id="editSupplierType"><option>交通</option><option>餐饮</option><option>住宿</option><option>场地</option><option>服务</option><option>其他</option></select></div>
+    <div class="field"><label for="editSupplierContact">联系人</label><input id="editSupplierContact" maxlength="60" autocomplete="off"></div>
+    <div class="field"><label for="editSupplierPhone">联系电话</label><input id="editSupplierPhone" maxlength="30" inputmode="tel" autocomplete="off"></div>
+    <div class="field full"><label for="editSupplierNotes">备注</label><textarea id="editSupplierNotes" maxlength="500"></textarea></div>
+  </div>
+  <div class="row" style="justify-content:flex-end;margin-top:14px"><button id="supplierEditCancel" class="btn" onclick="closeSupplierEditModal()">取消</button><button id="supplierEditSave" class="btn primary" onclick="submitSupplierEdit()">保存</button></div>
+</div></div>
+
+<div class="modal-mask" id="saveModal" aria-hidden="true"><div class="modal small" role="dialog" aria-modal="true" aria-labelledby="saveModalTitle" aria-busy="false">
+  <h3 id="saveModalTitle">保存方案</h3>
+  <div class="status-note" id="saveSummary">保存前确认：请选择客户并填写方案名称。</div>
+  <div class="field" style="margin-top:10px"><label for="saveCustomerSel">选择客户</label><select id="saveCustomerSel" onchange="renderSaveSummary()"></select></div>
+  <div class="field" style="margin-top:10px"><label for="saveSchemeName">方案名称</label><input id="saveSchemeName" oninput="renderSaveSummary()"></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary write-action" onclick="saveScheme()">保存</button></div>
+</div></div>
+
+<div class="modal-mask" id="loadModal" aria-hidden="true"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="loadModalTitle" aria-busy="false">
+  <h3 id="loadModalTitle">调出方案</h3>
+  <div class="row"><select id="loadCustomerFilter" onchange="schemePage=1;renderSchemeList()"></select><input id="loadSchemeSearch" class="grow" placeholder="搜索方案、客户或创建人" oninput="schemePage=1;renderSchemeList()"><select id="schemePageSize" onchange="schemePage=1;renderSchemeList()"><option value="10">每页 10 条</option><option value="20">每页 20 条</option><option value="50">每页 50 条</option></select></div>
+  <div class="hint" id="schemeListSummary" style="margin-top:10px">仅显示最新版方案。</div>
+  <div id="schemeList" class="modal-table-scroll" style="margin-top:12px"></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeModal()">关闭</button></div>
+</div></div>
+
+<div class="modal-mask" id="supplierModal" aria-hidden="true"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="supplierModalTitle" aria-busy="false">
+  <h3 id="supplierModalTitle">供方</h3>
+  <div class="tabs"><button class="tab active" data-tab="supplierLib" onclick="showSupplierTab('supplierLib')">供方资料</button><button class="tab" data-tab="supplierLedger" onclick="showSupplierTab('supplierLedger')">供方结算</button></div>
+  <div id="supplierLib">
+    <div class="row" style="margin-bottom:10px"><input id="supplierSearch" class="grow" placeholder="搜索供方名称、类型、联系人或电话" oninput="supplierPage=1;renderSuppliers()"><select id="supplierPageSize" onchange="supplierPage=1;renderSuppliers()"><option value="10">每页 10 条</option><option value="20">每页 20 条</option><option value="50">每页 50 条</option></select></div>
+    <div class="hint" id="supplierListSummary" style="margin-bottom:8px"></div>
+    <div id="supplierList" class="modal-table-scroll"></div>
+    <div id="supplierPager" style="margin-top:10px"></div>
+    <div class="row write-action" style="margin-top:10px"><input id="newSupplierName" class="grow" placeholder="供方名称"><select id="newSupplierType"><option>交通</option><option>餐饮</option><option>住宿</option><option>场地</option><option>服务</option><option>其他</option></select><input id="newSupplierContact" placeholder="联系人" style="width:110px"><input id="newSupplierPhone" placeholder="电话" style="width:130px"><button class="btn primary" onclick="addSupplier()">新增</button></div>
+  </div>
+  <div id="supplierLedger" style="display:none">
+    <section id="supplierStats" data-feature="supplier-stats">
+      <h4>方案用量统计</h4>
+      <div class="row"><input id="statStart" type="date"><input id="statEnd" type="date"><select id="statType"><option value="">全部类型</option><option>交通</option><option>餐饮</option><option>住宿</option><option>场地</option><option>服务</option><option>其他</option></select><input id="statSupplier" placeholder="供方名称"><input id="statCustomer" placeholder="客户"><input id="statScheme" placeholder="方案名称"><button class="btn primary" onclick="loadStats()">筛选统计</button><button class="btn green" onclick="exportStats()">导出统计</button></div>
+      <h4>供方汇总</h4><div id="statsSummary" class="modal-table-scroll"></div><h4>供方明细</h4><div id="statsDetail" class="modal-table-scroll"></div>
+    </section>
+    <section id="prepurchaseTab" data-feature="prepurchase" style="margin-top:18px">
+      <h4>预采买余额</h4>
+      <div class="row"><input id="prepFilterYear" type="number" min="2000" max="2100" placeholder="年度"><input id="prepFilterSupplier" placeholder="供方名称"><button class="btn primary" onclick="loadPrepurchase()">筛选余额</button><button class="btn green" onclick="exportPrepurchase()">导出余额</button></div>
+      <div class="day1-manager-block" style="margin-top:12px">
+      <h4>新增台账</h4>
+      <div class="row">
+        <input id="prepYear" type="number" min="2000" max="2100" placeholder="年度">
+        <input id="prepSupplierName" class="grow" list="supplierOptions" placeholder="供方">
+        <select id="prepItemScope"><option>门票/场地</option><option>门票/场地2</option><option>场地服务全部</option></select>
+        <input id="prepAmount" type="number" min="0" placeholder="采购金额">
+        <input id="prepQuantity" type="number" min="0" placeholder="采购数量(选填)">
+        <input id="prepUnit" placeholder="单位" value="张" style="width:80px">
+        <input id="prepValidFrom" type="date">
+        <input id="prepValidTo" type="date">
+        <input id="prepNotes" placeholder="备注">
+        <button class="btn primary" onclick="addPrepurchaseLedger()">新增台账</button>
+      </div>
+      </div>
+      <h4>余额汇总</h4><div id="prepurchaseSummary" class="modal-table-scroll"></div>
+      <h4>使用明细</h4><div id="prepurchaseDetails" class="modal-table-scroll"></div>
+    </section>
+  </div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeModal()">关闭</button></div>
+</div></div>
+
+<div class="modal-mask" id="adminModal" aria-hidden="true"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle" aria-busy="false">
+  <h3 id="adminModalTitle">员工账号</h3>
+  <div class="status-note"><b>角色说明：</b>客户超级管理员管理本单位账号；单日模块管理员管理单日业务；业务操作员负责录入；查看人员只查看数据。</div>
+  <div class="section"><h2>新增账号</h2><div class="row"><input id="newUserName" placeholder="账号"><input id="newUserPass" type="password" placeholder="密码"><select id="newUserRole"><option value="day1_admin">单日模块管理员</option><option value="user">业务操作员</option><option value="viewer">查看人员</option><option value="tenant_admin">客户超级管理员</option></select><button class="btn primary" onclick="addUser()">新增账号</button></div></div>
+  <div class="section"><h2>员工列表</h2><div class="row"><input id="userSearch" class="grow" placeholder="搜索账号、角色或状态" oninput="renderUsers()"></div><div class="hint" id="userListSummary" style="margin-top:8px"></div><div id="userList" class="modal-table-scroll" style="margin-top:10px"></div></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeModal()">关闭</button></div>
+</div></div>
+
+<div class="modal-mask nested-modal" id="userPasswordResetModal" aria-hidden="true"><div class="modal small" role="dialog" aria-modal="true" aria-labelledby="userPasswordResetModalTitle" aria-busy="false">
+  <h3 id="userPasswordResetModalTitle">重置员工密码</h3>
+  <div class="status-note edit-form-error" id="userPasswordResetError"></div>
+  <div class="field"><label for="userPasswordResetTarget">目标账号</label><input id="userPasswordResetTarget" readonly></div>
+  <div class="field" style="margin-top:11px"><label for="userPasswordResetNew">新密码</label><input id="userPasswordResetNew" type="password" autocomplete="new-password" placeholder="至少 6 位"></div>
+  <div class="field" style="margin-top:11px"><label for="userPasswordResetConfirm">确认新密码</label><input id="userPasswordResetConfirm" type="password" autocomplete="new-password" placeholder="再次输入新密码"></div>
+  <div class="row" style="justify-content:flex-end;margin-top:14px"><button id="userPasswordResetCancel" class="btn" onclick="closeUserPasswordResetModal()">取消</button><button id="userPasswordResetSave" class="btn primary" onclick="submitUserPasswordReset()">确认重置</button></div>
+</div></div>
+
+<div class="modal-mask" id="prepurchaseAdjustmentModal" aria-hidden="true"><div class="modal small" role="dialog" aria-modal="true" aria-labelledby="prepurchaseAdjustmentModalTitle" aria-busy="false">
+  <h3 id="prepurchaseAdjustmentModalTitle">手工调整预采买</h3>
+  <div class="status-note" id="prepurchaseAdjustmentSummary">用于退款、赠送、纠错，不改历史方案明细。</div>
+  <div class="field" style="margin-top:10px"><label for="prepAdjustmentType">调整方式</label><select id="prepAdjustmentType"><option value="decrease">减少余额</option><option value="increase">增加余额</option></select></div>
+  <div class="grid two" style="margin-top:10px">
+    <div class="field"><label for="prepAdjustmentAmount">调整金额</label><input id="prepAdjustmentAmount" type="number" min="0" step="0.01" placeholder="0"></div>
+    <div class="field"><label for="prepAdjustmentQuantity">调整数量</label><input id="prepAdjustmentQuantity" type="number" min="0" step="0.01" placeholder="0"></div>
+  </div>
+  <div class="field" style="margin-top:10px"><label for="prepAdjustmentNotes">备注</label><input id="prepAdjustmentNotes" placeholder="例如：退款、赠送、纠错"></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="submitPrepurchaseAdjustment()">确认调整</button></div>
+</div></div>
+
+<div class="modal-mask" id="passwordModal" aria-hidden="true"><div class="modal small" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle" aria-busy="false">
+  <h3 id="passwordModalTitle">修改密码</h3>
+  <div class="field"><label for="currentPassword">当前密码</label><input id="currentPassword" type="password"></div>
+  <div class="field" style="margin-top:10px"><label for="newPassword">新密码</label><input id="newPassword" type="password" placeholder="至少 6 位"></div>
+  <div class="field" style="margin-top:10px"><label for="newPassword2">再次输入新密码</label><input id="newPassword2" type="password"></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="changePassword()">确认修改</button></div>
+</div></div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<script>
+var token = '';
+localStorage.removeItem('yx_saas_customer_token');
+function yaochengCsrfToken(){var cookie=String(document.cookie||''),match=cookie.match(/(?:^|;\s*)yaocheng_customer_csrf=([^;]+)/)||cookie.match(/(?:^|;\s*)yaocheng_csrf=([^;]+)/);return match?decodeURIComponent(match[1]):'';}
+var currentUser = null;
+var tenantUsers = [];
+var customerPage = 1;
+var supplierPage = 1;
+var schemePage = 1;
+var editingCustomerId = null;
+var editingSupplierId = null;
+var customerEditSaving = false;
+var supplierEditSaving = false;
+var resetPasswordUserId = null;
+var resetPasswordSaving = false;
+var defaultQuoteData = null;
+var day1ModuleConfig = {module_title:'单日大研学',customer_entry_label:'客户使用入口',supplier_stats_enabled:true,prepurchase_enabled:true,current_release:null};
+var day1ModuleAccess = 'none';
+var activePrepurchaseLedgerId = null;
+var customers = [];
+var suppliers = [];
+var schemes = [];
+var extraServices = [{name:'',count:0,price:0}];
+var mealServices = [{name:'',count:0,price:0}];
+var customPersonnel = [{name:'自定义岗位1',count:0,price:0}];
+var customPersonnelSuppliers = [''];
+var quoteTrackingReady = false;
+var quoteState = {mode:'new',schemeName:'',version:0};
+var quoteDiscardInProgress = false;
+var viewerLoadedQuoteSnapshot = '';
+function isViewer(){return typeof day1ModuleAccess!=='undefined'?day1ModuleAccess==='viewer':!!(currentUser&&currentUser.role==='viewer');}
+function applyViewerReadOnlyState(){
+  var readOnly=isViewer();
+  document.querySelectorAll('main input, main select, main textarea').forEach(function(control){control.disabled=readOnly;});
+  document.querySelectorAll('main button, button.write-action').forEach(function(button){button.disabled=readOnly;});
+}
+function viewerWriteBlocked(actionLabel){if(!isViewer())return false;showToast('查看人员为只读账号，不能'+actionLabel,true);return true;}
+function currentViewerQuoteSnapshot(){return JSON.stringify({data:collectFormData(),suppliers:Array.from(document.querySelectorAll('.supplier-input')).map(function(input){return [input.dataset.key||'',input.value||''];})});}
+function captureViewerLoadedQuoteSnapshot(){viewerLoadedQuoteSnapshot=isViewer()?currentViewerQuoteSnapshot():'';}
+function validateViewerQuoteOutput(){
+  if(!isViewer())return {ok:true};
+  if(quoteState.mode==='dirty')return {ok:false,message:'当前方案存在本地修改，查看人员不能打印或导出'};
+  if(quoteState.mode!=='loaded'||!viewerLoadedQuoteSnapshot)return {ok:false,message:'查看人员只能打印或导出已调出的方案'};
+  if(currentViewerQuoteSnapshot()!==viewerLoadedQuoteSnapshot){quoteState.mode='dirty';viewerLoadedQuoteSnapshot='';renderQuoteStatus();return {ok:false,message:'当前方案存在本地修改，查看人员不能打印或导出'};}
+  return {ok:true};
+}
+
+function apiFetch(path, options){
+  options = options || {};
+  options.headers = options.headers || {};
+  options.headers['X-Yaocheng-Session-Scope']='customer';
+  if(options.body && typeof options.body !== 'string'){
+    options.body = JSON.stringify(options.body);
+    options.headers['Content-Type'] = 'application/json';
+  }
+  var method=String(options.method||'GET').toUpperCase();var csrf=yaochengCsrfToken();if((method==='POST'||method==='PATCH'||method==='DELETE')&&csrf)options.headers['X-CSRF-Token']=csrf;options.credentials='same-origin';
+  return fetch(path, options).then(function(res){
+    if(path.indexOf('.xlsx') > -1 && res.ok) return res.blob();
+    return res.text().then(function(text){
+      var data = text ? JSON.parse(text) : {};
+      if(!res.ok) throw new Error(data.error || '请求失败');
+      return data;
+    });
+  }).catch(function(e){
+    if(String(e && e.message || e).indexOf('Failed to fetch') >= 0){
+      throw new Error('服务端连接失败：请先运行一键启动包，并用 http://主机IP:端口 打开页面。不要直接双击 HTML 文件打开。');
+    }
+    throw e;
+  });
+}
+function showToast(msg,isError){
+  var el=document.getElementById('toast');if(!el)return;
+  if(showToast.timer)clearTimeout(showToast.timer);
+  el.setAttribute('role',isError?'alert':'status');
+  el.setAttribute('aria-live',isError?'assertive':'polite');
+  el.textContent=msg;el.className='toast show'+(isError?' error':'');
+  showToast.timer=setTimeout(function(){el.className='toast';},2400);
+}
+function focusElementSafely(element){if(!element||typeof element.focus!=='function'||element.isConnected===false)return false;try{element.focus({preventScroll:true});}catch(e){element.focus();}return true;}
+function focusFirstModalControl(modal){
+  if(!modal)return false;
+  var target=modal.querySelector('[autofocus],input:not([disabled]):not([readonly]):not([type="hidden"]),select:not([disabled]),textarea:not([disabled]):not([readonly]),button:not([disabled]),[tabindex]:not([tabindex="-1"])');
+  if(!target){target=modal.querySelector('.modal');if(target&&!target.hasAttribute('tabindex'))target.setAttribute('tabindex','-1');}
+  return focusElementSafely(target);
+}
+function visibleModalMasks(){return [].slice.call(document.querySelectorAll('.modal-mask')).filter(function(modal){return modal.style.display==='flex';});}
+function topVisibleModal(){var visible=visibleModalMasks();var nested=visible.filter(function(modal){return modal.classList.contains('nested-modal');});return nested.length?nested[nested.length-1]:(visible.length?visible[visible.length-1]:null);}
+function showModalElement(modal,trigger){
+  if(!modal)return false;
+  modal._returnFocus=trigger||document.activeElement;
+  modal.style.display='flex';modal.setAttribute('aria-hidden','false');
+  setTimeout(function(){if(modal.style.display==='flex')focusFirstModalControl(modal);},0);
+  return true;
+}
+function hideModalElement(modal,restoreFocus){
+  if(!modal)return false;
+  var trigger=modal._returnFocus;modal.style.display='none';modal.setAttribute('aria-hidden','true');modal._returnFocus=null;
+  if(restoreFocus!==false)focusElementSafely(trigger);
+  return true;
+}
+function openModal(id){
+  var trigger=document.activeElement;
+  visibleModalMasks().forEach(function(modal){hideModalElement(modal,false);});
+  return showModalElement(document.getElementById(id),trigger);
+}
+function requestModalClose(modal,force){
+  if(!modal)return false;
+  if(modal.getAttribute('aria-busy')==='true'&&!force)return false;
+  if(modal.id==='customerEditModal')return closeCustomerEditModal(force);
+  if(modal.id==='supplierEditModal')return closeSupplierEditModal(force);
+  if(modal.id==='userPasswordResetModal')return closeUserPasswordResetModal(force);
+  return hideModalElement(modal);
+}
+function closeModal(force){return requestModalClose(topVisibleModal(),force);}
+function handleModalKeydown(event){
+  if(!event||event.key!=='Escape')return false;
+  var modal=topVisibleModal();if(!modal)return false;
+  event.preventDefault();event.stopPropagation();
+  return requestModalClose(modal,false);
+}
+document.addEventListener('keydown',handleModalKeydown);
+function n(id){var el=document.getElementById(id);var val=el?parseFloat(el.value):0;return isNaN(val)?0:val;}
+function text(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+function money(v){return '¥'+Math.round((v||0)*100)/100;}
+function today(){return new Date().toISOString().slice(0,10);}
+function startOfYear(){return new Date().getFullYear() + '-01-01';}
+function quoteEnvironmentLabel(){return '当前版本 '+renderModuleVersion();}
+function quoteVersionText(version){return version?'第'+version+'版':'';}
+function renderQuoteStatus(){
+  var el=document.querySelector('.quote-status');if(!el)return;
+  var stateText='新报价';
+  if(quoteState.mode==='dirty')stateText='未保存修改'+(quoteState.schemeName?'：'+quoteState.schemeName:'');
+  if(quoteState.mode==='saved')stateText='已保存：'+quoteState.schemeName+' '+quoteVersionText(quoteState.version);
+  if(quoteState.mode==='loaded')stateText='已调出：'+quoteState.schemeName+' '+quoteVersionText(quoteState.version);if(isViewer()&&quoteState.mode==='new')stateText='只读账号：请先调出已保存方案';if(isViewer()&&quoteState.mode==='dirty')stateText='只读账号：当前方案有本地修改，不可输出';
+  el.className='quote-status no-print '+quoteState.mode;
+  el.textContent=stateText+' · '+quoteEnvironmentLabel();
+}
+function markQuoteNew(){quoteDiscardInProgress=false;viewerLoadedQuoteSnapshot='';quoteState={mode:'new',schemeName:'',version:0};renderQuoteStatus();}
+function markQuoteDirty(){if(!quoteTrackingReady||quoteState.mode==='dirty')return;viewerLoadedQuoteSnapshot='';quoteState.mode='dirty';renderQuoteStatus();}
+function markQuoteSaved(schemeName,version){quoteDiscardInProgress=false;viewerLoadedQuoteSnapshot='';quoteState={mode:'saved',schemeName:schemeName||text('projectName')||'未命名方案',version:Number(version)||1};renderQuoteStatus();}
+function markQuoteLoaded(schemeName,version){quoteDiscardInProgress=false;viewerLoadedQuoteSnapshot='';quoteState={mode:'loaded',schemeName:schemeName||'未命名方案',version:Number(version)||1};renderQuoteStatus();}
+function initializeQuoteState(){quoteTrackingReady=true;markQuoteNew();}
+function hasUnsavedQuoteChanges(){return quoteTrackingReady && quoteState.mode==='dirty';}
+function confirmDiscardUnsavedQuote(actionLabel){
+  if(!quoteTrackingReady || quoteState.mode!=='dirty')return true;
+  var confirmed=confirm('当前报价有未保存修改，确认放弃并'+actionLabel+'？');
+  if(confirmed)quoteDiscardInProgress=true;
+  return confirmed;
+}
+function cancelQuoteDiscard(){quoteDiscardInProgress=false;}
+function quoteValidationError(message,fieldId){return {ok:false,message:message,fieldId:fieldId||''};}
+function validateDynamicQuoteRows(rows,label,ignoreDefaultName){
+  for(var i=0;i<(rows||[]).length;i++){
+    var item=rows[i]||{};
+    var name=String(item.name||'').trim();
+    var count=parseFloat(item.count)||0;
+    var price=parseFloat(item.price)||0;
+    var isDefaultName=ignoreDefaultName && /^自定义岗位\d+$/.test(name);
+    var active=count!==0 || price!==0 || (name && !isDefaultName);
+    if(!active)continue;
+    if(!name)return quoteValidationError(label+'第 '+(i+1)+' 行请填写名称');
+    if(count<=0)return quoteValidationError(label+'第 '+(i+1)+' 行数量必须大于 0');
+    if(price<=0)return quoteValidationError(label+'第 '+(i+1)+' 行单价必须大于 0');
+  }
+  return null;
+}
+function validateQuoteBeforeSave(){
+  if(!text('projectName'))return quoteValidationError('请填写项目名称','projectName');
+  if(!text('docDate'))return quoteValidationError('请选择项目日期','docDate');
+  if(n('days')!==1)return quoteValidationError('单日大研学活动天数固定为 1 天','days');
+  if(n('studentCount')<=0)return quoteValidationError('学员人数必须大于 0','studentCount');
+  if(n('unitPrice')<=0)return quoteValidationError('人均报价必须大于 0','unitPrice');
+  var numericInputs=Array.from(document.querySelectorAll('main input[type="number"]'));
+  for(var i=0;i<numericInputs.length;i++){
+    var raw=String(numericInputs[i].value||'').trim();
+    if(raw && parseFloat(raw)<0)return quoteValidationError('报价数据不能为负数',numericInputs[i].id);
+  }
+  var rowError=validateDynamicQuoteRows(mealServices,'餐饮住宿其他服务项');
+  if(rowError){rowError.fieldId='section-meal';return rowError;}
+  rowError=validateDynamicQuoteRows(extraServices,'场地自定义服务');
+  if(rowError){rowError.fieldId='section-venue';return rowError;}
+  rowError=validateDynamicQuoteRows(customPersonnel,'自定义岗位',true);
+  if(rowError){rowError.fieldId='section-personnel';return rowError;}
+  if((n('majorTrafficPeople')>0 || n('majorTrafficPrice')>0) && n('majorTrafficPeople')<=0)return quoteValidationError('大交通乘坐人数必须大于 0','majorTrafficPeople');
+  if((n('majorTrafficPeople')>0 || n('majorTrafficPrice')>0) && n('majorTrafficPrice')<=0)return quoteValidationError('大交通人均票价必须大于 0','majorTrafficPrice');
+  if((n('sessionCount')>0 || n('sessionPrice')>0) && n('sessionCount')<=0)return quoteValidationError('讲解场次必须大于 0','sessionCount');
+  if((n('sessionCount')>0 || n('sessionPrice')>0) && n('sessionPrice')<=0)return quoteValidationError('讲解单场费用必须大于 0','sessionPrice');
+  return {ok:true};
+}
+function showQuoteValidationError(result){
+  showToast(result.message,true);
+  var el=result.fieldId?document.getElementById(result.fieldId):null;
+  if(!el)return;
+  closeModal();
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  if(typeof el.focus==='function')setTimeout(function(){el.focus();},180);
+}
+
+function login(){
+  apiFetch('/api/login',{method:'POST',body:{username:text('loginUser'),password:document.getElementById('loginPass').value}}).then(function(data){
+    if(data.user.role==='platform_admin'){showToast('平台管理员请从后台维护管理入口登录',true);return;}
+    currentUser=data.user;localStorage.removeItem('yx_saas_customer_token');boot();
+  }).catch(function(e){showToast(e.message,true);});
+}
+function logout(){if(!confirmDiscardUnsavedQuote('退出登录'))return;localStorage.removeItem('yx_saas_customer_token');token='';apiFetch('/api/logout',{method:'POST',body:{}}).catch(function(){}).then(function(){location.reload();});}
+function openPasswordModal(){document.getElementById('currentPassword').value='';document.getElementById('newPassword').value='';document.getElementById('newPassword2').value='';openModal('passwordModal');}
+function changePassword(){
+  var newPassword=document.getElementById('newPassword').value;
+  if(newPassword!==document.getElementById('newPassword2').value){showToast('两次新密码不一致',true);return;}
+  apiFetch('/api/me/password',{method:'POST',body:{current_password:document.getElementById('currentPassword').value,new_password:newPassword}}).then(function(){
+    showToast('密码已修改，请重新登录');localStorage.removeItem('yx_saas_customer_token');setTimeout(function(){location.reload();},800);
+  }).catch(function(e){showToast(e.message,true);});
+}
+function boot(){
+  Promise.all([apiFetch('/api/me'),apiFetch('/api/modules')]).then(function(results){
+    var data=results[0],modules=results[1],day1Module=(modules.items||[]).find(function(item){return item.key==='day1';});if(!day1Module)throw new Error('当前客户或账号未开通单日大研学');
+    currentUser=data.user;if(currentUser.role==='platform_admin'){location.replace('/admin.html');return;}day1ModuleAccess=day1Module.access_role;document.body.className=currentUser.role+' module-'+day1ModuleAccess;document.getElementById('loginView').style.display='none';document.getElementById('appView').style.display='block';document.getElementById('sessionBootView').style.display='none';
+    var d=document.getElementById('docDate');if(!d.value)d.value=today();
+    document.getElementById('statStart').value=startOfYear();document.getElementById('statEnd').value=today();
+    document.getElementById('prepFilterYear').value=new Date().getFullYear();document.getElementById('prepYear').value=new Date().getFullYear();
+    return Promise.all([loadDay1ModuleConfig(),loadCustomers(),loadSuppliers(),loadSchemes()]);
+  }).then(function(){renderCustomerWorkbench();renderCustomPersonnel();renderMealServices();renderExtraServices();calc();captureDefaultQuoteData();initQuoteSectionNav();initializeQuoteState();applyViewerReadOnlyState();}).catch(function(){if(typeof YaochengCustomerEntry!=='undefined')YaochengCustomerEntry.redirect();});
+}
+
+function loadDay1ModuleConfig(){return apiFetch('/api/day1/module-config').then(function(data){day1ModuleConfig=data.config||day1ModuleConfig;applyDay1ModuleConfig();return day1ModuleConfig;}).catch(function(){applyDay1ModuleConfig();return day1ModuleConfig;});}
+function featureEnabled(feature){if(feature==='supplier-stats')return day1ModuleConfig.supplier_stats_enabled!==false;if(feature==='prepurchase')return day1ModuleConfig.prepurchase_enabled!==false;return true;}
+function applyDay1ModuleConfig(){
+  var title=day1ModuleConfig.module_title||'单日大研学';
+  var entry=day1ModuleConfig.customer_entry_label||'客户使用入口';
+  var brandTitle=document.querySelector('.brand h1');if(brandTitle)brandTitle.textContent=title;
+  var brandSub=document.querySelector('.brand span');if(brandSub)brandSub.textContent='曜程 · 新未来教育科技出品';
+  renderQuoteStatus();
+  document.title=title+' SaaS 客户版';
+  document.querySelectorAll('[data-feature]').forEach(function(el){el.style.display=featureEnabled(el.getAttribute('data-feature'))?'':'none';});
+  var ledger=document.getElementById('supplierLedger');
+  if(ledger && ledger.style.display==='block' && !featureEnabled('supplier-stats') && !featureEnabled('prepurchase'))showSupplierTab('supplierLib');
+}
+function renderModuleVersion(){var release=day1ModuleConfig.current_release;if(release&&release.version_label)return release.version_label;if(release&&release.id)return '客户版 #'+release.id;return '尚无正式版';}
+function day1AccessRoleName(role){return ({manager:'模块管理员',editor:'业务编辑',viewer:'查看人员'}[role]||role||'-');}
+function loadCustomers(){return apiFetch('/api/customers').then(function(data){customers=data.items||[];return customers;});}
+function loadSuppliers(){return apiFetch('/api/suppliers').then(function(data){suppliers=data.items||[];renderSupplierOptions();return suppliers;});}
+function loadSchemes(){return apiFetch('/api/day1/schemes').then(function(data){schemes=data.items||[];return schemes;});}
+function renderSupplierOptions(){var box=document.getElementById('supplierOptions');box.innerHTML=suppliers.map(function(s){return '<option value="'+esc(s.name)+'" label="'+esc(s.type)+'"></option>';}).join('');}
+function esc(x){return String(x||'').replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
+
+function renderCustomerWorkbench(){
+  var identity=document.getElementById('customerIdentity');
+  if(identity){
+    identity.innerHTML=[
+      ['当前账号',currentUser?currentUser.username:'-'],
+      ['当前角色',day1AccessRoleName(day1ModuleAccess)],
+      ['模块',day1ModuleConfig.module_title||'单日大研学'],
+      ['当前版本',renderModuleVersion()]
+    ].map(function(item){return '<div class="mini-card"><div class="label">'+esc(item[0])+'</div><div class="value">'+esc(item[1])+'</div></div>';}).join('');
+  }
+  var overview=document.getElementById('workbenchOverview');
+  if(overview){
+    overview.innerHTML=[
+      ['客户档案',customers.length+' 个'],
+      ['供方库',suppliers.length+' 个'],
+      ['已存方案',schemes.length+' 个'],
+      ['预采买',featureEnabled('prepurchase')?'已启用':'未启用']
+    ].map(function(item){return '<div class="mini-card"><div class="label">'+esc(item[0])+'</div><div class="value">'+esc(item[1])+'</div></div>';}).join('');
+  }
+}
+function refreshWorkbenchData(){return Promise.all([loadCustomers(),loadSuppliers(),loadSchemes()]).then(function(){renderCustomerWorkbench();});}
+function captureDefaultQuoteData(){defaultQuoteData=collectFormData();}
+function resetQuoteForm(){
+  if(viewerWriteBlocked('新建报价'))return false;
+  if(!confirmDiscardUnsavedQuote('新建报价'))return false;
+  if(!defaultQuoteData)captureDefaultQuoteData();
+  applyFormData(defaultQuoteData);
+  document.querySelectorAll('.supplier-input').forEach(function(input){input.value='';});
+  var d=document.getElementById('docDate');if(d)d.value=today();
+  markQuoteNew();
+  showToast('已新建空白报价');
+  return true;
+}
+function scrollToQuoteForm(){if(!resetQuoteForm())return;var target=document.getElementById('section-base');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});var project=document.getElementById('projectName');if(project)setTimeout(function(){project.focus();},200);}
+function scrollToDay1Analysis(){var target=document.getElementById('day1-analysis');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});setActiveQuoteSection('day1-analysis');}
+function setActiveQuoteSection(sectionId){
+  document.querySelectorAll('.module-nav a').forEach(function(link){
+    link.classList.toggle('active',link.getAttribute('href')==='#'+sectionId);
+  });
+}
+function initQuoteSectionNav(){
+  var links=[].slice.call(document.querySelectorAll('.module-nav a'));
+  if(!links.length)return;
+  setActiveQuoteSection((links[0].getAttribute('href')||'#section-base').slice(1));
+  links.forEach(function(link){
+    link.addEventListener('click',function(){setActiveQuoteSection((link.getAttribute('href')||'').slice(1));});
+  });
+  if(!('IntersectionObserver' in window))return;
+  var observer=new IntersectionObserver(function(entries){
+    entries.filter(function(entry){return entry.isIntersecting;}).sort(function(a,b){return b.intersectionRatio-a.intersectionRatio;}).slice(0,1).forEach(function(entry){setActiveQuoteSection(entry.target.id);});
+  },{rootMargin:'-25% 0px -60% 0px',threshold:[0.1,0.3,0.6]});
+  links.forEach(function(link){
+    var target=document.querySelector(link.getAttribute('href'));
+    if(target)observer.observe(target);
+  });
+}
+function openCustomerModal(){var q=document.getElementById('customerSearch');if(q)q.value='';openModal('customerModal');renderCustomers();}
+function customerActionButtons(c){
+  var actions='';
+  if(c.can_edit||c.can_delete)actions+='<button class="btn" onclick="editCustomer('+c.id+')">编辑</button>';
+  if(c.can_delete)actions+=' <button class="btn red" onclick="deleteCustomer('+c.id+')">删除</button>';
+  return actions;
+}
+function openRecordEditModal(id){return showModalElement(document.getElementById(id));}
+function setLibraryEditError(id,message){var box=document.getElementById(id);if(!box)return;box.textContent=message||'';box.style.display=message?'block':'none';}
+function setLibraryEditSaving(saveId,cancelId,saving){var save=document.getElementById(saveId);var cancel=document.getElementById(cancelId);if(save){save.disabled=saving;save.textContent=saving?'保存中...':'保存';}if(cancel)cancel.disabled=saving;var modal=document.getElementById(saveId==='customerEditSave'?'customerEditModal':'supplierEditModal');if(modal&&modal.setAttribute){var busyValue=saving?'true':'false';modal.setAttribute('aria-busy',busyValue);var dialog=modal.querySelector('[role="dialog"]');if(dialog&&dialog.setAttribute)dialog.setAttribute('aria-busy',busyValue);}}
+function validateLibraryEdit(payload,entityLabel,requireType){
+  if(!payload.name)return {ok:false,message:'请输入'+entityLabel+'名称'};
+  if(payload.name.length>100)return {ok:false,message:entityLabel+'名称不能超过 100 个字符'};
+  if(payload.contact.length>60)return {ok:false,message:'联系人不能超过 60 个字符'};
+  if(payload.notes.length>500)return {ok:false,message:'备注不能超过 500 个字符'};
+  if(requireType&&['交通','餐饮','住宿','场地','服务','其他'].indexOf(payload.type)<0)return {ok:false,message:'请选择有效的供方类型'};
+  if(payload.phone&&(payload.phone.length<5||payload.phone.length>30||!/^[0-9+()（） 转分机#—-]+$/.test(payload.phone)))return {ok:false,message:'联系电话格式不正确，请输入 5-30 位号码'};
+  return {ok:true};
+}
+function editCustomer(id){
+  if(viewerWriteBlocked('编辑客户资料'))return false;
+  var c=customers.find(function(item){return Number(item.id)===Number(id);});
+  if(!c||!c.can_edit){showToast(c?'当前账号无权编辑该客户':'客户不存在',true);return false;}
+  editingCustomerId=Number(id);customerEditSaving=false;setLibraryEditSaving('customerEditSave','customerEditCancel',false);setLibraryEditError('customerEditError','');
+  document.getElementById('editCustomerName').value=c.name||'';
+  document.getElementById('editCustomerContact').value=c.contact||'';
+  document.getElementById('editCustomerPhone').value=c.phone||'';
+  document.getElementById('editCustomerNotes').value=c.notes||'';
+  openRecordEditModal('customerEditModal');
+  return true;
+}
+function closeCustomerEditModal(force){
+  if(customerEditSaving&&!force)return false;
+  customerEditSaving=false;editingCustomerId=null;setLibraryEditSaving('customerEditSave','customerEditCancel',false);setLibraryEditError('customerEditError','');
+  return hideModalElement(document.getElementById('customerEditModal'));
+}
+function submitCustomerEdit(){
+  if(viewerWriteBlocked('编辑客户资料'))return false;
+  if(customerEditSaving)return false;
+  var c=customers.find(function(item){return Number(item.id)===Number(editingCustomerId);});
+  if(!c||!c.can_edit){setLibraryEditError('customerEditError',c?'当前账号无权编辑该客户':'客户不存在');return false;}
+  var payload={name:text('editCustomerName'),contact:text('editCustomerContact'),phone:text('editCustomerPhone'),notes:text('editCustomerNotes')};
+  var validation=validateLibraryEdit(payload,'客户',false);if(!validation.ok){setLibraryEditError('customerEditError',validation.message);showToast(validation.message,true);return false;}
+  setLibraryEditError('customerEditError','');customerEditSaving=true;setLibraryEditSaving('customerEditSave','customerEditCancel',true);
+  apiFetch('/api/customers/'+editingCustomerId,{method:'PATCH',body:payload}).then(function(){return loadCustomers();}).then(function(){renderCustomerWorkbench();renderCustomers();closeCustomerEditModal(true);showToast('客户资料已更新');}).catch(function(e){customerEditSaving=false;setLibraryEditSaving('customerEditSave','customerEditCancel',false);setLibraryEditError('customerEditError',e.message);showToast(e.message,true);});
+  return true;
+}
+function pageSizeValue(id,fallback){var el=document.getElementById(id);var value=el?parseInt(el.value,10):fallback;return value>0?value:fallback;}
+function paginateList(list,page,size){var total=list.length;var totalPages=Math.max(1,Math.ceil(total/size));var safePage=Math.min(Math.max(1,page||1),totalPages);var start=(safePage-1)*size;return {items:list.slice(start,start+size),page:safePage,totalPages:totalPages,start:total?start+1:0,end:Math.min(start+size,total),total:total};}
+function renderPagination(containerId,page,totalPages,changeFnName){var box=document.getElementById(containerId);if(!box)return;box.innerHTML='<div class="row" style="justify-content:flex-end"><button class="btn" '+(page<=1?'disabled':'')+' onclick="'+changeFnName+'(-1)">上一页</button><span class="hint">第 '+page+' / '+totalPages+' 页</span><button class="btn" '+(page>=totalPages?'disabled':'')+' onclick="'+changeFnName+'(1)">下一页</button></div>';}
+function emptyState(message){return '<div class="hint empty-state" role="status">'+esc(message)+'</div>';}
+function customerEmptyMessage(){if(customers.length)return '暂无匹配客户，请调整搜索条件。';return isViewer()?'暂无客户档案。请联系业务人员维护客户资料。':'暂无客户档案，请在下方填写客户名称并新增。';}
+function matchesCustomerSearch(c){
+  var q=text('customerSearch').toLowerCase();
+  if(!q)return true;
+  return [c.name,c.contact,c.phone].some(function(value){return String(value||'').toLowerCase().indexOf(q)>=0;});
+}
+function changeCustomerPage(delta){customerPage+=delta;renderCustomers();}
+function renderCustomers(){
+  var list=customers.filter(matchesCustomerSearch);
+  var pageData=paginateList(list,customerPage,pageSizeValue('customerPageSize',10));customerPage=pageData.page;
+  var summary=document.getElementById('customerListSummary');
+  if(summary)summary.textContent=list.length?'显示 '+pageData.start+'-'+pageData.end+' / '+list.length+' 个客户，共 '+customers.length+' 个':'显示 0 / '+customers.length+' 个客户';
+  document.getElementById('customerList').innerHTML=list.length?table(['客户名称','联系人','电话','操作'],pageData.items.map(function(c){return [c.name,c.contact,c.phone,customerActionButtons(c)];}),true):emptyState(customerEmptyMessage());
+  renderPagination('customerPager',pageData.page,pageData.totalPages,'changeCustomerPage');
+}
+function addCustomer(){var name=text('newCustomerName');if(!name){showToast('请输入客户名称',true);return;}apiFetch('/api/customers',{method:'POST',body:{name:name,contact:text('newCustomerContact'),phone:text('newCustomerPhone')}}).then(function(){showToast('客户已新增');document.getElementById('newCustomerName').value='';return refreshWorkbenchData();}).then(renderCustomers).catch(function(e){showToast(e.message,true);});}
+function deleteCustomer(id){var c=customers.find(function(item){return Number(item.id)===Number(id);});var name=c?c.name:'该客户';if(!confirm('确定删除客户「'+name+'」？'))return;apiFetch('/api/customers/'+id,{method:'DELETE'}).then(function(){showToast('客户已删除');return refreshWorkbenchData();}).then(renderCustomers).catch(function(e){showToast(e.message,true);});}
+
+function openSupplierModal(){var q=document.getElementById('supplierSearch');if(q)q.value='';openModal('supplierModal');showSupplierTab('supplierLib');renderSuppliers();}
+function showSupplierTab(id){if(id==='supplierLedger'&&!featureEnabled('supplier-stats')&&!featureEnabled('prepurchase')){showToast('供方结算未启用',true);id='supplierLib';}document.querySelectorAll('#supplierModal .tab').forEach(function(b){b.classList.toggle('active',b.dataset.tab===id);});document.getElementById('supplierLib').style.display=id==='supplierLib'?'block':'none';document.getElementById('supplierLedger').style.display=id==='supplierLedger'?'block':'none';applyDay1ModuleConfig();if(id==='supplierLedger'){if(featureEnabled('supplier-stats'))loadStats();if(featureEnabled('prepurchase'))loadPrepurchase();}}
+function supplierActionButtons(s){
+  var actions='';
+  if(s.can_edit||s.can_delete)actions+='<button class="btn" onclick="editSupplier('+s.id+')">编辑</button>';
+  if(s.can_delete)actions+=' <button class="btn red" onclick="deleteSupplier('+s.id+')">删除</button>';
+  return actions;
+}
+function editSupplier(id){
+  if(viewerWriteBlocked('编辑供方资料'))return false;
+  var s=suppliers.find(function(item){return Number(item.id)===Number(id);});
+  if(!s||!s.can_edit){showToast(s?'当前账号无权编辑该供方':'供方不存在',true);return false;}
+  editingSupplierId=Number(id);supplierEditSaving=false;setLibraryEditSaving('supplierEditSave','supplierEditCancel',false);setLibraryEditError('supplierEditError','');
+  document.getElementById('editSupplierName').value=s.name||'';
+  document.getElementById('editSupplierType').value=s.type||'其他';
+  document.getElementById('editSupplierContact').value=s.contact||'';
+  document.getElementById('editSupplierPhone').value=s.phone||'';
+  document.getElementById('editSupplierNotes').value=s.notes||'';
+  openRecordEditModal('supplierEditModal');
+  return true;
+}
+function closeSupplierEditModal(force){
+  if(supplierEditSaving&&!force)return false;
+  supplierEditSaving=false;editingSupplierId=null;setLibraryEditSaving('supplierEditSave','supplierEditCancel',false);setLibraryEditError('supplierEditError','');
+  return hideModalElement(document.getElementById('supplierEditModal'));
+}
+function submitSupplierEdit(){
+  if(viewerWriteBlocked('编辑供方资料'))return false;
+  if(supplierEditSaving)return false;
+  var s=suppliers.find(function(item){return Number(item.id)===Number(editingSupplierId);});
+  if(!s||!s.can_edit){setLibraryEditError('supplierEditError',s?'当前账号无权编辑该供方':'供方不存在');return false;}
+  var payload={name:text('editSupplierName'),type:text('editSupplierType'),contact:text('editSupplierContact'),phone:text('editSupplierPhone'),notes:text('editSupplierNotes')};
+  var validation=validateLibraryEdit(payload,'供方',true);if(!validation.ok){setLibraryEditError('supplierEditError',validation.message);showToast(validation.message,true);return false;}
+  setLibraryEditError('supplierEditError','');supplierEditSaving=true;setLibraryEditSaving('supplierEditSave','supplierEditCancel',true);
+  apiFetch('/api/suppliers/'+editingSupplierId,{method:'PATCH',body:payload}).then(function(){return loadSuppliers();}).then(function(){renderCustomerWorkbench();renderSuppliers();closeSupplierEditModal(true);showToast('供方资料已更新');}).catch(function(e){supplierEditSaving=false;setLibraryEditSaving('supplierEditSave','supplierEditCancel',false);setLibraryEditError('supplierEditError',e.message);showToast(e.message,true);});
+  return true;
+}
+function matchesSupplierSearch(s){
+  var q=text('supplierSearch').toLowerCase();
+  if(!q)return true;
+  return [s.name,s.type,s.contact,s.phone,s.notes].some(function(value){return String(value||'').toLowerCase().indexOf(q)>=0;});
+}
+function supplierEmptyMessage(){if(suppliers.length)return '暂无匹配供方，请调整搜索条件。';return isViewer()?'暂无供方资料。请联系业务人员维护供方资料。':'暂无供方资料，请在下方填写供方名称并新增。';}
+function changeSupplierPage(delta){supplierPage+=delta;renderSuppliers();}
+function renderSuppliers(){
+  var list=suppliers.filter(matchesSupplierSearch);
+  var pageData=paginateList(list,supplierPage,pageSizeValue('supplierPageSize',10));supplierPage=pageData.page;
+  var summary=document.getElementById('supplierListSummary');
+  if(summary)summary.textContent=list.length?'显示 '+pageData.start+'-'+pageData.end+' / '+list.length+' 个供方，共 '+suppliers.length+' 个':'显示 0 / '+suppliers.length+' 个供方';
+  document.getElementById('supplierList').innerHTML=list.length?table(['供方名称','类型','联系人','电话','备注','操作'],pageData.items.map(function(s){return [s.name,s.type,s.contact,s.phone,s.notes,supplierActionButtons(s)];}),true):emptyState(supplierEmptyMessage());
+  renderPagination('supplierPager',pageData.page,pageData.totalPages,'changeSupplierPage');
+}
+function addSupplier(){var name=text('newSupplierName');if(!name){showToast('请输入供方名称',true);return;}apiFetch('/api/suppliers',{method:'POST',body:{name:name,type:document.getElementById('newSupplierType').value,contact:text('newSupplierContact'),phone:text('newSupplierPhone')}}).then(function(){showToast('供方已新增');document.getElementById('newSupplierName').value='';return refreshWorkbenchData();}).then(renderSuppliers).catch(function(e){showToast(e.message,true);});}
+function deleteSupplier(id){var s=suppliers.find(function(item){return Number(item.id)===Number(id);});var name=s?s.name:'该供方';if(!confirm('确定删除供方「'+name+'」？'))return;apiFetch('/api/suppliers/'+id,{method:'DELETE'}).then(function(){showToast('供方已删除');return refreshWorkbenchData();}).then(renderSuppliers).catch(function(e){showToast(e.message,true);});}
+
+function selectedSaveCustomerName(){
+  var sel=document.getElementById('saveCustomerSel');
+  if(!sel || !sel.value)return '未关联客户';
+  var customer=customers.find(function(c){return String(c.id)===String(sel.value);});
+  return customer?customer.name:'未关联客户';
+}
+function defaultSchemeName(){return text('projectName')||('未命名方案-'+(text('docDate')||today()));}
+function renderSaveSummary(){
+  var box=document.getElementById('saveSummary');
+  if(!box)return;
+  var schemeName=text('saveSchemeName')||defaultSchemeName();
+  var date=text('docDate')||today();
+  var studentCount=n('studentCount');
+  var unitPrice=n('unitPrice');
+  var revenue=studentCount*unitPrice;
+  box.innerHTML='<b>保存前确认</b><br>客户：'+esc(selectedSaveCustomerName())+'<br>方案：'+esc(schemeName)+'<br>日期：'+esc(date)+'<br>学员人数：'+esc(studentCount)+' 人<br>人均报价：'+money(unitPrice)+'<br>预计收入：'+money(revenue);
+}
+function renderLastSavedScheme(schemeName,customerName){
+  var box=document.getElementById('lastSavedScheme');
+  if(!box)return;
+  box.style.display='block';
+  box.innerHTML='<b>最近保存</b>：'+esc(customerName||'未关联客户')+' / '+esc(schemeName||'未填写方案名')+' / '+esc(text('docDate')||today());
+}
+function openSaveModal(){
+  if(viewerWriteBlocked('保存方案'))return;
+  var validation=validateQuoteBeforeSave();
+  if(!validation.ok){showQuoteValidationError(validation);return;}
+  loadCustomers().then(function(){var sel=document.getElementById('saveCustomerSel');sel.innerHTML='<option value="">未关联客户</option>'+customers.map(function(c){return '<option value="'+c.id+'">'+esc(c.name)+'</option>';}).join('');document.getElementById('saveSchemeName').value=defaultSchemeName();renderSaveSummary();openModal('saveModal');});
+}
+function collectFormData(){
+  var data={};
+  document.querySelectorAll('main input, main select').forEach(function(el){if(el.id&&!(el.classList&&el.classList.contains('supplier-input')))data[el.id]=el.value;});
+  data._day1ClassRoster=window.day1ClassRoster?window.day1ClassRoster.getClasses():[];
+  data._day1DispatchConfig=window.day1DispatchAdvisor?window.day1DispatchAdvisor.getState():{};
+  data._day1ExtraServices=extraServices.filter(function(x){return x.name || x.count || x.price;});
+  data._day1MealServices=mealServices.filter(function(x){return x.name || x.count || x.price;});
+  data._day1CustomPersonnel=customPersonnel.filter(function(x){return x.name || x.count || x.price;});
+  return data;
+}
+function applyFormData(data){
+  Object.keys(data||{}).forEach(function(key){var el=document.getElementById(key);if(el)el.value=data[key];});
+  if(data && data.hotelNights === undefined && document.getElementById('hotelNights')) document.getElementById('hotelNights').value=Math.max(0,n('days')-1);
+  if(data && data.subLeaderFee === undefined && document.getElementById('subLeaderFee')) document.getElementById('subLeaderFee').value=(parseFloat(data.subLeaderCount)||0)*(parseFloat(data.fullSubLeaderFee)||0);
+  extraServices=Array.isArray(data._day1ExtraServices)&&data._day1ExtraServices.length?data._day1ExtraServices:[{name:'',count:0,price:0}];
+  mealServices=Array.isArray(data._day1MealServices)&&data._day1MealServices.length?data._day1MealServices:[{name:'',count:0,price:0}];
+  customPersonnel=Array.isArray(data._day1CustomPersonnel)&&data._day1CustomPersonnel.length?data._day1CustomPersonnel:[{name:'自定义岗位1',count:0,price:0}];
+  customPersonnelSuppliers=customPersonnel.map(function(){return '';});
+  if(window.day1ClassRoster)window.day1ClassRoster.setClasses(Array.isArray(data._day1ClassRoster)?data._day1ClassRoster:[],{silent:true});
+  if(window.day1DispatchAdvisor)window.day1DispatchAdvisor.setState(data._day1DispatchConfig||{},{silent:true});
+  renderCustomPersonnel();renderMealServices();renderExtraServices();calc();
+}
+async function collectSupplierBindings(){
+  var supplier_bindings = {};
+  var inputs = Array.from(document.querySelectorAll('.supplier-input'));
+  for(var i=0;i<inputs.length;i++){
+    var input=inputs[i];var name=input.value.trim();if(!name)continue;
+    var found=suppliers.find(function(s){return s.name===name;});
+    var key=input.dataset.key;var binding={supplier_name:name,supplier_type:input.dataset.type};
+    if(found){binding.supplier_id=found.id;binding.supplier_type=found.type;}
+    else if(confirm('供方「'+name+'」不在供方库，是否新增到供方库？')){
+      var created=await apiFetch('/api/suppliers',{method:'POST',body:{name:name,type:input.dataset.type}});
+      binding.supplier_id=created.id;binding.supplier_name=created.name;binding.supplier_type=created.type;binding.confirmed=true;
+      await loadSuppliers();
+    }else{binding.confirmed=false;}
+    supplier_bindings[key]=binding;
+  }
+  return supplier_bindings;
+}
+function saveScheme(){if(viewerWriteBlocked('保存方案'))return;
+  var validation=validateQuoteBeforeSave();
+  if(!validation.ok){showQuoteValidationError(validation);return;}
+  var customerId=document.getElementById('saveCustomerSel').value;
+  var customer=customers.find(function(c){return String(c.id)===String(customerId);});
+  var schemeName=text('saveSchemeName')||defaultSchemeName();
+  if(!schemeName){showToast('请输入方案名称',true);return;}
+  collectSupplierBindings().then(function(supplier_bindings){
+    return apiFetch('/api/day1/schemes',{method:'POST',body:{customer_id:customerId||null,customer_name:customer?customer.name:'未关联客户',scheme_name:schemeName,project_date:text('docDate')||today(),data:collectFormData(),supplier_bindings:supplier_bindings}});
+  }).then(function(saved){markQuoteSaved(schemeName,saved.version);showToast('方案已保存');renderLastSavedScheme(schemeName,customer?customer.name:'未关联客户');closeModal();return refreshWorkbenchData();}).catch(function(e){showToast(e.message,true);});
+}
+function openLoadModal(){Promise.all([loadCustomers(),loadSchemes()]).then(function(){var sel=document.getElementById('loadCustomerFilter');sel.innerHTML='<option value="">全部客户</option>'+customers.map(function(c){return '<option value="'+c.id+'">'+esc(c.name)+'</option>';}).join('');var search=document.getElementById('loadSchemeSearch');if(search)search.value='';schemePage=1;renderSchemeList();openModal('loadModal');});}
+function schemeVersionLabel(s){return '第'+s.version+'版';}
+function schemeActionButtons(s){var actions='<button class="btn" onclick="loadScheme('+s.id+')">调出</button>';if(s.can_delete)actions+=' <button class="btn red" onclick="deleteScheme('+s.id+')">删除</button>';return actions;}
+function matchesSchemeSearch(s){var q=text('loadSchemeSearch').toLowerCase();if(!q)return true;return [s.project_date,s.customer_name,s.scheme_name,s.created_by_name,schemeVersionLabel(s)].some(function(value){return String(value||'').toLowerCase().indexOf(q)>=0;});}
+function schemeEmptyMessage(){if(schemes.length)return '暂无匹配方案，请调整客户筛选或搜索条件。';return isViewer()?'暂无已保存方案。请联系业务人员先保存方案。':'暂无已保存方案，请先完成报价并保存方案。';}
+function renderSchemeList(){var cid=document.getElementById('loadCustomerFilter').value;var list=schemes.filter(function(s){return (!cid || String(s.customer_id)===String(cid)) && matchesSchemeSearch(s);});var pageData=paginateList(list,schemePage,pageSizeValue('schemePageSize',10));schemePage=pageData.page;var summary=document.getElementById('schemeListSummary');if(summary)summary.textContent=list.length?'显示 '+pageData.start+'-'+pageData.end+' / '+list.length+' 个方案，共 '+schemes.length+' 个，仅显示最新版。':'显示 0 / '+schemes.length+' 个方案，仅显示最新版。';document.getElementById('schemeList').innerHTML=list.length?table(['日期','客户','方案名称','版本','创建人','操作'],pageData.items.map(function(s){return [s.project_date,s.customer_name,s.scheme_name,schemeVersionLabel(s),s.created_by_name||'', schemeActionButtons(s)];}),true):emptyState(schemeEmptyMessage());renderPagination('schemePager',pageData.page,pageData.totalPages,'changeSchemePage');}
+function loadScheme(id){if(!confirmDiscardUnsavedQuote('调出其他方案'))return;return apiFetch('/api/day1/schemes/'+id).then(function(s){applyFormData(s.data);applySupplierBindings(s.supplier_bindings||{});markQuoteLoaded(s.scheme_name,s.version);captureViewerLoadedQuoteSnapshot();applyViewerReadOnlyState();showToast('已调出「'+s.scheme_name+'」');closeModal();return s;}).catch(function(e){cancelQuoteDiscard();showToast(e.message,true);throw e;});}
+function deleteScheme(id){var s=schemes.find(function(item){return Number(item.id)===Number(id);});var name=s?s.scheme_name:'该方案';var detail=s?'（'+schemeVersionLabel(s)+' / '+(s.project_date||'未填日期')+'）':'';if(!confirm('确定删除方案「'+name+'」'+detail+'？删除后不会影响已导出的文件。'))return;apiFetch('/api/day1/schemes/'+id,{method:'DELETE'}).then(function(){showToast('方案已删除');return refreshWorkbenchData();}).then(renderSchemeList).catch(function(e){showToast(e.message,true);});}
+function applySupplierBindings(bindings){document.querySelectorAll('.supplier-input').forEach(function(input){var b=bindings[input.dataset.key]||{};input.value=b.supplier_name||'';});document.querySelectorAll('#customPersonnelList .personnel-supplier').forEach(function(input,i){customPersonnelSuppliers[i]=input.value;});}
+
+function addMealService(){if(viewerWriteBlocked('修改报价'))return;mealServices.push({name:'',count:0,price:0});renderMealServices();markQuoteDirty();}
+function renderMealServices(){var box=document.getElementById('mealServiceList');box.innerHTML=mealServices.map(function(item,i){var key='meal_service_'+(i+1);return '<div class="meal-service-row"><label class="'+(i===0?'meal-service-label':'meal-service-spacer')+'">'+(i===0?'其他服务项':'')+'</label><div class="meal-service-controls"><input value="'+esc(item.name)+'" placeholder="服务名称" oninput="mealServices['+i+'].name=this.value;calc()"><input class="supplier-input" data-key="'+key+'" data-type="餐饮" list="supplierOptions" placeholder="供方"><input type="number" min="0" value="'+(item.count||0)+'" placeholder="数量" oninput="mealServices['+i+'].count=parseFloat(this.value)||0;calc()"><span>×</span><input type="number" min="0" value="'+(item.price||0)+'" placeholder="单价" oninput="mealServices['+i+'].price=parseFloat(this.value)||0;calc()"><span>元</span><button class="btn red" type="button" onclick="mealServices.splice('+i+',1);renderMealServices();calc();markQuoteDirty()">删除</button></div></div>';}).join('');}
+function addExtraService(){if(viewerWriteBlocked('修改报价'))return;extraServices.push({name:'',count:0,price:0});renderExtraServices();markQuoteDirty();}
+function renderExtraServices(){var box=document.getElementById('extraSvcList');box.innerHTML=extraServices.map(function(item,i){var key='extra_service_'+(i+1);return '<div class="service-row"><label class="'+(i===0?'service-label':'service-spacer')+'">'+(i===0?'自定义服务':'')+'</label><div class="service-controls"><input value="'+esc(item.name)+'" placeholder="服务名称" oninput="extraServices['+i+'].name=this.value;calc()"><input class="supplier-input" data-key="'+key+'" data-type="服务" list="supplierOptions" placeholder="供方"><input type="number" min="0" value="'+(item.count||0)+'" placeholder="数量" oninput="extraServices['+i+'].count=parseFloat(this.value)||0;calc()"><span>×</span><input type="number" min="0" value="'+(item.price||0)+'" placeholder="单价" oninput="extraServices['+i+'].price=parseFloat(this.value)||0;calc()"><span>元</span><button class="btn red" type="button" onclick="extraServices.splice('+i+',1);renderExtraServices();calc();markQuoteDirty()">删除</button></div></div>';}).join('');}
+function addCustomPersonnel(){if(viewerWriteBlocked('修改报价'))return;customPersonnel.push({name:'自定义岗位'+(customPersonnel.length+1),count:0,price:0});customPersonnelSuppliers.push('');renderCustomPersonnel();markQuoteDirty();}
+function removeCustomPersonnel(i){if(viewerWriteBlocked('修改报价'))return;customPersonnel.splice(i,1);customPersonnelSuppliers.splice(i,1);renderCustomPersonnel();calc();markQuoteDirty();}
+function renderCustomPersonnel(){var box=document.getElementById('customPersonnelList');box.innerHTML=customPersonnel.map(function(item,i){var key='personnel_custom_'+(i+1);return '<div class="personnel-row"><input value="'+esc(item.name||('自定义岗位'+(i+1)))+'" placeholder="岗位名称" oninput="customPersonnel['+i+'].name=this.value;calc()"><input type="number" min="0" value="'+(item.count||0)+'" placeholder="人数" oninput="customPersonnel['+i+'].count=parseFloat(this.value)||0;calc()"><input type="number" min="0" value="'+(item.price||0)+'" placeholder="单价" oninput="customPersonnel['+i+'].price=parseFloat(this.value)||0;calc()"><span>元/人/天</span><input class="supplier-input personnel-supplier" data-key="'+key+'" data-type="服务" list="supplierOptions" placeholder="供方" aria-label="'+esc((item.name||('自定义岗位'+(i+1)))+'供方')+'" value="'+esc(customPersonnelSuppliers[i]||'')+'" oninput="customPersonnelSuppliers['+i+']=this.value"><button class="btn red" type="button" onclick="removeCustomPersonnel('+i+')">删除</button></div>';}).join('');}
+
+function quoteTotals(){return quoteScenarioTotals(n('studentCount'));}
+function quoteScenarioTotals(studentCount){
+  var days=Math.max(0,n('days')||1), stu=Math.max(0,parseFloat(studentCount)||0), teachers=n('teacherCount'), leaders=n('schoolLeaderCount');
+  var customStaff=customPersonnel.reduce(function(sum,item){return sum+(parseFloat(item.count)||0);},0);
+  var staff=n('leaderCount')+n('safetyCount')+n('guideCount')+n('photographerCount')+n('medicCount')+n('lifeTeacherCount')+customStaff;
+  var revenue=stu*n('unitPrice'), commission=revenue*n('commissionRate')/100, vat=revenue*n('vatRate')/100, netRevenue=revenue-commission-vat;
+  var bus=n('busFeePerTrip')*n('busCount')*n('busTrips')*days;
+  var majorTraffic=n('majorTrafficPeople')*n('majorTrafficPrice')*n('majorTrafficTrips');
+  var personnel=days*(n('leaderCount')*n('leaderPrice')+n('safetyCount')*n('safetyPrice')+n('guideCount')*n('guidePrice')+n('photographerCount')*n('photographerPrice')+n('medicCount')*n('medicPrice')+n('lifeTeacherCount')*n('lifeTeacherPrice'))+customPersonnel.reduce(function(sum,item){return sum+(parseFloat(item.count)||0)*(parseFloat(item.price)||0);},0)*days;
+  var bonus=n('coordinatorFee')+n('fullLeaderFee')+n('subLeaderFee');
+  var meal=n('mealStudent')*stu*days+n('mealStaff')*(n('photographerCount')+n('medicCount')+n('lifeTeacherCount'))*days+n('mealParttime')*(n('leaderCount')+n('safetyCount'))*days+n('mealDriver')*n('busCount')*days;
+  var mealServicesCost=mealServices.reduce(function(sum,item){return sum+(parseFloat(item.count)||0)*(parseFloat(item.price)||0);},0);
+  var hotel=n('hotelPrice')*(n('hotelStaffRooms')+n('hotelTeacherRooms')+n('hotelStudentRooms'))*n('hotelNights');
+  var insuredPeople=stu+teachers+leaders+staff+n('busCount');
+  var venue=n('ticketPerStudent')*stu+n('ticketPerStudent2')*stu+n('insurancePerStudent')*insuredPeople+n('sessionPrice')*n('sessionCount');
+  var extra=extraServices.reduce(function(sum,item){return sum+(parseFloat(item.count)||0)*(parseFloat(item.price)||0);},0);
+  var cost=bus+majorTraffic+personnel+bonus+meal+hotel+mealServicesCost+venue+extra;
+  return {days:days,stu:stu,teachers:teachers,leaders:leaders,staff:staff,insuredPeople:insuredPeople,revenue:revenue,commission:commission,vat:vat,netRevenue:netRevenue,bus:bus,majorTraffic:majorTraffic,personnel:personnel,bonus:bonus,meal:meal,mealServicesCost:mealServicesCost,hotel:hotel,venue:venue,extra:extra,cost:cost,profit:netRevenue-cost};
+}
+function day1AnalysisGroups(t){
+  return [
+    {name:'人员费',value:t.personnel+t.bonus,color:'#16c4dd'},
+    {name:'交通费',value:t.bus+t.majorTraffic,color:'#16c77a'},
+    {name:'餐饮住宿',value:t.meal+t.hotel+t.mealServicesCost,color:'#ffb22e'},
+    {name:'场地服务',value:t.venue+t.extra,color:'#f04465'},
+    {name:'物料其他',value:0,color:'#a54bdc'}
+  ];
+}
+function day1Breakeven(){
+  var current=quoteScenarioTotals(n('studentCount'));
+  var first=quoteScenarioTotals(1),second=quoteScenarioTotals(2);
+  var variableCost=second.cost-first.cost;
+  var netUnit=n('unitPrice')*(1-n('commissionRate')/100-n('vatRate')/100);
+  var contribution=netUnit-variableCost;
+  if(contribution<=0)return 'N/A';
+  var fixedCost=Math.max(0,first.cost-variableCost);
+  var result=Math.max(1,Math.ceil(fixedCost/contribution));
+  if(current.stu>0&&quoteScenarioTotals(result).profit<0)result+=1;
+  return result>9999?'N/A':result;
+}
+function setDay1Metric(id,value,tone){
+  var element=document.getElementById(id);if(!element)return;
+  element.textContent=value;element.className='day1-metric-value'+(tone?' '+tone:'');
+}
+function renderDay1CostBars(t){
+  var box=document.getElementById('day1CostBars');if(!box)return;
+  var colors=['#1687f8','#29bf68','#ff9f0a','#a54bdc','#f04465','#52b9e8','#4f56d9','#f65c4c'];
+  var items=buildPrintDetailRows(t).filter(function(row){return row[0]!=='增值税'&&rowAmount(row)>0;}).map(function(row){return {name:row[1],value:rowAmount(row)};}).sort(function(a,b){return b.value-a.value;});
+  if(!items.length){box.innerHTML='<div class="day1-analysis-empty">录入成本后显示结构分析</div>';return;}
+  var maxValue=items[0].value||1;
+  box.innerHTML=items.map(function(item,index){var percentage=t.cost>0?item.value/t.cost*100:0;return '<div class="day1-cost-bar"><div class="day1-cost-label" title="'+esc(item.name)+'">'+esc(item.name)+'</div><div class="day1-cost-track"><div class="day1-cost-fill" style="width:'+(item.value/maxValue*100).toFixed(1)+'%;background:'+colors[index%colors.length]+'"></div></div><div class="day1-cost-value">'+money(item.value)+' ('+percentage.toFixed(0)+'%)</div></div>';}).join('');
+}
+function renderDay1Donut(t){
+  var canvas=document.getElementById('day1CostDonut'),legend=document.getElementById('day1CostLegend');if(!canvas||!legend)return;
+  var groups=day1AnalysisGroups(t).filter(function(item){return item.value>0;}),total=groups.reduce(function(sum,item){return sum+item.value;},0);
+  if(total<=0){legend.innerHTML='<div class="day1-analysis-empty" style="min-height:0">暂无成本数据</div>';return;}
+  legend.innerHTML=groups.map(function(item){return '<div class="day1-donut-key"><span class="day1-donut-swatch" style="background:'+item.color+'"></span><span>'+item.name+' '+(item.value/total*100).toFixed(0)+'%</span></div>';}).join('');
+  if(typeof canvas.getContext!=='function')return;
+  var context=canvas.getContext('2d');if(!context)return;
+  context.clearRect(0,0,canvas.width,canvas.height);
+  var center=canvas.width/2,radius=canvas.width*.39,inner=canvas.width*.205,start=-Math.PI/2;
+  groups.forEach(function(item){var angle=item.value/total*Math.PI*2;context.beginPath();context.moveTo(center,center);context.arc(center,center,radius,start,start+angle);context.closePath();context.fillStyle=item.color;context.fill();start+=angle;});
+  context.beginPath();context.arc(center,center,inner,0,Math.PI*2);context.fillStyle='#ffffff';context.fill();
+  context.fillStyle='#334155';context.font='900 28px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif';context.textAlign='center';context.textBaseline='middle';context.fillText(money(total),center,center);
+}
+function renderDay1Sensitivity(t){
+  var tableElement=document.getElementById('day1SensitivityTable');if(!tableElement)return;
+  var base=Math.max(1,Math.round(t.stu||30)),steps=[];
+  [-.4,-.2,0,.2,.4,.6].forEach(function(change){var people=Math.max(1,Math.round(base*(1+change)));if(steps.indexOf(people)<0)steps.push(people);});
+  if(steps.indexOf(base)<0){steps.push(base);steps.sort(function(a,b){return a-b;});}
+  var header='<tr><th></th>',income='<tr><td>净收入</td>',cost='<tr><td>总成本</td>',profit='<tr><td>毛利润</td>',margin='<tr><td>毛利率</td>';
+  steps.forEach(function(people){var data=quoteScenarioTotals(people),current=people===base,currentClass=current?' current':'',profitClass=data.profit>=0?' positive':' negative',marginValue=data.netRevenue>0?data.profit/data.netRevenue*100:0,marginClass=marginValue>=30?' positive':marginValue<0?' negative':'';header+='<th class="'+(current?'current':'')+'">'+people+'人'+(current?'*':'')+'</th>';income+='<td class="'+currentClass.trim()+'">'+money(data.netRevenue)+'</td>';cost+='<td class="'+currentClass.trim()+'">'+money(data.cost)+'</td>';profit+='<td class="'+(currentClass+profitClass).trim()+'">'+money(data.profit)+'</td>';margin+='<td class="'+(currentClass+marginClass).trim()+'">'+marginValue.toFixed(1)+'%</td>';});
+  tableElement.innerHTML=header+'</tr>'+income+'</tr>'+cost+'</tr>'+profit+'</tr>'+margin+'</tr>';
+}
+function renderDay1Analysis(t){
+  t=t||quoteTotals();
+  var margin=t.netRevenue>0?t.profit/t.netRevenue*100:0,profitPer=t.stu>0?t.profit/t.stu:0,costPer=t.stu>0?t.cost/t.stu:0,breakeven=day1Breakeven();
+  setDay1Metric('day1Revenue',money(t.revenue),'');setDay1Metric('day1Commission',money(t.commission),'negative');setDay1Metric('day1Vat',money(t.vat),'negative');setDay1Metric('day1NetRevenue',money(t.netRevenue),'accent');setDay1Metric('day1TotalCost',money(t.cost),'');setDay1Metric('day1Profit',money(t.profit),t.profit>0?'positive':t.profit<0?'negative':'');setDay1Metric('day1Margin',margin.toFixed(1)+'%',margin>=30?'positive':margin<0?'negative':'');setDay1Metric('day1ProfitPer',money(profitPer),profitPer>0?'positive':profitPer<0?'negative':'');setDay1Metric('day1CostPer',money(costPer),'');setDay1Metric('day1Breakeven',typeof breakeven==='number'?breakeven+'人':breakeven,'accent');
+  var health=document.getElementById('day1ProfitHealth');if(health){if(t.profit>0&&margin>=30){health.textContent='利润健康（毛利率'+margin.toFixed(1)+'%）';health.className='day1-profit-health good';}else if(t.profit>0){health.textContent='盈利偏薄（毛利率'+margin.toFixed(1)+'%），建议优化成本或提价';health.className='day1-profit-health warn';}else if(t.profit===0){health.textContent='当前报价刚好持平';health.className='day1-profit-health warn';}else{health.textContent='当前亏损'+money(Math.abs(t.profit))+'，请检查成本和定价';health.className='day1-profit-health bad';}}
+  renderDay1CostBars(t);renderDay1Donut(t);renderDay1Sensitivity(t);
+}
+function printTable(headers,rows){
+  var h='<table class="print-table"><thead><tr>'+headers.map(function(x){return '<th>'+esc(x)+'</th>';}).join('')+'</tr></thead><tbody>';
+  h+=rows.map(function(row){return '<tr>'+row.map(function(cell){return '<td>'+esc(cell)+'</td>';}).join('')+'</tr>';}).join('');
+  return h+'</tbody></table>';
+}
+function detailRow(category,name,qty,unit,price,amount,note){return [category,name,qty,unit,price,amount,note||''];}
+function rowAmount(row){return Number(String(row[5]||'').replace(/[^0-9.-]/g,''))||0;}
+function buildPrintDetailRows(t){
+  var rows=[
+    detailRow('交通费','包车',n('busCount')*n('busTrips')*t.days,'车趟',money(n('busFeePerTrip')),money(t.bus),'往返里程 '+n('busKm')+' 公里'),
+    detailRow('交通费','大交通-'+(document.getElementById('majorTrafficType')?document.getElementById('majorTrafficType').value:'大交通'),n('majorTrafficPeople')*n('majorTrafficTrips'),'人趟',money(n('majorTrafficPrice')),money(t.majorTraffic),''),
+    detailRow('人员费','讲解导游',n('guideCount')*t.days,'人天',money(n('guidePrice')),money(n('guideCount')*n('guidePrice')*t.days),''),
+    detailRow('人员费','导游',n('leaderCount')*t.days,'人天',money(n('leaderPrice')),money(n('leaderCount')*n('leaderPrice')*t.days),''),
+    detailRow('人员费','安全员/教官',n('safetyCount')*t.days,'人天',money(n('safetyPrice')),money(n('safetyCount')*n('safetyPrice')*t.days),''),
+    detailRow('人员费','摄影师',n('photographerCount')*t.days,'人天',money(n('photographerPrice')),money(n('photographerCount')*n('photographerPrice')*t.days),''),
+    detailRow('人员费','队医',n('medicCount')*t.days,'人天',money(n('medicPrice')),money(n('medicCount')*n('medicPrice')*t.days),''),
+    detailRow('人员费','生活老师',n('lifeTeacherCount')*t.days,'人天',money(n('lifeTeacherPrice')),money(n('lifeTeacherCount')*n('lifeTeacherPrice')*t.days),''),
+    detailRow('全职奖金','计调补助',1,'单',money(n('coordinatorFee')),money(n('coordinatorFee')),''),
+    detailRow('全职奖金','领队补助',1,'单',money(n('fullLeaderFee')),money(n('fullLeaderFee')),''),
+    detailRow('全职奖金','副领队补助',1,'单',money(n('subLeaderFee')),money(n('subLeaderFee')),''),
+    detailRow('餐饮住宿','学员餐费',t.stu*t.days,'人餐',money(n('mealStudent')),money(n('mealStudent')*t.stu*t.days),''),
+    detailRow('餐饮住宿','全职人员餐费',(n('photographerCount')+n('medicCount')+n('lifeTeacherCount'))*t.days,'人餐',money(n('mealStaff')),money(n('mealStaff')*(n('photographerCount')+n('medicCount')+n('lifeTeacherCount'))*t.days),''),
+    detailRow('餐饮住宿','兼职人员餐费',(n('leaderCount')+n('safetyCount'))*t.days,'人餐',money(n('mealParttime')),money(n('mealParttime')*(n('leaderCount')+n('safetyCount'))*t.days),''),
+    detailRow('餐饮住宿','司机餐费',n('busCount')*t.days,'人餐',money(n('mealDriver')),money(n('mealDriver')*n('busCount')*t.days),''),
+    detailRow('餐饮住宿','住宿',(n('hotelStaffRooms')+n('hotelTeacherRooms')+n('hotelStudentRooms'))*n('hotelNights'),'间夜',money(n('hotelPrice')),money(t.hotel),'团队房间 '+n('hotelStaffRooms')+'，教师房间 '+n('hotelTeacherRooms')+'，学员房间 '+n('hotelStudentRooms')+'，晚数 '+n('hotelNights')),
+    detailRow('场地服务','门票/场地',t.stu,'学员',money(n('ticketPerStudent')),money(n('ticketPerStudent')*t.stu),''),
+    detailRow('场地服务','门票/场地2',t.stu,'学员',money(n('ticketPerStudent2')),money(n('ticketPerStudent2')*t.stu),''),
+    detailRow('场地服务','保险费',t.insuredPeople,'人',money(n('insurancePerStudent')),money(n('insurancePerStudent')*t.insuredPeople),'全员'),
+    detailRow('场地服务','讲解服务',n('sessionCount'),'场',money(n('sessionPrice')),money(n('sessionPrice')*n('sessionCount')),'')
+  ];
+  customPersonnel.forEach(function(item,index){
+    var count=parseFloat(item.count)||0, price=parseFloat(item.price)||0;
+    rows.push(detailRow('人员费',item.name||('自定义岗位'+(index+1)),count*t.days,'人天',money(price),money(count*price*t.days),''));
+  });
+  extraServices.forEach(function(item,index){
+    var count=parseFloat(item.count)||0, price=parseFloat(item.price)||0;
+    rows.push(detailRow('场地服务',item.name||('自定义服务'+(index+1)),count,'项',money(price),money(count*price),'自定义服务'));
+  });
+  mealServices.forEach(function(item,index){
+    var count=parseFloat(item.count)||0, price=parseFloat(item.price)||0;
+    rows.push(detailRow('餐饮住宿',item.name||('餐饮住宿服务'+(index+1)),count,'项',money(price),money(count*price),'其他服务项'));
+  });
+  rows.push(detailRow('增值税','增值税',n('vatRate'),'%','',money(t.vat),'按收入计算'));
+  return rows.filter(function(row){return rowAmount(row)!==0;});
+}
+function quoteReportData(){
+  calc();
+  var t=quoteTotals();
+  var baseRows=[
+    ['项目名称',text('projectName')||'未命名项目'],['项目日期',text('docDate')||today()],['活动天数',t.days],['学员人数',t.stu],['班级数',n('classCount')],['人均报价',money(n('unitPrice'))],['学校教师',t.teachers],['学校领导',t.leaders],['渠道佣金率',n('commissionRate')+'%'],['增值税率',n('vatRate')+'%']
+  ];
+  var resultRows=[['总收入',money(t.revenue)],['总成本',money(t.cost)],['毛利润',money(t.profit)],['总服务人数',t.insuredPeople]];
+  var costRows=[['交通费',money(t.bus+t.majorTraffic)],['人员费',money(t.personnel)],['全职奖金',money(t.bonus)],['餐饮住宿',money(t.meal+t.hotel+t.mealServicesCost)],['场地服务',money(t.venue+t.extra)],['渠道佣金',money(t.commission)],['增值税',money(t.vat)]].filter(function(row){return rowAmount(['','','','','',row[1]])!==0;});
+  var detailRows=buildPrintDetailRows(t);
+  var workbook={
+    baseRows:[['项目名称',text('projectName')||'未命名项目'],['项目日期',text('docDate')||today()],['活动天数',t.days],['学员人数',t.stu],['班级数',n('classCount')],['人均报价',n('unitPrice')],['学校教师',t.teachers],['学校领导',t.leaders],['渠道佣金率(%)',n('commissionRate')],['增值税率(%)',n('vatRate')]],
+    resultRows:[['总收入',t.revenue],['总成本',t.cost],['毛利润',t.profit],['总服务人数',t.insuredPeople]],
+    costRows:[['交通费',t.bus+t.majorTraffic],['人员费',t.personnel],['全职奖金',t.bonus],['餐饮住宿',t.meal+t.hotel+t.mealServicesCost],['场地服务',t.venue+t.extra],['渠道佣金',t.commission],['增值税',t.vat]].filter(function(row){return row[1]!==0;}),
+    detailRows:detailRows.map(function(row){return [row[0],row[1],xlsxNumericValue(row[2]),row[3],xlsxNumericValue(row[4]),xlsxNumericValue(row[5]),row[6]];})
+  };
+  return {title:'单日大研学报价明细单',exportedAt:new Date().toLocaleString(),baseRows:baseRows,resultRows:resultRows,costRows:costRows,detailRows:detailRows,totals:t,workbook:workbook};
+}
+function renderPrintReport(){
+  var data=quoteReportData();
+  var box=document.getElementById('printReport');
+  if(!box)return;
+  var detailRows=data.detailRows;
+  box.innerHTML='<h1>单日大研学报价明细单</h1><div class="print-muted">打印时间：'+esc(new Date().toLocaleString())+' · SaaS 客户版</div>'+
+    '<h2>基础信息</h2>'+printTable(['项目','数值'],data.baseRows)+
+    '<h2>报价结果</h2><div class="print-kpi"><div>总收入<b>'+data.resultRows[0][1]+'</b></div><div>总成本<b>'+data.resultRows[1][1]+'</b></div><div>毛利润<b>'+data.resultRows[2][1]+'</b></div><div>总服务人数<b>'+data.resultRows[3][1]+'</b></div></div>'+
+    '<h2>成本汇总</h2>'+(data.costRows.length?printTable(['大类','金额'],data.costRows):'<div class="print-muted">暂无成本数据</div>')+
+    '<h2>单项费用明细</h2>'+(detailRows.length?printTable(['大类','费用项','数量','单位','单价','金额','备注'],detailRows):'<div class="print-muted">暂无费用明细</div>');
+}
+function xlsxNumericValue(value){
+  if(typeof value==='number'&&isFinite(value))return value;
+  var source=String(value==null?'':value).trim();
+  if(!source)return '';
+  var cleaned=source.replace(/[^0-9.-]/g,'');
+  if(!cleaned||cleaned==='-'||cleaned==='.')return value;
+  var number=Number(cleaned);
+  return isFinite(number)?number:value;
+}
+function xlsxXml(value){return String(value==null?'':value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');}
+function xlsxColumnName(index){var name='';while(index>0){var remainder=(index-1)%26;name=String.fromCharCode(65+remainder)+name;index=Math.floor((index-1)/26);}return name||'A';}
+function xlsxCellXml(value,column,row,styleId){
+  var ref=xlsxColumnName(column)+row;
+  var style=styleId?' s="'+styleId+'"':'';
+  if(typeof value==='number'&&isFinite(value))return '<c r="'+ref+'"'+style+'><v>'+String(value)+'</v></c>';
+  if(typeof value==='boolean')return '<c r="'+ref+'"'+style+' t="b"><v>'+(value?'1':'0')+'</v></c>';
+  var content=String(value==null?'':value);
+  var first=content.charAt(0),last=content.charAt(content.length-1);
+  var preserve=first===' '||last===' '||content.indexOf(String.fromCharCode(10))>=0?' xml:space="preserve"':'';
+  return '<c r="'+ref+'"'+style+' t="inlineStr"><is><t'+preserve+'>'+xlsxXml(content)+'</t></is></c>';
+}
+function xlsxSheetXml(sheet){
+  var safeRows=Array.isArray(sheet.rows)?sheet.rows:[];
+  var maxColumns=safeRows.reduce(function(max,row){return Math.max(max,Array.isArray(row)?row.length:0);},1);
+  var lastRow=Math.max(1,safeRows.length);
+  var summary=sheet.name==='报价汇总',sectionRows=summary?[4,16,23]:[],headerRows=summary?[5,17,24]:[1],currencyRows=summary?[11,18,19,20,25,26,27,28,29,30]:[];
+  var body=safeRows.map(function(row,rowIndex){var rowNumber=rowIndex+1;var cells=(row||[]).map(function(value,columnIndex){var columnNumber=columnIndex+1,styleId=6;if(summary&&rowNumber===1)styleId=1;else if(sectionRows.indexOf(rowNumber)>=0)styleId=2;else if(headerRows.indexOf(rowNumber)>=0)styleId=3;else if((summary&&columnNumber===2&&currencyRows.indexOf(rowNumber)>=0)||(!summary&&(columnNumber===5||columnNumber===6)&&typeof value==='number'))styleId=4;else if(!summary&&columnNumber===7)styleId=5;else if(summary&&columnNumber===1)styleId=7;return xlsxCellXml(value,columnNumber,rowNumber,styleId);}).join('');var height=rowNumber===1?' ht="28" customHeight="1"':sectionRows.indexOf(rowNumber)>=0?' ht="22" customHeight="1"':'';return '<row r="'+rowNumber+'"'+height+'>'+cells+'</row>';}).join('');
+  var widths=(sheet.widths||[]).map(function(width,index){return '<col min="'+(index+1)+'" max="'+(index+1)+'" width="'+width+'" customWidth="1"/>';}).join('');
+  var merges=summary?'<mergeCells count="4"><mergeCell ref="A1:B1"/><mergeCell ref="A4:B4"/><mergeCell ref="A16:B16"/><mergeCell ref="A23:B23"/></mergeCells>':'';
+  var filter=summary?'':'<autoFilter ref="A1:'+xlsxColumnName(maxColumns)+lastRow+'"/>';
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><dimension ref="A1:'+xlsxColumnName(maxColumns)+lastRow+'"/><sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="19"/><cols>'+widths+'</cols><sheetData>'+body+'</sheetData>'+merges+filter+'</worksheet>';
+}
+function xlsxBytes(value){return new TextEncoder().encode(String(value));}
+function xlsxConcat(parts){var size=parts.reduce(function(sum,part){return sum+part.length;},0);var output=new Uint8Array(size),offset=0;parts.forEach(function(part){output.set(part,offset);offset+=part.length;});return output;}
+function xlsxCrc32(bytes){
+  var table=[];
+  for(var i=0;i<256;i++){var value=i;for(var bit=0;bit<8;bit++)value=(value&1)?(0xedb88320^(value>>>1)):(value>>>1);table[i]=value>>>0;}
+  var crc=0xffffffff;
+  for(var index=0;index<bytes.length;index++)crc=(crc>>>8)^table[(crc^bytes[index])&0xff];
+  return (crc^0xffffffff)>>>0;
+}
+function xlsxDosDateTime(date){
+  var value=date instanceof Date&&!isNaN(date.getTime())?date:new Date();
+  var year=Math.max(1980,value.getFullYear());
+  return {time:(value.getHours()<<11)|(value.getMinutes()<<5)|Math.floor(value.getSeconds()/2),date:((year-1980)<<9)|((value.getMonth()+1)<<5)|value.getDate()};
+}
+function xlsxZipStore(entries,modifiedAt){
+  var localParts=[],centralParts=[],offset=0,dos=xlsxDosDateTime(modifiedAt);
+  entries.forEach(function(entry){
+    var name=xlsxBytes(entry.name),data=entry.data instanceof Uint8Array?entry.data:xlsxBytes(entry.data),crc=xlsxCrc32(data);
+    var local=new Uint8Array(30),localView=new DataView(local.buffer);
+    localView.setUint32(0,0x04034b50,true);localView.setUint16(4,20,true);localView.setUint16(6,0x0800,true);localView.setUint16(8,0,true);localView.setUint16(10,dos.time,true);localView.setUint16(12,dos.date,true);localView.setUint32(14,crc,true);localView.setUint32(18,data.length,true);localView.setUint32(22,data.length,true);localView.setUint16(26,name.length,true);localView.setUint16(28,0,true);
+    localParts.push(local,name,data);
+    var central=new Uint8Array(46),centralView=new DataView(central.buffer);
+    centralView.setUint32(0,0x02014b50,true);centralView.setUint16(4,20,true);centralView.setUint16(6,20,true);centralView.setUint16(8,0x0800,true);centralView.setUint16(10,0,true);centralView.setUint16(12,dos.time,true);centralView.setUint16(14,dos.date,true);centralView.setUint32(16,crc,true);centralView.setUint32(20,data.length,true);centralView.setUint32(24,data.length,true);centralView.setUint16(28,name.length,true);centralView.setUint16(30,0,true);centralView.setUint16(32,0,true);centralView.setUint16(34,0,true);centralView.setUint16(36,0,true);centralView.setUint32(38,0,true);centralView.setUint32(42,offset,true);
+    centralParts.push(central,name);
+    offset+=local.length+name.length+data.length;
+  });
+  var localData=xlsxConcat(localParts),centralData=xlsxConcat(centralParts),end=new Uint8Array(22),endView=new DataView(end.buffer);
+  endView.setUint32(0,0x06054b50,true);endView.setUint16(4,0,true);endView.setUint16(6,0,true);endView.setUint16(8,entries.length,true);endView.setUint16(10,entries.length,true);endView.setUint32(12,centralData.length,true);endView.setUint32(16,localData.length,true);endView.setUint16(20,0,true);
+  return xlsxConcat([localData,centralData,end]);
+}
+function xlsxSafeSheetName(name){var forbidden='[]:*?/';return String(name||'工作表').split('').map(function(character){return forbidden.indexOf(character)>=0||character.charCodeAt(0)===92?'-':character;}).join('').slice(0,31)||'工作表';}
+function buildXlsxWorkbook(sheets,modifiedAt){
+  var safeSheets=(sheets||[]).map(function(sheet,index){return {name:xlsxSafeSheetName(sheet.name||('工作表'+(index+1))),rows:Array.isArray(sheet.rows)?sheet.rows:[],widths:Array.isArray(sheet.widths)?sheet.widths:[]};});
+  if(!safeSheets.length)safeSheets=[{name:'工作表1',rows:[],widths:[]}];
+  var sheetOverrides=safeSheets.map(function(sheet,index){return '<Override PartName="/xl/worksheets/sheet'+(index+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';}).join('');
+  var contentTypes='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+sheetOverrides+'</Types>';
+  var workbookSheets=safeSheets.map(function(sheet,index){return '<sheet name="'+xlsxXml(sheet.name)+'" sheetId="'+(index+1)+'" r:id="rId'+(index+1)+'"/>';}).join('');
+  var workbook='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+workbookSheets+'</sheets></workbook>';
+  var worksheetRelationships=safeSheets.map(function(sheet,index){return '<Relationship Id="rId'+(index+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(index+1)+'.xml"/>';}).join('');
+  var workbookRelationships='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+worksheetRelationships+'<Relationship Id="rId'+(safeSheets.length+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
+  var rootRelationships='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
+  var styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="¥#,##0.00;[Red]-¥#,##0.00"/></numFmts><fonts count="4"><font><sz val="11"/><name val="Microsoft YaHei"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="16"/><name val="Microsoft YaHei"/></font><font><b/><color rgb="FF2447A7"/><sz val="12"/><name val="Microsoft YaHei"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="11"/><name val="Microsoft YaHei"/></font></fonts><fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF3157C8"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFEAF1FF"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color rgb="FFD7E1EE"/></left><right style="thin"><color rgb="FFD7E1EE"/></right><top style="thin"><color rgb="FFD7E1EE"/></top><bottom style="thin"><color rgb="FFD7E1EE"/></bottom><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="8"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf><xf numFmtId="0" fontId="2" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center"/></xf><xf numFmtId="0" fontId="3" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center"/></xf><xf numFmtId="0" fontId="2" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyAlignment="1"><alignment vertical="center"/></xf></cellXfs><cellStyles count="1"><cellStyle name="常规" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+  var entries=[{name:'[Content_Types].xml',data:contentTypes},{name:'_rels/.rels',data:rootRelationships},{name:'xl/workbook.xml',data:workbook},{name:'xl/_rels/workbook.xml.rels',data:workbookRelationships},{name:'xl/styles.xml',data:styles}];
+  safeSheets.forEach(function(sheet,index){entries.push({name:'xl/worksheets/sheet'+(index+1)+'.xml',data:xlsxSheetXml(sheet)});});
+  return xlsxZipStore(entries,modifiedAt);
+}
+function quoteWorkbookSheets(data){
+  var workbook=data.workbook||{baseRows:[],resultRows:[],costRows:[],detailRows:[]};
+  var summaryRows=[[data.title],['导出时间',data.exportedAt+' · SaaS 客户版'],[],['基础信息'],['项目','数值']].concat(workbook.baseRows,[[],['报价结果'],['项目','数值']],workbook.resultRows,[[],['成本汇总'],['大类','金额']],workbook.costRows.length?workbook.costRows:[['暂无成本数据','']]);
+  var detailRows=[['大类','费用项','数量','单位','单价','金额','备注']].concat(workbook.detailRows.length?workbook.detailRows:[['暂无费用明细','','','','','','']]);
+  return [{name:'报价汇总',rows:summaryRows,widths:[22,34]},{name:'费用明细',rows:detailRows,widths:[16,24,12,12,16,16,34]}];
+}
+function buildQuoteXlsx(data,modifiedAt){return buildXlsxWorkbook(quoteWorkbookSheets(data),modifiedAt);}
+function safeQuoteFileName(name){return String(name||'报价明细').split('').map(function(ch){return '\\/:*?"<>|'.indexOf(ch)>=0?'-':ch;}).join('').trim().slice(0,60)||'报价明细';}
+function downloadQuoteDetailWorkbook(){
+  var viewerValidation=validateViewerQuoteOutput();
+  if(!viewerValidation.ok){showToast(viewerValidation.message,true);return;}
+  var validation=validateQuoteBeforeSave();
+  if(!validation.ok){showQuoteValidationError(validation);return;}
+  if(typeof Blob==='undefined'||typeof URL==='undefined'){showToast('当前浏览器不支持导出',true);return;}
+  var data=quoteReportData();
+  var bytes=buildQuoteXlsx(data);
+  var blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download=safeQuoteFileName(text('projectName')||'单日大研学报价明细')+'.xlsx';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(function(){URL.revokeObjectURL(url);},800);
+  showToast('报价明细已导出');
+}
+function printQuoteDetail(){
+  var viewerValidation=validateViewerQuoteOutput();
+  if(!viewerValidation.ok){showToast(viewerValidation.message,true);return;}
+  var validation=validateQuoteBeforeSave();
+  if(!validation.ok){showQuoteValidationError(validation);return;}
+  renderPrintReport();
+  document.body.classList.add('printing-report');
+  setTimeout(function(){try{window.print();}finally{setTimeout(function(){document.body.classList.remove('printing-report');},0);}},50);
+}
+window.addEventListener('beforeprint',function(){if(document.body.classList.contains('printing-report')||document.body.classList.contains('dispatch-printing'))return;var viewerValidation=validateViewerQuoteOutput();if(!viewerValidation.ok){showToast(viewerValidation.message,true);return;}var validation=validateQuoteBeforeSave();if(!validation.ok){showQuoteValidationError(validation);return;}renderPrintReport();document.body.classList.add('printing-report');});
+window.addEventListener('afterprint',function(){document.body.classList.remove('printing-report');});
+
+function calc(){
+  var t=quoteTotals();
+  document.getElementById('kpiBox').innerHTML='<div>总收入<b>'+money(t.revenue)+'</b></div><div>总成本<b>'+money(t.cost)+'</b></div><div>毛利润<b>'+money(t.profit)+'</b></div><div>总服务人数<b>'+t.insuredPeople+'</b></div>';
+  document.getElementById('costDetail').innerHTML=table(['大类','金额'],[['交通费',money(t.bus+t.majorTraffic)],['人员费',money(t.personnel)],['全职奖金',money(t.bonus)],['餐饮住宿',money(t.meal+t.hotel+t.mealServicesCost)],['场地服务',money(t.venue+t.extra)],['渠道佣金',money(t.commission)],['增值税',money(t.vat)]]);
+  renderDay1Analysis(t);
+}
+document.addEventListener('input',function(e){if(e.target.closest('main')){calc();markQuoteDirty();}});
+window.addEventListener('beforeunload',function(e){
+  if(!hasUnsavedQuoteChanges() || quoteDiscardInProgress)return;
+  e.preventDefault();
+  e.returnValue='';
+});
+
+function statQuery(){var p=new URLSearchParams();p.set('start_date',document.getElementById('statStart').value||startOfYear());p.set('end_date',document.getElementById('statEnd').value||today());if(document.getElementById('statType').value)p.set('supplier_type',document.getElementById('statType').value);if(text('statSupplier'))p.set('supplier_name',text('statSupplier'));if(text('statCustomer'))p.set('customer',text('statCustomer'));if(text('statScheme'))p.set('scheme_name',text('statScheme'));return p.toString();}
+function loadStats(){apiFetch('/api/supplier-stats?'+statQuery()).then(function(data){document.getElementById('statsSummary').innerHTML=data.summary.length?table(['供方名称','类型','方案数','学员人次','成人/随行人次','总服务人次','服务数量','总金额'],data.summary.map(function(r){return [r.supplier_name,r.supplier_type,r.scheme_count,r.student_person_times,r.adult_person_times,r.total_person_times,r.service_quantity,money(r.total_amount)];})):'<div class="hint">暂无统计数据</div>';document.getElementById('statsDetail').innerHTML=data.details.length?table(['日期','客户','方案名称','费用大类','费用项','供方','服务对象','数量','单位','学员人次','成人/随行人次','金额','创建人'],data.details.map(function(r){return [r.date,r.customer_name,r.scheme_name,r.cost_category,r.cost_item,r.supplier_name,r.service_target,r.quantity,r.unit,r.student_person_times,r.adult_person_times,money(r.amount),r.created_by];})):'<div class="hint">暂无明细</div>';}).catch(function(e){showToast(e.message,true);});}
+function exportStats(){apiFetch('/api/supplier-stats.xlsx?'+statQuery()).then(function(blob){var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='供方统计.xlsx';a.click();setTimeout(function(){URL.revokeObjectURL(url);},800);}).catch(function(e){showToast(e.message,true);});}
+function prepurchaseQuery(){var p=new URLSearchParams();p.set('year',document.getElementById('prepFilterYear').value||new Date().getFullYear());if(text('prepFilterSupplier'))p.set('supplier_name',text('prepFilterSupplier'));return p.toString();}
+function prepQty(v,unit){return v===null||v===undefined?'':(v+' '+(unit||''));}
+function prepActions(r){return r.can_manage?'<button class="btn" onclick="addPrepurchaseAdjustment('+r.id+')">手工调整</button> <button class="btn red" onclick="deletePrepurchaseLedger('+r.id+')">删除</button>':'';}
+function loadPrepurchase(){apiFetch('/api/prepurchase-ledgers?'+prepurchaseQuery()).then(function(data){document.getElementById('prepurchaseSummary').innerHTML=data.summary.length?table(['年度','供方','适用项目','采购金额','已用金额','剩余金额','使用率','采购数量','已用数量','剩余数量','操作'],data.summary.map(function(r){return [r.year,r.supplier_name,r.item_scope,money(r.purchased_amount),money(r.used_amount),money(r.remaining_amount),r.amount_usage_rate+'%',prepQty(r.purchased_quantity,r.quantity_unit),prepQty(r.used_quantity,r.quantity_unit),prepQty(r.remaining_quantity,r.quantity_unit),prepActions(r)];}),true):'<div class="hint">暂无预采买台账</div>';document.getElementById('prepurchaseDetails').innerHTML=data.details.length?table(['日期','客户','方案名称','费用项','供方','数量','单位','金额','来源','创建人'],data.details.map(function(r){return [r.date,r.customer_name,r.scheme_name,r.cost_item,r.supplier_name,r.quantity,r.unit,money(r.amount),r.source,r.created_by];})):'<div class="hint">暂无使用明细</div>';}).catch(function(e){showToast(e.message,true);});}
+function addPrepurchaseLedger(){var supplierName=text('prepSupplierName');if(!supplierName){showToast('请选择供方',true);return;}var found=suppliers.find(function(s){return s.name===supplierName;});apiFetch('/api/prepurchase-ledgers',{method:'POST',body:{year:document.getElementById('prepYear').value,supplier_name:supplierName,supplier_id:found?found.id:null,supplier_type:found?found.type:'场地',item_scope:document.getElementById('prepItemScope').value,purchased_amount:document.getElementById('prepAmount').value,purchased_quantity:document.getElementById('prepQuantity').value,quantity_unit:text('prepUnit')||'张',valid_from:document.getElementById('prepValidFrom').value,valid_to:document.getElementById('prepValidTo').value,notes:text('prepNotes')}}).then(function(){showToast('预采买台账已新增');document.getElementById('prepAmount').value='';document.getElementById('prepQuantity').value='';document.getElementById('prepNotes').value='';return loadPrepurchase();}).catch(function(e){showToast(e.message,true);});}
+function addPrepurchaseAdjustment(id){
+  activePrepurchaseLedgerId=id;
+  var summary=document.getElementById('prepurchaseAdjustmentSummary');
+  if(summary)summary.textContent='用于退款、赠送、纠错，不改历史方案明细。';
+  document.getElementById('prepAdjustmentType').value='decrease';
+  document.getElementById('prepAdjustmentAmount').value='';
+  document.getElementById('prepAdjustmentQuantity').value='';
+  document.getElementById('prepAdjustmentNotes').value='';
+  openModal('prepurchaseAdjustmentModal');
+}
+function submitPrepurchaseAdjustment(){
+  if(!activePrepurchaseLedgerId){showToast('请选择台账',true);return;}
+  var adjustmentType=document.getElementById('prepAdjustmentType').value;
+  var amount=document.getElementById('prepAdjustmentAmount').value||0;
+  var quantity=document.getElementById('prepAdjustmentQuantity').value||0;
+  var notes=text('prepAdjustmentNotes')||'手工调整';
+  apiFetch('/api/prepurchase-ledgers/'+activePrepurchaseLedgerId+'/adjustments',{method:'POST',body:{adjustment_type:adjustmentType,amount:amount,quantity:quantity,notes:notes,adjustment_date:today()}}).then(function(){
+    showToast('手工调整已记录');
+    activePrepurchaseLedgerId=null;
+    closeModal();
+    return loadPrepurchase();
+  }).catch(function(e){showToast(e.message,true);});
+}
+function deletePrepurchaseLedger(id){if(!confirm('确定删除这条预采买台账？'))return;apiFetch('/api/prepurchase-ledgers/'+id,{method:'DELETE'}).then(function(){showToast('预采买台账已删除');return loadPrepurchase();}).catch(function(e){showToast(e.message,true);});}
+function exportPrepurchase(){apiFetch('/api/prepurchase-ledgers.xlsx?'+prepurchaseQuery()).then(function(blob){var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='预采买台账.xlsx';a.click();setTimeout(function(){URL.revokeObjectURL(url);},800);}).catch(function(e){showToast(e.message,true);});}
+function openAdminModal(){var q=document.getElementById('userSearch');if(q)q.value='';openModal('adminModal');loadUsers();}
+function addUser(){apiFetch('/api/users',{method:'POST',body:{username:text('newUserName'),password:document.getElementById('newUserPass').value,role:document.getElementById('newUserRole').value}}).then(function(){showToast('账号已新增');loadUsers();}).catch(function(e){showToast(e.message,true);});}
+function roleName(role){return ({tenant_admin:'客户超级管理员',day1_admin:'单日模块管理员',user:'业务操作员',viewer:'查看人员',platform_admin:'平台管理员'}[role]||role);}
+function roleHelp(role){return ({tenant_admin:'管理本单位账号和全部数据',day1_admin:'管理单日业务数据',user:'录入和维护业务资料',viewer:'只查看数据，不允许修改',platform_admin:'平台维护账号'}[role]||'');}
+function loadUsers(){apiFetch('/api/users').then(function(data){tenantUsers=data.items||[];renderUsers();}).catch(function(e){showToast(e.message,true);});}
+function matchesUserSearch(u){var q=text('userSearch').toLowerCase();if(!q)return true;return [u.username,roleName(u.role),u.is_active?'启用':'停用'].some(function(v){return String(v||'').toLowerCase().indexOf(q)>=0;});}
+function canResetTenantUserPassword(){return !!(currentUser&&currentUser.role==='tenant_admin');}
+function tenantUserPasswordResetBlocked(){if(canResetTenantUserPassword())return false;showToast('只有客户超级管理员可以重置员工密码',true);return true;}
+function userActionButtons(u){if(!canResetTenantUserPassword())return '';var actions='<button class="btn" onclick="resetUserPassword('+u.id+')">重置密码</button>';if(Number(u.id)!==Number(currentUser.id)){actions+=' <button class="btn '+(u.is_active?'red':'')+'" onclick="toggleUserActive('+u.id+','+(u.is_active?'false':'true')+')">'+(u.is_active?'停用':'启用')+'</button>';}return actions;}
+function userEmptyMessage(){if(tenantUsers.length)return '暂无匹配账号，请调整搜索条件。';return currentUser&&currentUser.role==='tenant_admin'?'暂无员工账号，请在上方新增账号。':'暂无员工账号。';}
+function renderUsers(){var list=tenantUsers.filter(matchesUserSearch);var summary=document.getElementById('userListSummary');if(summary)summary.textContent='共 '+tenantUsers.length+' 个账号，当前显示 '+list.length+' 个';document.getElementById('userList').innerHTML=list.length?table(['账号','角色','说明','状态','操作'],list.map(function(u){return [u.username,roleName(u.role),roleHelp(u.role),u.is_active?'启用':'停用',userActionButtons(u)];}),true):emptyState(userEmptyMessage());}
+function toggleUserActive(userId,active){var u=tenantUsers.find(function(item){return Number(item.id)===Number(userId);});var action=active?'启用':'停用';var name=u?u.username:'该账号';if(!confirm('确定'+action+'账号「'+name+'」？'))return;apiFetch('/api/users/'+userId+'/'+(active?'enable':'disable'),{method:'POST',body:{}}).then(function(){showToast('账号已'+action);return loadUsers();}).catch(function(e){showToast(e.message,true);});}
+function setUserPasswordResetError(message){var box=document.getElementById('userPasswordResetError');if(!box)return;box.textContent=message||'';box.style.display=message?'block':'none';}
+function setUserPasswordResetSaving(saving){var save=document.getElementById('userPasswordResetSave');var cancel=document.getElementById('userPasswordResetCancel');if(save){save.disabled=saving;save.textContent=saving?'重置中...':'确认重置';}if(cancel)cancel.disabled=saving;var modal=document.getElementById('userPasswordResetModal');if(modal&&modal.setAttribute){var busyValue=saving?'true':'false';modal.setAttribute('aria-busy',busyValue);var dialog=modal.querySelector('[role="dialog"]');if(dialog&&dialog.setAttribute)dialog.setAttribute('aria-busy',busyValue);}}
+function resetUserPassword(userId, username){
+  if(tenantUserPasswordResetBlocked())return false;
+  var target=tenantUsers.find(function(item){return Number(item.id)===Number(userId);});
+  if(!target){showToast('账号不存在',true);return false;}
+  resetPasswordUserId=Number(userId);resetPasswordSaving=false;setUserPasswordResetSaving(false);setUserPasswordResetError('');
+  document.getElementById('userPasswordResetTarget').value=target.username||username||'';
+  document.getElementById('userPasswordResetNew').value='';
+  document.getElementById('userPasswordResetConfirm').value='';
+  openRecordEditModal('userPasswordResetModal');
+  return true;
+}
+function closeUserPasswordResetModal(force){
+  if(resetPasswordSaving&&!force)return false;
+  resetPasswordSaving=false;resetPasswordUserId=null;setUserPasswordResetSaving(false);setUserPasswordResetError('');
+  document.getElementById('userPasswordResetTarget').value='';document.getElementById('userPasswordResetNew').value='';document.getElementById('userPasswordResetConfirm').value='';
+  return hideModalElement(document.getElementById('userPasswordResetModal'));
+}
+function submitUserPasswordReset(){
+  if(tenantUserPasswordResetBlocked())return false;
+  if(resetPasswordSaving)return false;
+  var target=tenantUsers.find(function(item){return Number(item.id)===Number(resetPasswordUserId);});
+  if(!target){setUserPasswordResetError('账号不存在');return false;}
+  var newPassword=document.getElementById('userPasswordResetNew').value;
+  var confirmPassword=document.getElementById('userPasswordResetConfirm').value;
+  if(newPassword.length<6){setUserPasswordResetError('新密码至少 6 位');showToast('新密码至少 6 位',true);return false;}
+  if(newPassword!==confirmPassword){setUserPasswordResetError('两次输入的新密码不一致');showToast('两次输入的新密码不一致',true);return false;}
+  setUserPasswordResetError('');resetPasswordSaving=true;setUserPasswordResetSaving(true);
+  apiFetch('/api/users/'+resetPasswordUserId+'/password',{method:'POST',body:{new_password:newPassword}}).then(function(){closeUserPasswordResetModal(true);showToast('密码已重置');}).catch(function(e){resetPasswordSaving=false;setUserPasswordResetSaving(false);setUserPasswordResetError(e.message);showToast(e.message,true);});
+  return true;
+}
+function createBackup(){apiFetch('/api/backups',{method:'POST',body:{}}).then(function(data){showToast('备份已生成：'+data.filename);loadBackups();}).catch(function(e){showToast(e.message,true);});}
+function loadBackups(){apiFetch('/api/backups').then(function(data){var sel=document.getElementById('backupSelect');sel.innerHTML=(data.items||[]).map(function(b){return '<option value="'+esc(b.filename)+'">'+esc(b.filename)+' - '+esc(b.backup_type)+'</option>';}).join('');}).catch(function(e){showToast(e.message,true);});}
+function restoreBackup(){var filename=document.getElementById('backupSelect').value;if(!filename){showToast('请选择备份',true);return;}if(!confirm('恢复会覆盖当前数据库，确定继续？'))return;apiFetch('/api/restore',{method:'POST',body:{filename:filename,confirm:true}}).then(function(){showToast('已恢复备份，请刷新页面重新登录');}).catch(function(e){showToast(e.message,true);});}
+function table(headers,rows,raw){var h='<table><thead><tr>'+headers.map(function(x){return '<th>'+esc(x)+'</th>';}).join('')+'</tr></thead><tbody>';h+=rows.map(function(row){return '<tr>'+row.map(function(cell){return '<td>'+(raw?String(cell):esc(cell))+'</td>';}).join('')+'</tr>';}).join('');return h+'</tbody></table>';}
+if(yaochengCsrfToken()){boot();}else if(typeof YaochengCustomerEntry!=='undefined'){YaochengCustomerEntry.redirect();}
+</script>
+<script src="/dispatch-advisor.js"></script>
+<script>
+if(typeof YaochengDispatchAdvisor!=='undefined'){
+window.day1ClassRoster=YaochengDispatchAdvisor.mountClassRoster({
+  containerId:'day1ClassRoster',
+  applyTotals:function(summary){
+    document.getElementById('classCount').value=summary.classCount;
+    document.getElementById('studentCount').value=summary.studentCount;
+    document.getElementById('teacherCount').value=summary.teacherCount;
+  },
+  onChange:function(classes,options){
+    ['classCount','studentCount','teacherCount'].forEach(function(id){var el=document.getElementById(id);if(el){el.readOnly=classes.length>0;el.setAttribute('aria-readonly',classes.length?'true':'false');}});
+    if(window.day1DispatchAdvisor)window.day1DispatchAdvisor.render();
+    calc();
+    if(!(options&&options.silent))markQuoteDirty();
+  }
+});
+window.day1DispatchAdvisor=YaochengDispatchAdvisor.mount({
+  containerId:'day1DispatchAdvisor',
+  defaultSeat:55,
+  reserveSeats:2,
+  readPrintMeta:function(){return {moduleName:'单日大研学',projectName:text('projectName')||'',activityDate:text('docDate')||'',customerName:''};},
+  watchIds:['studentCount','classCount','teacherCount','schoolLeaderCount','guideCount','leaderCount','safetyCount','photographerCount','medicCount','lifeTeacherCount'],
+  readInput:function(){
+    var customStaff=(window.customPersonnel||[]).reduce(function(sum,item){return sum+(parseFloat(item.count)||0);},0);
+    return {
+      studentCount:n('studentCount'),
+      classCount:n('classCount'),
+      teacherCount:n('teacherCount'),
+      leaderCount:n('schoolLeaderCount'),
+      responsibleStaff:n('guideCount')+n('leaderCount')+n('safetyCount'),
+      projectStaff:n('photographerCount')+n('medicCount')+n('lifeTeacherCount')+customStaff,
+      classes:window.day1ClassRoster?window.day1ClassRoster.getClasses():[]
+    };
+  },
+  canApply:function(){return !viewerWriteBlocked('套用分车建议');},
+  applyResult:function(result){
+    document.getElementById('busCount').value=result.summary.busCount;
+    calc();
+    markQuoteDirty();
+  },
+  onChange:function(state,options){if(!(options&&options.silent))markQuoteDirty();},
+  notify:function(message,isError){showToast(message,isError);}
+});
+}
+</script>
+</body>
+</html>

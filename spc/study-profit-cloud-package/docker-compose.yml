@@ -1,0 +1,12 @@
+services:
+  study-profit:
+    build: .
+    container_name: study-profit-calculator
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      APP_USERNAME: ${APP_USERNAME:-}
+      APP_PASSWORD: ${APP_PASSWORD:-}
+    volumes:
+      - ./data:/app/data
