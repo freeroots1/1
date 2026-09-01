@@ -1,0 +1,10 @@
+const { xunleiResolve } = require('/home/ubuntu/app/coolink/server/providers/resolve-other.js');
+(async () => {
+  try {
+    const r = await xunleiResolve('https://pan.xunlei.com/s/VOzZsgPqtVS_wJej8qWRv9P9A1', '', { pass_code: 'c233', listOnly: true });
+    console.log('OK tree=', JSON.stringify(r.tree).slice(0, 300));
+    console.log('files=', r.files.length, r.files.slice(0,2).map(f=>f.name).join('|'));
+  } catch (e) {
+    console.log('ERR:', e.message);
+  }
+})();

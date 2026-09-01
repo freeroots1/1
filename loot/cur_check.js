@@ -1,0 +1,11 @@
+const fs=require("fs"),crypto=require("crypto");
+const pwd=process.env.ADMIN_PASSWORD||"";
+const kdf=crypto.scryptSync(pwd||"pandel-default-key",Buffer.from("pandel-settings-v1","utf8"),32,{N:16384,r:8,p:1});
+const j=JSON.parse(fs.readFileSync("/home/ubuntu/app/coolink/data/settings.json","utf8"));
+console.log("settings.json 顶层:", Object.keys(j));
+const buf=Buffer.from(j.data,"base64");
+const dec=crypto.createDecipheriv("aes-256-gcm",kdf,buf.subarray(0,12)); dec.setAuthTag(buf.subarray(12,28));
+const s=JSON.parse(Buffer.concat([dec.update(buf.subarray(28)),dec.final()]).toString("utf8"));
+console.log("cookies.xunlei:", s.cookies.xunlei?String(s.cookies.xunlei).length+"字符":"空");
+console.log("token:", s.xunleiCaptchaToken?String(s.xunleiCaptchaToken).length+"字符":"空");
+console.log("deviceId:", s.xunleiDeviceId?String(s.xunleiDeviceId).slice(0,25):"空");

@@ -1,0 +1,238 @@
+./install.sh: line 13: /usr/local/qcloud/tat_agent/install/tat_install.log: No such file or directory
+Created symlink /etc/systemd/system/multi-user.target.wants/tat_install.service → /etc/systemd/system/tat_install.service.
+stop stargate if exist
+install stargate
+stargate/
+stargate/bin/
+stargate/bin/sgagentarm64
+stargate/bin/sgagent32
+stargate/bin/sgagent64
+stargate/lib/
+stargate/lib/libstdcxx-arm64/
+stargate/lib/libstdcxx-arm64/libstdc++.so.6.0.24
+stargate/lib/libstdcxx-x86_64/
+stargate/lib/libstdcxx-x86_64/libstdc++.so.6.0.20
+stargate/admin/
+stargate/admin/addcrontab.sh
+stargate/admin/delcrontab.sh
+stargate/admin/restart.sh
+stargate/admin/start.sh
+stargate/admin/stop.sh
+stargate/admin/sgagenttask
+stargate/admin/uninstall.sh
+stargate/etc/
+stargate/etc/base.conf
+stargate/logs/
+install success
+'/usr/local/qcloud/stargate/bin/sgagent' -> '/usr/local/qcloud/stargate/bin/sgagent64'
+install python
+strings: '/lib64/libstdc++.so.6': No such file
+update /usr/local/qcloud/stargate/lib/libstdc++.so.6
+reset state
+reset state succ.
+start sgagent
+no crontab for root
+no crontab for root
+stargate agent run succ
+finish
+-- basic_linux_install enter --
+[Begin]:Sat Aug 15 04:02:39 PM CST 2026
+vars:shvpc public
+-> OS Type: ubuntu
+os_version:24.04
+cpuarch:x86_64
+-> Copy_basic_ini begin
+-> Copy_basic_ini end
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    11  100    11    0     0    999      0 --:--:-- --:--:-- --:--:--  1100
+-> Instance type: SA2
+-> CPU Mode: 2.0GHz
+->CPU Bug fix ok...
+->read tce config
+  ->we are in PUBLIC
+-> load_qcloud_ini begin
+-> load_qcloud_ini end
+basic_install_public_cloud_init...
+  ->set rdma bonding......
+RDMAInit is disable
+sysctl opt config
+net.core.somaxconn = 4096
+net.ipv4.tcp_max_tw_buckets = 4096
+net.ipv4.tcp_slow_start_after_idle = 0
+cloud_init_etc_hosts_fix Try Fix /etc/hosts reset BUG.
+cloud_init_etc_hosts_fix Done
+>>>>bind_cloud_init_to_img_original_version start
+>>>> not a symbollink for /usr/local/qcloud/python/bin/python3.7. no need.
+linux_max_sector_blk_udev_install begin
+linux_max_sector_blk_udev_install done
+>>>>change_ubuntu_history_owner start
+>>>>change_ubuntu_history_owner end
+->config_networkmanager_dhcp_timeout...
+->turn off service
+fix_sudo_cve_2021_3156 begin
+fix_sudo_cve_2021_3156 end
+blacklist algif_aead start
+install algif_aead /bin/false
+blacklist algif_aead done
+blacklist dirtyfrag start
+install esp4 /bin/false
+install esp6 /bin/false
+install rxrpc /bin/false
+blacklist dirtyfrag done
+mitigate cve-2026-46333 start
+kernel.yama.ptrace_scope = 2
+kernel.yama.ptrace_scope = 2
+mitigate cve-2026-46333 done
+block cve-2026-46331 start
+install act_pedit /bin/false
+block cve-2026-46331 done
+->ntp_config
+time_daemon_config run...
+time_daemon_config delete old config
+time_daemon_config add servers
+time_daemon_config add ntp local listening rules
+time_daemon_config ban ntpdate in crontab
+time_daemon_config_recheck_ntpdate run...
+time_daemon_config_recheck_ntpdate done
+time_daemon_config restart service
+time_daemon_config done...
+./install.sh: line 1173: ver: unbound variable
+config_repos_implement run[dir:/qcloud_init/basic_linux_install_1.2.62 cpuarch:x86_64 ostype:ubuntu os_version:24.04]
+config_repos_implement done
+->acpid process is not ok,fix it...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+acpid is already the newest version (1:2.0.34-1ubuntu2).
+The following packages were automatically installed and are no longer required:
+  linux-headers-6.8.0-101 linux-headers-6.8.0-117 linux-tools-6.8.0-101
+  linux-tools-6.8.0-117
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 67 not upgraded.
+->install acpid ok...
+->software insatall and update for net config......
+ethtool version is ok, do nothing
+->set virtio net bind ......
+  ->disable irqbalance service......
+tee: /etc/init/irqbalance.override: No such file or directory
+manual
+sed: can't read /etc/default/irqbalance: No such file or directory
+  ->set net_irq_bind......
+  ->set_cpuidle_support......
+->set rps for vm......
+->set xps for vm......
+  ->set nvme_irq_bind...
+   -> not nvme cvm. completed...
+  ->set virtio_blk_irq_bind...
+  ->set virtio_blk_irq_bind...done
+->set_nic_hotplugin_support
+->Cler bash_history......
+--->config_sysctl:</etc/sysctl.conf>[kernel.sysrq,/proc/sys/kernel/sysrq](1)
+net.core.somaxconn = 4096
+net.ipv4.tcp_max_tw_buckets = 4096
+net.ipv4.tcp_slow_start_after_idle = 0
+kernel.sysrq = 1
+net.ipv6.conf.all.disable_ipv6 = 0
+net.ipv6.conf.default.disable_ipv6 = 0
+net.ipv6.conf.lo.disable_ipv6 = 0
+>>>config ubuntu sudo policy......
+->os specific config
+>>>Config locale......
+>>>Locale success
+>>>Fix pormpt_command:Begin Fix......
+>>>Fix pormpt_command:Fix completed.
+>>>Fix pip mirrors:Begin Fix......
+>>>Fix common pip mirrors:Success......
+>>>Fix common easy_install mirrors:Success......
+>>>Fix ubuntu pip mirrors:Success......
+>>>Fix ubuntu easy_install mirrors:Success......
+1. set Persistence-M for nvidia gpu driver......
+2. set gpu configuration for nvidia gpu......
+Created symlink /etc/systemd/system/shutdown.target.wants/nv_gpu_shutdown_pm.service → /usr/lib/systemd/system/nv_gpu_shutdown_pm.service.
+Installed and enabled nv gpu shutdown pm Service
+info - binary path: /usr/local/qcloud/gpu
+info - service path: /usr/lib/systemd/system
+http://metadata.tencentyun.com/latest/meta-data/software-management/basic-software/ curl, grep software fail
+get gpudirect rdma setup.sh and run it
+--2026-08-15 16:02:44--  http://mirrors.tencentyun.com/install/GPU/gpudirect_rdma_setup.sh
+Resolving mirrors.tencentyun.com (mirrors.tencentyun.com)... 169.254.0.3
+Connecting to mirrors.tencentyun.com (mirrors.tencentyun.com)|169.254.0.3|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1774 (1.7K) [text/x-sh]
+Saving to: ‘/tmp/gpudirect_rdma_setup.sh’
+
+     0K .                                                     100%  528M=0s
+
+2026-08-15 16:02:44 (528 MB/s) - ‘/tmp/gpudirect_rdma_setup.sh’ saved [1774/1774]
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    11  100    11    0     0   1409      0 --:--:-- --:--:-- --:--:--  1571
+[2026-08-15 16:02:44,783]: ins-type:SA2.MEDIUM2 no need setup
+>>>set_printk_ge5 start
+set kernel.printk = 5
+current setting : kernel.printk = 5
+>>>set_printk_ge5 end
+->Install initscripts......
+->Install initscripts for centos only. return
+->exclude_kernel: 2.6.32-696.30.1 ......
+cpu vendor id: AuthenticAMD
+ID:
+->exclude_kernel for centos only. return
+  ->disable rt runtime share......
+http://metadata.tencentyun.com/latest/meta-data/software-management/basic-software/ curl, grep software fail
+get ai sdk install.sh and run it
+--2026-08-15 16:02:44--  http://mirrors.tencentyun.com/install/cvm/ai/nvenc_ai_sdk_install.sh
+Resolving mirrors.tencentyun.com (mirrors.tencentyun.com)... 169.254.0.3
+Connecting to mirrors.tencentyun.com (mirrors.tencentyun.com)|169.254.0.3|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1400 (1.4K) [application/octet-stream]
+Saving to: ‘/tmp/nvenc_ai_sdk_install.sh’
+
+     0K .                                                     100%  422M=0s
+
+2026-08-15 16:02:44 (422 MB/s) - ‘/tmp/nvenc_ai_sdk_install.sh’ saved [1400/1400]
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    11  100    11    0     0   1012      0 --:--:-- --:--:-- --:--:--  1100
+ins-type:SA2.MEDIUM2
+[2026-08-15 16:02:44,857]: ins-type:SA2.MEDIUM2 no need install
+write basic_linux: 1.2.62 to /usr/local/qcloud/img_version
+http://metadata.tencentyun.com/latest/meta-data/software-management/software/Software-Install-Scripts/ curl 404, basic donot entry tcsmtool
+->setup add_npm_go_config for vm......
+GOPROXY="https://mirrors.tencent.com/go,direct"
+GOPROXY written to /etc/environment success
+SUDO_COMMAND=/usr/bin/su -c env | grep GOPROXY
+GOPROXY=https://mirrors.tencent.com/go,direct
+->setup add_ubuntu_npm_go_config for vm......
+-> GPU machine transparent huge page optimization check
+-> Current kernel version: 6.8.0-124-generic (not 5.x kernel)
+-> Not kernel 5.x, skipping transparent huge page optimization
+[End]:Sat Aug 15 04:02:45 PM CST 2026
+-- basic install success --
+/qcloud_init/ydeyes_linux_install_5.2.1.162
+checking the md5 file...
+check package success
+tar zxvf success
+new_ver:Version:5.2.1.162
+start ydsvc...
+start ydsvc success
+start ydlive...
+start ydlive success
+install package success
+report install log success
+total 48
+dr-xr-xr-x 14 root root 4096 Aug 15 16:02 basic_linux_install_1.2.62
+-r-xr-xr-x  1 root root  333 Aug 15 16:02 cvm_init.sh
+-r-xr-xr-x  1 root root   70 Aug 15 16:02 install_basic.sh
+-r-xr-xr-x  1 root root   68 Aug 15 16:02 install_stargate.sh
+-r-xr-xr-x  1 root root   66 Aug 15 16:02 install_tat.sh
+-r-xr-xr-x  1 root root   67 Aug 15 16:02 install_ydeyes.sh
+-r--r--r--  1 root root   24 Aug 15 16:02 instance_id
+-r--r--r--  1 root root   23 Aug 15 16:02 qcloud_init.conf
+-r--r--r--  1 root root   74 Aug 15 16:02 qcloud_init.ini
+dr-xr-xr-x  6 root root 4096 Aug 15 16:02 stargate_linux_install_20210222
+dr-xr-xr-x  2 root root 4096 Aug 15 16:02 tat_agent_linux_install_1.1.9
+dr-xr-xr-x  2 root root 4096 Aug 15 16:02 ydeyes_linux_install_5.2.1.162

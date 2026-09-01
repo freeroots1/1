@@ -1,0 +1,22 @@
+const fs = require('fs'), crypto = require('crypto');
+const salt = Buffer.from('pandel-settings-v1', 'utf8');
+const key = crypto.scryptSync(process.env.ADMIN_PASSWORD || 'pandel-default-key', salt, 32, { N: 16384, r: 8, p: 1 });
+const raw = JSON.parse(fs.readFileSync('/home/ubuntu/app/coolink/data/settings.json', 'utf8'));
+const buf = Buffer.from(raw.data, 'base64');
+const dec = crypto.createDecipheriv('aes-256-gcm', key, buf.subarray(0, 12));
+dec.setAuthTag(buf.subarray(12, 28));
+const s = JSON.parse(Buffer.concat([dec.update(buf.subarray(28)), dec.final()]).toString('utf8'));
+const { pan123Resolve } = require('/home/ubuntu/app/coolink/server/providers/resolve-other.js');
+const { extractToken } = require('/home/ubuntu/app/coolink/server/providers/login-123.js');
+const { buildDisplayTree } = require('/home/ubuntu/app/coolink/server/lib/utils.js');
+(async () => {
+  const tk = extractToken(s.cookies.pan123 || '');
+  const r = await pan123Resolve('https://www.123pan.cn/s/nbicMh-c27Xh', 'token=' + tk, { pass_code: 'oRch' });
+  console.log('=== pan123Resolve 树节点（62.jpg）===');
+  const file = r.tree[0].children[0];
+  console.log('name:', file.name, '| created_at:', JSON.stringify(file.created_at), '| size:', file.size);
+  console.log('\n=== buildDisplayTree 输出（62.jpg）===');
+  const dt = buildDisplayTree(r.tree);
+  const dfile = dt[0].children[0];
+  console.log('name:', dfile.file_name, '| created_at:', JSON.stringify(dfile.created_at), '| created_time:', JSON.stringify(dfile.created_time));
+})().catch(e => { console.log('ERR:', e.message); process.exit(1); });

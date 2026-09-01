@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="/xlcaptcha/css/reset.css" rel="stylesheet" />
+    <title>reviewpanel</title>
+    <style>
+        iframe {
+            /* border: 1px solid rgb(238, 124, 145); */
+            /* height: 275px; */
+            height: calc(100vw/375*50*2*(3.3));
+            width: 100%;
+            min-height: 280px;
+            padding:0 1%;
+            box-sizing: border-box;
+            text-align: center;
+            /* background-color:green; */
+        }
+    </style>
+    <!-- <script src="vconsole.min.js"></script>
+    <script>
+        var vConsole = new VConsole();
+    </script> -->
+</head>
+
+<body>
+    <div id="iframe-box">
+        <iframe id="iframe" src="" frameborder="0" data-ming='jojojo' name='xl' accept-charset='UTF-8' width="" height=""></iframe>
+    </div>
+</body>
+
+</html>
+<script>
+    function getDomain() {
+	    var s = location.host.split('.'),
+		len = s.length
+	    return s[len - 2] + '.' + s[len - 1]
+    }
+    // 如果没有实现 XLJSWebViewBridge 说明是开发环境
+    // 开发环境手动 mock 这个函数
+    var isDebug = !window.XLJSWebViewBridge
+    // isDebug = true
+    if (isDebug) {
+        var obj = {
+            pic:      '/xlcaptcha/pic.html?appid=22003&appName=wap-i.xl.com&deviceid=123',
+            slide: '/xlcaptcha/slide.html?appid=22003&appName=wap-i.xl.com&deviceid=123',
+            phone: "/xlcaptcha/vertifyPhone.html?appid=22011&deviceModel=NONE&protocolVersion=301&providerName=NONE&OSVersion=NONE&appName=ANDROID-com.xl.xlkdemo&mobile=186****4215&userID=160162085&clientVersion=3.3.1&netWorkType=NONE&smsEvent=34&deviceName=NONE&event=login3&platformVersion=10",
+            // phone: '/xlcaptcha/vertifyPhone.html?OSVersion=NONE&deviceModel=NONE&protocolVersion=301&appName=WEB-i.xl.com&appid=100&smsEvent=34&clientVersion=1.1.1&providerName=NONE&platformVersion=1&userID=150156654&event=login3_web&deviceName=NONE&mobile=13580548394&netWorkType=NONE',
+            work: '/xlcaptcha/workload.html?appid=22003&appName=wap-i.xl.com&deviceid=999'
+        }
+        window.XLJSWebViewBridge = {
+          sendMessage: function (name, data, cb) {
+              console.log(name, data, cb)
+              if (cb) {
+                  // window[cb]('{"platformVersion":"10","protocolVersion":"301","deviceModel":"SM-G9350","deviceName":"Samsung Sm-g9350","OSVersion":"7.0","devicesign":"div101.b7fc30f81a3385754156501775012cfb7f966d4985467c99019943318bbc22da","netWorkType":"WIFI","providerName":"CMCC","appid":"69","appName":"ANDROID-com.xl.xlkdemo","clientVersion":"3.2.1","sdkVersion":"0","packageName":"com.xl.xlkdemo","session":"","userid":0,"appKey":"88899b863b9dbe3b3f83b5f99eed840d","signature":"d1a1b9446199f9cb3a6585371f5594ab","deviceid":"div101.b7fc30f81a3385754156501775012cfb7f966d4985467c99019943318bbc22da","creditkey":"ck0.clABlwJ1PA0P2czqxaPGbuVu_0QtRErhRZIG_YIQXNMQ6bFS9Fp0d9FpdEb3z0KX","reviewurl":"https://i.xl.com/xlcaptcha/pic.html?event=login3&appName=ANDROID-com.xl.xlkdemo&appid=69&clientVersion=3.2.1&platformVersion=10"}')
+                  window[cb]({
+                    creditkey: 'ck0.iQNZ08BOKs_aCYxQBlxflHYYlktQ_L4E6-EuyTJh4mplxwOFRXAz-fpPdVN2JqXK',
+                    devicesign: 'wdi10.f9f27749066cba356cd7838fa6ccff3fcfcb296a763d9738841e50dba3bf40db',
+                    reviewurl: obj.pic
+                  })
+              }
+          }
+        }
+    }
+    
+    // 设置环境变量
+    window.env = 'android';
+    var iframe = document.getElementById('iframe')
+    
+    function reviewCb (data) {
+        try {
+            data = JSON.parse(data)
+        } catch (e) {}
+        console.log('nativeGetUserDeviceInfo', data)
+        
+        // 跨域处理
+        function getDomain() {
+	        var s = location.host.split('.'),
+		        len = s.length
+	        return s[len - 2] + '.' + s[len - 1]
+        }
+        document.domain =  getDomain() 
+        var reviewurl = data.reviewurl
+        reviewurl = decodeURIComponent(reviewurl)
+        reviewurl = reviewurl.replace(/http\:|https\:/, location.protocol)
+        
+        // 设置cookie
+        if (data.creditkey) {
+            setCookies('creditkey', data.creditkey, '', getDomain())
+        }
+        if (data.deviceid) {
+            setCookies('deviceid', data.deviceid, '', getDomain())
+        }
+        if (data.flowid) {
+            setCookies('flowid', data.flowid, '', getDomain())
+        }
+        // 统一从魏捷返回的reviewurl里获取mainHost
+        if (data.mainHost) {
+            setCookies('mainHost', data.mainHost, '', getDomain())
+        }else{
+            // 清空cookie
+            setCookies('mainHost', '', '', getDomain())
+        }
+        
+        iframe.src = reviewurl
+        iframe.onload = function () {
+            loadFn(data)
+        }
+    }
+    
+    // 通知安卓app事件: 取消
+    function CANCEL_CB () {
+        var params = {
+            roErrorCode: '30001',
+            roCommand: 'android_review'
+        };
+        params = JSON.stringify(params)
+        XLJSWebViewBridge.sendMessage('nativeRecvOperationResult',params, '');
+    }
+    
+    function setCookies (name, value, expire, domain, path, secure) {
+        var cookie, expire = expire ? new Date(new Date().getTime() + expire).toGMTString() : false;
+        cookie = name + '=' + escape(value);
+        cookie += '; path=' + (path ? path : '/');
+        if (domain) {
+            cookie += '; domain=' + domain;
+        }
+        if (secure) {
+            cookie += '; secure';
+        }
+        if (expire) {
+            cookie += '; expires=' + expire;
+        }
+        document.cookie = cookie;
+    }
+    var loadFn = function (data) {
+        window.XlCaptcha.init({
+            creditkey: data.creditkey,
+            deviceid: data.devicesign || data.deviceid,
+            'IFRAME_BOX_ID': "iframe",
+            VERTIFY_SUCC_FUNC: function (res) {
+                console.log('VERTIFY_SUCC_FUNC', res)
+                // 通知安卓app事件: 校验成功
+                if (+res.code === 200) {
+                    var ret = {}
+                    ret.roCommand = 'android_review'
+                    ret.roErrorCode = '0'
+                    // ret.roErrorDesc = res.error || res.msg
+                    ret.roData = {
+                        creditkey: res.creditkey
+                    }
+                    ret = JSON.stringify(ret)
+                    XLJSWebViewBridge.sendMessage('nativeRecvOperationResult',ret, '');
+                }
+            }
+        })
+    }
+    
+    XLJSWebViewBridge.sendMessage('nativeGetUserDeviceInfo', '', 'reviewCb');
+    
+</script>
