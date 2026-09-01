@@ -1,0 +1,5 @@
+[http]
+	postBuffer = 524288000
+[safe]
+	directory = /home/pangchao/metabot
+	directory = /home/pangchao/metabot2
