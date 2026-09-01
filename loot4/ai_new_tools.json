@@ -1,0 +1,438 @@
+[
+  {
+    "name": "huggingface/transformers",
+    "stars": 164455,
+    "description": "🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both in",
+    "url": "https://github.com/huggingface/transformers",
+    "created_at": "2018-10-29",
+    "pushed_at": "2026-08-26",
+    "language": "Python",
+    "topics": [
+      "audio",
+      "deep-learning",
+      "deepseek",
+      "gemma",
+      "glm"
+    ]
+  },
+  {
+    "name": "DietrichGebert/ponytail",
+    "stars": 111559,
+    "description": "Makes your AI agent think like the laziest senior dev in the room. The best code is the code you never wrote.",
+    "url": "https://github.com/DietrichGebert/ponytail",
+    "created_at": "2026-06-12",
+    "pushed_at": "2026-08-07",
+    "language": "JavaScript",
+    "topics": [
+      "agent-skills",
+      "ai-agents",
+      "claude",
+      "claude-code",
+      "claude-code-plugin"
+    ]
+  },
+  {
+    "name": "Mintplex-Labs/anything-llm",
+    "stars": 65212,
+    "description": "Stop renting your intelligence. Own it with AnythingLLM. Everything you need for a powerful local-first agent experience ",
+    "url": "https://github.com/Mintplex-Labs/anything-llm",
+    "created_at": "2023-06-04",
+    "pushed_at": "2026-08-26",
+    "language": "JavaScript",
+    "topics": [
+      "agent-computer",
+      "agent-harness",
+      "agent-orchestration",
+      "agentic-ai",
+      "ai-agents"
+    ]
+  },
+  {
+    "name": "bojieli/ai-agent-book",
+    "stars": 42347,
+    "description": "《深入理解 AI Agent：设计原理与工程实践》（李博杰 著）开源主仓库：全书正文、编译版 PDF 与按章配套代码",
+    "url": "https://github.com/bojieli/ai-agent-book",
+    "created_at": "2025-09-09",
+    "pushed_at": "2026-08-26",
+    "language": "Python",
+    "topics": [
+      "agent",
+      "agent-memory",
+      "ai-agent",
+      "book",
+      "coding-agent"
+    ]
+  },
+  {
+    "name": "sgl-project/sglang",
+    "stars": 32467,
+    "description": "SGLang is a high-performance serving framework for large language models and multimodal models.",
+    "url": "https://github.com/sgl-project/sglang",
+    "created_at": "2024-01-08",
+    "pushed_at": "2026-08-26",
+    "language": "Python",
+    "topics": [
+      "attention",
+      "blackwell",
+      "cuda",
+      "deepseek",
+      "diffusion"
+    ]
+  },
+  {
+    "name": "deepset-ai/haystack",
+    "stars": 26318,
+    "description": "Open-source AI orchestration framework for building context-engineered, production-ready LLM applications. Design modular pipelines and agent workflow",
+    "url": "https://github.com/deepset-ai/haystack",
+    "created_at": "2019-11-14",
+    "pushed_at": "2026-08-26",
+    "language": "Python",
+    "topics": [
+      "agent-framework",
+      "agentic-ai",
+      "agentic-rag",
+      "agents",
+      "ai"
+    ]
+  },
+  {
+    "name": "screenpipe/screenpipe",
+    "stars": 21233,
+    "description": "YC (S26) | Open Computer History | Record your screen continuously locally and provide context to your agents (Claude, Codex, Openclaw, Hermes, Runner",
+    "url": "https://github.com/screenpipe/screenpipe",
+    "created_at": "2024-06-19",
+    "pushed_at": "2026-08-26",
+    "language": "Rust",
+    "topics": [
+      "agents",
+      "agi",
+      "ai",
+      "ai-memory",
+      "audio-recording"
+    ]
+  },
+  {
+    "name": "modelscope/ms-swift",
+    "stars": 15364,
+    "description": "Use PEFT or Full-parameter to CPT/SFT/DPO/GRPO 600+ LLMs (Qwen3.6, DeepSeek-V4, GLM-5.1, InternLM3, Llama4, ...) and 300+ MLLMs (Qwen3-VL, Qwen3-Omni,",
+    "url": "https://github.com/modelscope/ms-swift",
+    "created_at": "2023-08-01",
+    "pushed_at": "2026-08-26",
+    "language": "Python",
+    "topics": [
+      "deepseek-r1",
+      "embedding",
+      "grpo",
+      "internvl",
+      "liger"
+    ]
+  },
+  {
+    "name": "XiaomiMiMo/MiMo-Code",
+    "stars": 12874,
+    "description": "MiMo Code: Where Models and Agents Co-Evolve",
+    "url": "https://github.com/XiaomiMiMo/MiMo-Code",
+    "created_at": "2026-06-10",
+    "pushed_at": "2026-08-26",
+    "language": "TypeScript",
+    "topics": [
+      "ai",
+      "ai-agents",
+      "cli",
+      "mimo",
+      "mimo-code"
+    ]
+  },
+  {
+    "name": "cobusgreyling/loop-engineering",
+    "stars": 10671,
+    "description": "Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Design systems that prompt and orchestrate agents (inspired by Ad",
+    "url": "https://github.com/cobusgreyling/loop-engineering",
+    "created_at": "2026-06-09",
+    "pushed_at": "2026-08-26",
+    "language": "JavaScript",
+    "topics": [
+      "agentic-ai",
+      "ai-agents",
+      "ai-coding",
+      "anthropic",
+      "automation"
+    ]
+  },
+  {
+    "name": "RunanywhereAI/runanywhere-sdks",
+    "stars": 10281,
+    "description": "Production ready toolkit to run AI locally",
+    "url": "https://github.com/RunanywhereAI/runanywhere-sdks",
+    "created_at": "2025-07-22",
+    "pushed_at": "2026-08-26",
+    "language": "C++",
+    "topics": [
+      "android",
+      "apple-intelligence",
+      "cpp",
+      "diffusion-models",
+      "edge"
+    ]
+  },
+  {
+    "name": "gorse-io/gorse",
+    "stars": 9808,
+    "description": "AI powered open source recommender system engine supports classical/LLM rankers and multimodal content via embedding",
+    "url": "https://github.com/gorse-io/gorse",
+    "created_at": "2018-08-14",
+    "pushed_at": "2026-08-25",
+    "language": "Go",
+    "topics": [
+      "collaborative-filtering",
+      "go",
+      "knn",
+      "machine-learning",
+      "recommender-system"
+    ]
+  },
+  {
+    "name": "apache/seatunnel",
+    "stars": 9582,
+    "description": "SeaTunnel is a multimodal, high-performance, distributed, massive data integration tool.",
+    "url": "https://github.com/apache/seatunnel",
+    "created_at": "2017-08-05",
+    "pushed_at": "2026-08-26",
+    "language": "Java",
+    "topics": [
+      "apache",
+      "batch",
+      "cdc",
+      "change-data-capture",
+      "data-ingestion"
+    ]
+  },
+  {
+    "name": "omnigent-ai/omnigent",
+    "stars": 9287,
+    "description": "Omnigent is an open-source AI agent framework and meta-harness: orchestrate Claude Code, Codex, Cursor, Pi, and custom agents — swap harnesses without",
+    "url": "https://github.com/omnigent-ai/omnigent",
+    "created_at": "2026-06-11",
+    "pushed_at": "2026-08-26",
+    "language": "Python",
+    "topics": [
+      "agent-framework",
+      "agent-governance",
+      "agent-orchestration",
+      "agents",
+      "ai"
+    ]
+  },
+  {
+    "name": "JimLiu/baoyu-design",
+    "stars": 3601,
+    "description": "Run Claude Design locally as an Agent Skill — Cursor, Claude Code & more. Produce polished UI mockups, prototypes, decks & wireframes as self-containe",
+    "url": "https://github.com/JimLiu/baoyu-design",
+    "created_at": "2026-06-07",
+    "pushed_at": "2026-07-30",
+    "language": "JavaScript",
+    "topics": [
+      "agent-skills",
+      "claude",
+      "claude-code",
+      "claude-design",
+      "cursor"
+    ]
+  },
+  {
+    "name": "yetone/cumora",
+    "stars": 3132,
+    "description": "Where agent teams gather. Cross-platform team chat where AI agents are first-class teammates — with cloud or bring-your-own (Claude Code / Codex) brai",
+    "url": "https://github.com/yetone/cumora",
+    "created_at": "2026-08-17",
+    "pushed_at": "2026-08-25",
+    "language": "TypeScript",
+    "topics": []
+  },
+  {
+    "name": "Forward-Future/loopy",
+    "stars": 3060,
+    "description": "A library of practical AI-agent loops and an installable skill for finding, adapting, and designing repeatable agent workflows.",
+    "url": "https://github.com/Forward-Future/loopy",
+    "created_at": "2026-06-12",
+    "pushed_at": "2026-07-26",
+    "language": "JavaScript",
+    "topics": [
+      "agent-skills",
+      "agentic-workflows",
+      "ai-agents",
+      "automation",
+      "codex"
+    ]
+  },
+  {
+    "name": "fuxicodex/Fuxi",
+    "stars": 2079,
+    "description": "FuXi is a fast, self-contained AI coding agent that lives in your terminal — edit code, run commands, and drive tools, with cost-aware routing across ",
+    "url": "https://github.com/fuxicodex/Fuxi",
+    "created_at": "2026-08-04",
+    "pushed_at": "2026-08-23",
+    "language": "Python",
+    "topics": [
+      "agent",
+      "ai",
+      "ai-agent",
+      "ai-coding",
+      "autonomous-agent"
+    ]
+  },
+  {
+    "name": "eternityspring/shuohao-skills",
+    "stars": 2072,
+    "description": "AI 短剧制作的 skill 集合：拆角色、排大纲、出场景与道具设定、写剧本、切分镜 | Agent skills for AI short-drama production — character bibles, adaptation outlines, art bibles, screenpla",
+    "url": "https://github.com/eternityspring/shuohao-skills",
+    "created_at": "2026-08-06",
+    "pushed_at": "2026-08-26",
+    "language": "JavaScript",
+    "topics": []
+  },
+  {
+    "name": "Kritt-ai/open-kritt",
+    "stars": 2008,
+    "description": "Open-source, self-hosted AI vulnerability research tool that orchestrates agents to find and validate security issues in code.",
+    "url": "https://github.com/Kritt-ai/open-kritt",
+    "created_at": "2026-07-20",
+    "pushed_at": "2026-08-24",
+    "language": "JavaScript",
+    "topics": [
+      "ai",
+      "ai-agents",
+      "ai-security",
+      "bug-bounty",
+      "bugbounty-tools"
+    ]
+  },
+  {
+    "name": "xerj-org/xerj",
+    "stars": 1665,
+    "description": "XERJ is the new way for AI to search data. Its autoindex capability activates agents to know your data without the token waste of grep and sed. One co",
+    "url": "https://github.com/xerj-org/xerj",
+    "created_at": "2026-06-30",
+    "pushed_at": "2026-08-26",
+    "language": "Rust",
+    "topics": [
+      "ai-search",
+      "ai-search-algorithms",
+      "ai-search-engine",
+      "ai-search-free",
+      "ai-search-module"
+    ]
+  },
+  {
+    "name": "duty1g/x64dbg-mcp-server",
+    "stars": 1423,
+    "description": "x64dbg-MCP Server is a native MCP (Model Context Protocol) plugin for x64dbg that exposes the debugger's full functionality over HTTP. Connect any MCP",
+    "url": "https://github.com/duty1g/x64dbg-mcp-server",
+    "created_at": "2026-08-22",
+    "pushed_at": "2026-08-24",
+    "language": "Zig",
+    "topics": [
+      "ai-agents",
+      "ai-debugging",
+      "binary-analysis",
+      "claude",
+      "claude-code"
+    ]
+  },
+  {
+    "name": "Pinvou/pinvou-agent",
+    "stars": 1273,
+    "description": "Open-source desktop AI agent for tools, files, knowledge, workflows, and real deliverables.",
+    "url": "https://github.com/Pinvou/pinvou-agent",
+    "created_at": "2026-07-24",
+    "pushed_at": "2026-08-26",
+    "language": "Rust",
+    "topics": [
+      "ai-agent",
+      "automation",
+      "desktop-app",
+      "llm",
+      "local-first"
+    ]
+  },
+  {
+    "name": "Dong90/oh-my-taiyiforge",
+    "stars": 881,
+    "description": "AI workflow automation plugin for intelligent code generation with Claude/Codex",
+    "url": "https://github.com/Dong90/oh-my-taiyiforge",
+    "created_at": "2026-06-05",
+    "pushed_at": "2026-08-24",
+    "language": "TypeScript",
+    "topics": [
+      "ai",
+      "automation",
+      "claude",
+      "code-generation",
+      "codex"
+    ]
+  },
+  {
+    "name": "livecontext-ai/livecontext-ce",
+    "stars": 333,
+    "description": "The AI automation platform, self-hosted. Describe the job in chat and LiveContext builds it: readable workflows, scoped AI agents, and small apps your",
+    "url": "https://github.com/livecontext-ai/livecontext-ce",
+    "created_at": "2026-06-16",
+    "pushed_at": "2026-08-14",
+    "language": "Java",
+    "topics": [
+      "agent-framework",
+      "agents",
+      "ai",
+      "ai-agents",
+      "ai-automation"
+    ]
+  },
+  {
+    "name": "mrpulor-gh/nuphus-mcp",
+    "stars": 256,
+    "description": "Desktop automation MCP server — computer use for any AI agent: control screen, windows, mouse/keyboard, and Chrome via Model Context Protocol (stdio)",
+    "url": "https://github.com/mrpulor-gh/nuphus-mcp",
+    "created_at": "2026-08-01",
+    "pushed_at": "2026-08-21",
+    "language": "Rust",
+    "topics": [
+      "ai-agent",
+      "browser-automation",
+      "chrome-automation",
+      "computer-use",
+      "computer-vision"
+    ]
+  },
+  {
+    "name": "IvanMurzak/Godot-MCP",
+    "stars": 225,
+    "description": "Godot-MCP — Model Context Protocol (MCP) integration for the Godot Engine. AI tools for the Godot Editor in C#, with cloud connection to ai-game.dev. ",
+    "url": "https://github.com/IvanMurzak/Godot-MCP",
+    "created_at": "2026-06-04",
+    "pushed_at": "2026-08-24",
+    "language": "C#",
+    "topics": [
+      "ai",
+      "ai-integration",
+      "ai-tools",
+      "anthropic",
+      "claude"
+    ]
+  },
+  {
+    "name": "bagidea/bagidea-office",
+    "stars": 202,
+    "description": "A living AI-agent office on your desktop wallpaper — Claude Code agents that walk, work, delegate, learn & hold meetings. Per-agent swappable models (",
+    "url": "https://github.com/bagidea/bagidea-office",
+    "created_at": "2026-06-03",
+    "pushed_at": "2026-08-25",
+    "language": "JavaScript",
+    "topics": [
+      "agent-orchestration",
+      "ai",
+      "ai-agents",
+      "anthropic",
+      "automation"
+    ]
+  }
+]

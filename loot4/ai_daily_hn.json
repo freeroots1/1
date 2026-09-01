@@ -1,0 +1,26 @@
+[
+  {
+    "title": "My personal AI benchmark: “Generate an SVG of a frog with a Habsburg jaw”",
+    "url": "https://frogs.vaguespac.es/",
+    "score": 139,
+    "comments": 70
+  },
+  {
+    "title": "Autoregressive Language Model on the 6502 Processor",
+    "url": "https://mattbeton.com/blog/bitnet-6502.html",
+    "score": 101,
+    "comments": 10
+  },
+  {
+    "title": "AI migrated legacy COBOL programs to Java, bugs included",
+    "url": "https://arxiv.org/abs/2607.28271",
+    "score": 47,
+    "comments": 34
+  },
+  {
+    "title": "Why we write our own C and C++ inference engines",
+    "url": "https://localai.io/blog/why-we-write-our-own-engines/",
+    "score": 41,
+    "comments": 22
+  }
+]

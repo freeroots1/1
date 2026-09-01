@@ -1,0 +1,137 @@
+[
+  {
+    "name": "openclaw",
+    "full_name": "openclaw/openclaw",
+    "stars": 384989,
+    "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/openclaw/openclaw",
+    "language": "TypeScript"
+  },
+  {
+    "name": "superpowers",
+    "full_name": "obra/superpowers",
+    "stars": 265338,
+    "description": "An agentic skills framework & software development methodology that works.",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/obra/superpowers",
+    "language": "Shell"
+  },
+  {
+    "name": "ECC",
+    "full_name": "affaan-m/ECC",
+    "stars": 237160,
+    "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencod",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/affaan-m/ECC",
+    "language": "JavaScript"
+  },
+  {
+    "name": "hermes-agent",
+    "full_name": "NousResearch/hermes-agent",
+    "stars": 224523,
+    "description": "The agent that grows with you",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/NousResearch/hermes-agent",
+    "language": "Python"
+  },
+  {
+    "name": "n8n",
+    "full_name": "n8n-io/n8n",
+    "stars": 199134,
+    "description": "Fair-code workflow automation platform with native AI capabilities. Combine visual building with custom code, self-host or cloud, 400+ integrations.",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/n8n-io/n8n",
+    "language": "TypeScript"
+  },
+  {
+    "name": "AutoGPT",
+    "full_name": "Significant-Gravitas/AutoGPT",
+    "stars": 185781,
+    "description": "AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission is to provide the tools, so that you can focus on what matter",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/Significant-Gravitas/AutoGPT",
+    "language": "Python"
+  },
+  {
+    "name": "ollama",
+    "full_name": "ollama/ollama",
+    "stars": 177649,
+    "description": "Get up and running with Kimi-K2.6, GLM-5.2, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and other models.",
+    "pushed_at": "2026-07-31",
+    "url": "https://github.com/ollama/ollama",
+    "language": "Go"
+  },
+  {
+    "name": "prompts.chat",
+    "full_name": "f/prompts.chat",
+    "stars": 166656,
+    "description": "f.k.a. Awesome ChatGPT Prompts. Share, discover, and collect prompts from the community. Free and open source — self-host for your organization with c",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/f/prompts.chat",
+    "language": "HTML"
+  },
+  {
+    "name": "transformers",
+    "full_name": "huggingface/transformers",
+    "stars": 163282,
+    "description": "🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both in",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/huggingface/transformers",
+    "language": "Python"
+  },
+  {
+    "name": "firecrawl",
+    "full_name": "firecrawl/firecrawl",
+    "stars": 159696,
+    "description": "The API to search, scrape, and interact with the web at scale. 🔥",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/firecrawl/firecrawl",
+    "language": "TypeScript"
+  },
+  {
+    "name": "JavaGuide",
+    "full_name": "Snailclimb/JavaGuide",
+    "stars": 157491,
+    "description": "Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发",
+    "pushed_at": "2026-07-28",
+    "url": "https://github.com/Snailclimb/JavaGuide",
+    "language": "JavaScript"
+  },
+  {
+    "name": "langflow",
+    "full_name": "langflow-ai/langflow",
+    "stars": 152778,
+    "description": "Langflow is a powerful tool for building and deploying AI-powered agents and workflows.",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/langflow-ai/langflow",
+    "language": "Python"
+  },
+  {
+    "name": "dify",
+    "full_name": "langgenius/dify",
+    "stars": 151164,
+    "description": "Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collaborative workspace. Deploy on cloud, VPC, or self-hosted, so t",
+    "pushed_at": "2026-08-03",
+    "url": "https://github.com/langgenius/dify",
+    "language": "TypeScript"
+  },
+  {
+    "name": "langchain",
+    "full_name": "langchain-ai/langchain",
+    "stars": 143282,
+    "description": "The agent engineering platform.",
+    "pushed_at": "2026-08-02",
+    "url": "https://github.com/langchain-ai/langchain",
+    "language": "Python"
+  },
+  {
+    "name": "system-prompts-and-models-of-ai-tools",
+    "full_name": "x1xhlol/system-prompts-and-models-of-ai-tools",
+    "stars": 142523,
+    "description": "FULL Augment Code, Claude Code, Cluely, CodeBuddy, Comet, Cursor, Devin AI, Junie, Kiro, Leap.new, Lovable, Manus, NotionAI, Orchids.app, Perplexity, ",
+    "pushed_at": "2026-07-31",
+    "url": "https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools",
+    "language": "N/A"
+  }
+]

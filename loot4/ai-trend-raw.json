@@ -1,0 +1,448 @@
+{
+  "gh_new": [
+    {
+      "name": "HUANGCHIHHUNGLeo/claude-real-video",
+      "stars": 815,
+      "desc": "Let Claude (or any LLM) actually watch a video — scene-aware, deduplicated frames + transcript, from a URL or local file",
+      "url": "https://github.com/HUANGCHIHHUNGLeo/claude-real-video",
+      "lang": "Python",
+      "created": "2026-06-30"
+    },
+    {
+      "name": "jamesob/local-llm",
+      "stars": 807,
+      "desc": "Everything I know about running LLMs locally",
+      "url": "https://github.com/jamesob/local-llm",
+      "lang": "Shell",
+      "created": "2026-07-03"
+    },
+    {
+      "name": "jmerelnyc/Talos",
+      "stars": 615,
+      "desc": "GPU worker client for the Talos network. Pairs with your Talos account, serves open-model inference jobs over a WebSocke",
+      "url": "https://github.com/jmerelnyc/Talos",
+      "lang": "Python",
+      "created": "2026-07-02"
+    },
+    {
+      "name": "uzairansaruzi/hermex",
+      "stars": 575,
+      "desc": "Native iPhone app for your Hermes agent",
+      "url": "https://github.com/uzairansaruzi/hermex",
+      "lang": "Swift",
+      "created": "2026-07-02"
+    },
+    {
+      "name": "elder-plinius/T3MP3ST",
+      "stars": 547,
+      "desc": "autonomous red teaming platform; multi-agent offensive-security meta-harness",
+      "url": "https://github.com/elder-plinius/T3MP3ST",
+      "lang": "TypeScript",
+      "created": "2026-07-02"
+    },
+    {
+      "name": "Kulaxyz/token-diet",
+      "stars": 523,
+      "desc": "Always-on token-efficiency skill for coding agents (Claude Code, Codex, Cursor, Windsurf, Cline). ~31% lower bill on ave",
+      "url": "https://github.com/Kulaxyz/token-diet",
+      "lang": "Shell",
+      "created": "2026-07-03"
+    },
+    {
+      "name": "TianhangZhuzth/Fundamental-Ava",
+      "stars": 522,
+      "desc": "Build digital human beings — autonomous, collaborative, and socially intelligent agents. FNzgGxU31RWiDgLr3GvxxSa42nRntvZ",
+      "url": "https://github.com/TianhangZhuzth/Fundamental-Ava",
+      "lang": "Python",
+      "created": "2026-06-30"
+    },
+    {
+      "name": "lingbol088-spec/reverse-flow-skill",
+      "stars": 362,
+      "desc": "面向 AI Agent / Codex 的本地 CTF 逆向工程流程技能。加载后通过“真心为你”进入逆向模式，默认在本地沙盒、CTF、crackme、wargame 或训练靶场环境中工作，按“分析 → 报告 → 逆向 → 深度逆向 → 漏洞",
+      "url": "https://github.com/lingbol088-spec/reverse-flow-skill",
+      "lang": "Python",
+      "created": "2026-06-30"
+    },
+    {
+      "name": "Evolink-AI/Awesome-Blender-Seedance-Workflow-Usecases",
+      "stars": 299,
+      "desc": "Curated Blender + Seedance workflows for AI filmmaking: previs, camera control, Blender MCP, reference video, and agent-",
+      "url": "https://github.com/Evolink-AI/Awesome-Blender-Seedance-Workflow-Usecases",
+      "lang": "Python",
+      "created": "2026-06-29"
+    },
+    {
+      "name": "xt4d/GameBlocks",
+      "stars": 240,
+      "desc": "Concise and self-explanatory building blocks that help coding agents prototype browser-based 3D games.",
+      "url": "https://github.com/xt4d/GameBlocks",
+      "lang": "JavaScript",
+      "created": "2026-07-01"
+    },
+    {
+      "name": "SuperJJ007/CSSwitch",
+      "stars": 232,
+      "desc": "帮你的 Claude Science 一键接入你自己的 API：DeepSeek / 通义千问 / 智谱 GLM / Kimi / MiniMax / 小米 MiMo / 硅基流动 / OpenRouter / 任意 OpenAI·Anth",
+      "url": "https://github.com/SuperJJ007/CSSwitch",
+      "lang": "Rust",
+      "created": "2026-07-02"
+    },
+    {
+      "name": "Archive228/loopkit",
+      "stars": 189,
+      "desc": "33 battle-tested skills + minimal .claude harness for any coding agent (Claude Code, Cursor, Codex, Gemini CLI).",
+      "url": "https://github.com/Archive228/loopkit",
+      "lang": "JavaScript",
+      "created": "2026-06-30"
+    },
+    {
+      "name": "oomol-lab/open-connector",
+      "stars": 165,
+      "desc": "Open-source auth gateway connecting 1000+ SaaS providers to AI agents through SDK, CLI, MCP, HTTP, and OpenAPI.",
+      "url": "https://github.com/oomol-lab/open-connector",
+      "lang": "TypeScript",
+      "created": "2026-06-29"
+    },
+    {
+      "name": "HKUDS/OpenOPC",
+      "stars": 148,
+      "desc": "OpenOPC: Build Your Personal AI-Native Company — Self-Built, Self-Run, Self-Grown",
+      "url": "https://github.com/HKUDS/OpenOPC",
+      "lang": "Python",
+      "created": "2026-07-01"
+    },
+    {
+      "name": "Sophomoresty/gemini-search-mcp",
+      "stars": 139,
+      "desc": "Free MCP server for web search powered by Google AI Mode (Gemini). Unlimited, no API key.",
+      "url": "https://github.com/Sophomoresty/gemini-search-mcp",
+      "lang": "Python",
+      "created": "2026-06-29"
+    }
+  ],
+  "gh_active": [
+    {
+      "name": "punkpeye/awesome-mcp-servers",
+      "stars": 90302,
+      "desc": "A collection of MCP servers.",
+      "url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "lang": null,
+      "pushed": "2026-07-04"
+    },
+    {
+      "name": "headroomlabs-ai/headroom",
+      "stars": 56619,
+      "desc": "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library",
+      "url": "https://github.com/headroomlabs-ai/headroom",
+      "lang": "Python",
+      "pushed": "2026-07-03"
+    },
+    {
+      "name": "BerriAI/litellm",
+      "stars": 52626,
+      "desc": "Python SDK, Proxy Server (AI Gateway) to call 100+ LLM APIs in OpenAI (or native) format, with cost tracking, guardrails",
+      "url": "https://github.com/BerriAI/litellm",
+      "lang": "Python",
+      "pushed": "2026-07-05"
+    },
+    {
+      "name": "1Panel-dev/1Panel",
+      "stars": 36090,
+      "desc": "🔥 1Panel is a modern, open-source VPS control panel — and the only one with native AI agent support. Run Ollama models, ",
+      "url": "https://github.com/1Panel-dev/1Panel",
+      "lang": "Go",
+      "pushed": "2026-07-03"
+    },
+    {
+      "name": "activepieces/activepieces",
+      "stars": 23123,
+      "desc": "AI Agents & MCPs & AI Workflow Automation • (~400 MCP servers for AI agents) • AI Automation / AI Agent with MCPs • AI W",
+      "url": "https://github.com/activepieces/activepieces",
+      "lang": "TypeScript",
+      "pushed": "2026-07-05"
+    },
+    {
+      "name": "aio-libs/aiohttp",
+      "stars": 16478,
+      "desc": "Asynchronous HTTP client/server framework for asyncio and Python",
+      "url": "https://github.com/aio-libs/aiohttp",
+      "lang": "Python",
+      "pushed": "2026-07-03"
+    },
+    {
+      "name": "googleapis/mcp-toolbox",
+      "stars": 15855,
+      "desc": "MCP Toolbox for Databases is an open source MCP server for databases.",
+      "url": "https://github.com/googleapis/mcp-toolbox",
+      "lang": "Go",
+      "pushed": "2026-07-04"
+    },
+    {
+      "name": "GLips/Figma-Context-MCP",
+      "stars": 15305,
+      "desc": "MCP server to provide Figma layout information to AI coding agents like Cursor",
+      "url": "https://github.com/GLips/Figma-Context-MCP",
+      "lang": "TypeScript",
+      "pushed": "2026-07-03"
+    },
+    {
+      "name": "mcp-use/mcp-use",
+      "stars": 10246,
+      "desc": "The fullstack MCP framework to develop MCP Apps for ChatGPT / Claude & MCP Servers for AI Agents.",
+      "url": "https://github.com/mcp-use/mcp-use",
+      "lang": "TypeScript",
+      "pushed": "2026-07-03"
+    },
+    {
+      "name": "webiny/webiny-js",
+      "stars": 8002,
+      "desc": "Open-source, self-hosted CMS platform on AWS serverless (Lambda, DynamoDB, S3). TypeScript framework with multi-tenancy,",
+      "url": "https://github.com/webiny/webiny-js",
+      "lang": "TypeScript",
+      "pushed": "2026-07-03"
+    },
+    {
+      "name": "apache/hertzbeat",
+      "stars": 7302,
+      "desc": "An AI-powered next-generation open source real-time observability system.",
+      "url": "https://github.com/apache/hertzbeat",
+      "lang": "Java",
+      "pushed": "2026-07-04"
+    },
+    {
+      "name": "vespa-engine/vespa",
+      "stars": 6987,
+      "desc": "The AI search platform",
+      "url": "https://github.com/vespa-engine/vespa",
+      "lang": "Java",
+      "pushed": "2026-07-05"
+    },
+    {
+      "name": "CursorTouch/Windows-MCP",
+      "stars": 6324,
+      "desc": "MCP Server for Computer Use in Windows",
+      "url": "https://github.com/CursorTouch/Windows-MCP",
+      "lang": "Python",
+      "pushed": "2026-07-02"
+    },
+    {
+      "name": "wonderwhy-er/DesktopCommanderMCP",
+      "stars": 6245,
+      "desc": "This is MCP server for Claude that gives it terminal control, file system search and diff file editing capabilities",
+      "url": "https://github.com/wonderwhy-er/DesktopCommanderMCP",
+      "lang": "TypeScript",
+      "pushed": "2026-07-03"
+    },
+    {
+      "name": "Arthur-Ficial/apfel",
+      "stars": 5905,
+      "desc": "The free AI already on your Mac. CLI tool, OpenAI-compatible server, and interactive chat — all on-device via Apple Inte",
+      "url": "https://github.com/Arthur-Ficial/apfel",
+      "lang": "Swift",
+      "pushed": "2026-07-03"
+    }
+  ],
+  "techcrunch": [
+    {
+      "title": "New Google commercial imagines a Declaration of Independence written with help from AI",
+      "link": "https://techcrunch.com/2026/07/04/new-google-commercial-imagines-a-declaration-of-independence-written-with-help-from-ai/",
+      "desc": "Two hundred and fifty years after the signing of the Declaration of Independence, a new commercial asks: What if the Founding Fathers had access to Google Workspace?"
+    },
+    {
+      "title": "Midjourney wants Hollywood studios to reveal the details of their AI usage",
+      "link": "https://techcrunch.com/2026/07/04/midjourney-wants-hollywood-studios-to-reveal-the-details-of-their-ai-usage/",
+      "desc": "As part of an ongoing legal dispute with three Hollywood studios, Midjourney is seeking to compel those studios to reveal how they use AI themselves."
+    },
+    {
+      "title": "Alibaba reportedly bans employees from using Claude Code",
+      "link": "https://techcrunch.com/2026/07/04/alibaba-reportedly-bans-employees-from-using-claude-code/",
+      "desc": "Alibaba has reportedly classified Claude Code as high-risk software."
+    },
+    {
+      "title": "What is Mistral AI? Everything to know about the OpenAI competitor",
+      "link": "https://techcrunch.com/2026/07/04/what-is-mistral-ai-everything-to-know-about-the-openai-competitor/",
+      "desc": "Mistral AI, which offers some open source AI models, has raised significant funding since its creation in 2023, with the ambition to “put frontier AI in the hands of everyone.”"
+    },
+    {
+      "title": "The only AI glossary you&#8217;ll need this year",
+      "link": "https://techcrunch.com/2026/07/03/artificial-intelligence-definition-glossary-hallucinations-guide-to-common-ai-terms/",
+      "desc": "The rise of AI has brought an avalanche of new terms and slang. Here is a glossary with definitions of some of the most important words and phrases you might encounter."
+    },
+    {
+      "title": "The browser wars aren&#8217;t about search anymore — here are the best alternatives to Chrome and Safari",
+      "link": "https://techcrunch.com/2026/07/03/as-the-browser-wars-heat-up-here-are-the-hottest-alternatives-to-chrome-and-safari-in-2026/",
+      "desc": "We’ve compiled an overview of some of the top alternative browsers available today aiming to challenge Chrome and Safari."
+    },
+    {
+      "title": "Mark Zuckerberg tells staff that AI agents haven&#8217;t progressed as quickly as he&#8217;d hoped",
+      "link": "https://techcrunch.com/2026/07/02/mark-zuckerberg-tells-staff-that-ai-agents-havent-progressed-as-quickly-as-hed-hoped/",
+      "desc": "At an internal meeting, the Meta CEO reportedly said that AI development efforts were not moving as quickly as anticipated."
+    },
+    {
+      "title": "Jersey Mike&#8217;s IPO illustrates how bad the AI hype has become",
+      "link": "https://techcrunch.com/2026/07/02/jersey-mikes-ipo-illustrates-how-bad-the-ai-hype-has-become/",
+      "desc": "Just for kicks, I took a look at Jersey Mike's IPO documents. Surely a sandwich shop would have no need to mention AI. But lo and behold."
+    },
+    {
+      "title": "Meta quietly launches vibe-coded gaming app Pocket",
+      "link": "https://techcrunch.com/2026/07/02/meta-quietly-launches-vibe-coded-gaming-app-pocket/",
+      "desc": "Meta has quietly launched Pocket, an experimental AI app that lets users generate and share interactive mini games using text prompts."
+    },
+    {
+      "title": "Anthropic is discussing a new custom chip with Samsung",
+      "link": "https://techcrunch.com/2026/07/02/anthropic-is-discussing-a-new-custom-chip-with-samsung/",
+      "desc": "The news comes about a week after OpenAI announced its own custom AI chip in a partnership with Broadcom."
+    },
+    {
+      "title": "OpenAI proposed donating 5% of its equity to a US sovereign wealth fund",
+      "link": "https://techcrunch.com/2026/07/02/openai-proposed-donating-5-of-its-equity-to-a-us-sovereign-wealth-fund/",
+      "desc": "OpenAI CEO Sam Altman has reportedly proposed giving 5% of the company’s equity to a U.S. sovereign wealth fund, reviving discussions about letting the public share in the financial gains from the AI "
+    },
+    {
+      "title": "Microsoft launches its own AI deployment company with $2.5 billion commitment",
+      "link": "https://techcrunch.com/2026/07/02/microsoft-launches-its-own-ai-deployment-company-with-2-5-billion-commitment/",
+      "desc": "Microsoft follows Amazon, OpenAI, and Anthropic with its new AI deployment group."
+    },
+    {
+      "title": "Yep, we&#8217;re using OpenClaw to date now",
+      "link": "https://techcrunch.com/2026/07/02/yep-were-using-openclaw-to-date-now/",
+      "desc": "Ben Guez has \"a bunch of potential international wives in [his] DMs,\" thanks to an automated script he set up using OpenClaw, Claude code, and Instagram trials."
+    },
+    {
+      "title": "Indian tech tycoon bets $30M of his own money to build AI alternative to Microsoft Office",
+      "link": "https://techcrunch.com/2026/07/01/indian-tech-tycoon-bets-30m-to-build-an-ai-alternative-to-microsoft-office/",
+      "desc": "Neo is Bhavin Turakhia’s fifth venture and his latest involving enterprise software. This time he's taking on Microsoft Office and Google Apps with AI."
+    },
+    {
+      "title": "SpaceX has an AI device prototype, and it sure sounds phone-ish",
+      "link": "https://techcrunch.com/2026/07/01/spacex-has-an-ai-device-prototype-and-it-sure-sounds-phone-ish/",
+      "desc": "SpaceX reportedly showed investors a \"handset-like\" AI device before going public. It could be another signal SpaceX wants to expand into wireless."
+    },
+    {
+      "title": "Ashton Kutcher leaving Sound Ventures to launch new VC firm with Morgan Beller",
+      "link": "https://techcrunch.com/2026/07/01/ashton-kutcher-leaving-sound-ventures-to-launch-new-vc-firm-with-morgan-beller/",
+      "desc": "Sound built its reputation on concentrated, high-conviction bets in category-leading AI labs, while Kutcher's new fund appears to be chasing the layer underneath those companies — the infrastructure a"
+    },
+    {
+      "title": "Cloudflare&#8217;s new policy pushes AI companies to pay for publishers&#8217; content",
+      "link": "https://techcrunch.com/2026/07/01/cloudflares-new-policy-pushes-ai-companies-to-pay-for-publishers-content/",
+      "desc": "Cloudflare is giving AI companies until September 15 to separate web crawlers used for search from those used for AI training and agents, or risk being blocked by default on many publisher sites."
+    },
+    {
+      "title": "Venice AI becomes a unicorn with $65M Series A as its privacy-first AI platform takes off",
+      "link": "https://techcrunch.com/2026/07/01/venice-ai-becomes-a-unicorn-with-65m-series-a-as-its-privacy-first-ai-platform-takes-off/",
+      "desc": "Venice AI is already profitable, with annualized run-rate revenues of over $70 million, CEO Erik Voorhees said."
+    },
+    {
+      "title": "Gemini Spark, Google&#8217;s agentic assistant, is now available on Mac",
+      "link": "https://techcrunch.com/2026/07/01/gemini-spark-googles-agentic-assistant-is-now-available-on-mac/",
+      "desc": "Google's 24/7 agentic assistant, Gemini Spark, comes to Mac alongside other improvements, like real-time tracking and support for more apps."
+    },
+    {
+      "title": "Builders Stage agenda revealed: Practical strategies for scaling startups at TechCrunch Disrupt 2026",
+      "link": "https://techcrunch.com/2026/07/01/builders-stage-agenda-revealed-practical-strategies-for-scaling-startups-at-techcrunch-disrupt-2026/",
+      "desc": "The Builders Stage is returning to TechCrunch Disrupt 2026, bringing together 10,000+ founders, startup operators, and investors for practical conversations. and Q&#038;A on what it takes to build and"
+    }
+  ],
+  "venturebeat": [
+    {
+      "title": "Google just redesigned the search box for the first time in 25 years — here’s why it matters more than you think.",
+      "link": "https://venturebeat.com/technology/google-just-redesigned-the-search-box-for-the-first-time-in-25-years-heres-why-it-matters-more-than-you-think",
+      "desc": "For a quarter century, the Google search box has been one of the most recognizable interfaces in computing: a thin white rectangle, a blinking cursor, a few typed words, and a list of blue links. On T"
+    },
+    {
+      "title": "Railway secures $100 million to challenge AWS with AI-native cloud infrastructure",
+      "link": "https://venturebeat.com/infrastructure/railway-secures-usd100-million-to-challenge-aws-with-ai-native-cloud",
+      "desc": "Railway, a San Francisco-based cloud platform that has quietly amassed two million developers without spending a dollar on marketing, announced Thursday that it raised $100 million in a Series B fundi"
+    },
+    {
+      "title": "Claude Code costs up to $200 a month. Goose does the same thing for free.",
+      "link": "https://venturebeat.com/infrastructure/claude-code-costs-up-to-usd200-a-month-goose-does-the-same-thing-for-free",
+      "desc": "The artificial intelligence coding revolution comes with a catch: it&#x27;s expensive.Claude Code, Anthropic&#x27;s terminal-based AI agent that can write, debug, and deploy code autonomously, has cap"
+    },
+    {
+      "title": "Listen Labs raises $69M after viral billboard hiring stunt to scale AI customer interviews",
+      "link": "https://venturebeat.com/technology/listen-labs-raises-usd69m-after-viral-billboard-hiring-stunt-to-scale-ai",
+      "desc": "Alfred Wahlforss was running out of options. His startup, Listen Labs, needed to hire over 100 engineers, but competing against Mark Zuckerberg&#x27;s $100 million offers seemed impossible. So he spen"
+    },
+    {
+      "title": "Salesforce rolls out new Slackbot AI agent as it battles Microsoft and Google in workplace AI",
+      "link": "https://venturebeat.com/technology/salesforce-rolls-out-new-slackbot-ai-agent-as-it-battles-microsoft-and",
+      "desc": "Salesforce on Tuesday launched an entirely rebuilt version of Slackbot, the company&#x27;s workplace assistant, transforming it from a simple notification tool into what executives describe as a fully"
+    },
+    {
+      "title": "Anthropic launches Cowork, a Claude Desktop agent that works in your files — no coding required",
+      "link": "https://venturebeat.com/technology/anthropic-launches-cowork-a-claude-desktop-agent-that-works-in-your-files-no",
+      "desc": "Anthropic released Cowork on Monday, a new AI agent capability that extends the power of its wildly successful Claude Code tool to non-technical users — and according to company insiders, the team bui"
+    },
+    {
+      "title": "Nous Research's NousCoder-14B is an open-source coding model landing right in the Claude Code moment",
+      "link": "https://venturebeat.com/technology/nous-researchs-nouscoder-14b-is-an-open-source-coding-model-landing-right-in",
+      "desc": "Nous Research, the open-source artificial intelligence startup backed by crypto venture firm Paradigm, released a new competitive programming model on Monday that it says matches or exceeds several la"
+    }
+  ],
+  "36kr": [
+    {
+      "title": "硬氪首发 | 港大教授成立的忆生科技获数亿天使轮融资，致力于为机器人造一套记忆系统",
+      "link": "https://36kr.com/p/3882365879005186?f=rss",
+      "desc": "作者&nbsp;|&nbsp;邱晓芬\n  编辑&nbsp;|&nbsp;袁斯来\n  硬氪获悉，「忆生科技」（TranscEngram）完成数亿元天使轮融资，本轮投资方阵容横跨产业资本与国资平台，包括正大旗下中生制药、浦东创投、张江科投、张江高科、弘信电子、云晖资本、沃肯资本、金舵资本等。\n  「忆生科技」致力于从科学第一性原理出发，用\"感知—预测—交互\"闭环构建机器人\"大脑+小脑\"统一系统，探索下"
+    },
+    {
+      "title": "硬氪首发 | 清华车辆学院师兄弟创业具身智能，已完成数亿元天使融资，将落地汽车产业",
+      "link": "https://36kr.com/p/3882364132077577?f=rss",
+      "desc": "作者&nbsp;|&nbsp;邱晓芬\n  编辑&nbsp;|&nbsp;袁斯来\n  硬氪获悉，具身智能公司「光象科技」宣布完成累计数亿元天使轮融资。\n  最新一轮由珠海科技产业集团、兴证资本、松禾资本、顺禧基金、慕华科创、SeeFund、亿宸资本、上市公司行云科技等头部财投与产投深度参与，老股东零一创投、L2F光源创业者基金持续加注。\n  本轮资金将重点投入物理原生基座模���的研发迭代，并推进具"
+    },
+    {
+      "title": "硬氪首发 | 小米前高管唐沐创业咖啡机器人，完成数亿融资，林斌、黎万强投过",
+      "link": "https://36kr.com/p/3882361033322755?f=rss",
+      "desc": "作者&nbsp;|&nbsp;邱晓芬\n  编辑&nbsp;|&nbsp;袁斯来\n  硬氪获悉，通用餐饮具身机器人公司「影智XBOT」连续完成数亿元两轮融资——其中，A轮的2亿元融资由香港简坤资本GPTX出资，B轮融资为3-5亿元人民币，由多支政府基金、美元基金和产业投资方共同参与出资。\n  这是目前餐饮垂直机器人领域规模最大的一笔融资之一。\n  在此之前，「影智XBOT」还完成了一轮天使融资，出资"
+    },
+    {
+      "title": "对话傲鲨创始人徐振华：当科幻机甲成为户外装备，外骨骼如何重新定义人机关系？",
+      "link": "https://36kr.com/p/3880770270425089?f=rss",
+      "desc": "《流浪地球2》与游戏《死亡搁浅》中，主角身穿外骨骼行走的人类未来图景，正在成为户外爱好者的真实装备。\n  7月4日，阳澄湖半岛度假区，十几个人身穿“机甲”在湖畔徒步。他们穿的是傲鲨VIATRIX增程动力外骨骼机器人，走几步后很快步伐变得轻盈，这是外骨骼通过学习他们的行走姿态，在抬腿瞬间加上一定推力，使6公里的徒步体验更像一次悠闲的City walk。\n  当天的机甲徒步活动由傲鲨联合户外平台一帐之"
+    },
+    {
+      "title": "9点1氪｜阿里内部全面禁用Claude Code；FF洛杉矶总部人去楼空？公司回应：不实；微软砸25亿美元组建6000人AI新公司",
+      "link": "https://36kr.com/p/3880629882679301?f=rss",
+      "desc": "今日热点导览\n  \n   三部门：调整节能汽车、新能源汽车车船税优惠政策\n   三星传获Meta超10万亿韩元AI芯片代工订单\n   茉莉奶白小程序更换彩色Logo\n   Meta打算出售富余算力引发科技股回落\n   英伟达前光互连技术高管Ashkan Seyedi加入艾迈斯欧司朗\n  \n  TOP3大新闻\n  因存在植入后门风险，阿里内部全面禁用Claude Code\n  36氪从阿里内部人士处"
+    },
+    {
+      "title": "36氪首发 | 剑桥副教授创业硅光芯片，已合作华为，获一亿投资",
+      "link": "https://36kr.com/p/3879991356157952?f=rss",
+      "desc": "图源/企业\n  作者丨欧雪\n  编辑丨袁斯来\n  硬氪获悉，硅基光电子集成芯片研发商光引科技近期已完成1亿元Pre-A轮融资，投资方包括光子强链基金、善达投资、长飞基金、洛阳英才、中科创星、西安财金。资金将主要用于上海新实验室建设、人才招募及量产推进。\n  光引科技2021年成立于徐州，核心团队孵化自英国剑桥大学研发团队。创始人程祺翔为剑桥大学博士、剑桥大学副教授，在光子集成领域深耕超16年，曾就"
+    },
+    {
+      "title": "400家starup聚集、阿斯利康重押13亿欧元，创新药出海欧洲绕不开这座城｜最前线",
+      "link": "https://36kr.com/p/3879807100023040?f=rss",
+      "desc": "文｜胡香赟\n  编辑｜海若镜\n  2026年6月底，西班牙瓦尔德希伯伦大学医院（Vall d’Hebron University Hospital）宣布完成欧洲首例单孔机器人儿科肾输尿管切除��。\n  瓦尔德希伯伦大学医院是西班牙规模最大的综合医院之一，年接诊量过百万人次，在整个欧洲医疗系统内，这家医院对前沿医疗技术、产品的探索都称得上“先锋”。此前，世界首例供体来自安乐死患者的面部移植手术就在这"
+    },
+    {
+      "title": "秋声 | 袁进辉新公司冲港股IPO，成立不到三年",
+      "link": "https://36kr.com/p/3879814941437956?f=rss",
+      "desc": "本文约2700字，建议阅读6分钟\n  作者&nbsp;|&nbsp;彭孝秋\n  \n   编者按：AI大爆发之际，越来越多公司走向资本市场。每一份招股书翻动的声音里，都藏着一家公司想说与未曾明说的全部。\n   鉴于此，硬氪特推出「秋声」专栏。秋声取自欧阳修《秋声赋》，借“听秋声”之意，产业冷暖，辨公司成色，记录企业冲刺IPO途中那些被写下与被隐藏的真实。这是我们第七期，硅基流动。\n  \n  Q2的最"
+    },
+    {
+      "title": "氪星晚报｜西贝餐饮集团退出小女当家；FF洛杉矶总部人去楼空？公司回应：不实",
+      "link": "https://36kr.com/p/3879796756754694?f=rss",
+      "desc": "大公司：\n  德银：Meta云业务或打开千亿美元级AI投入变现通道，2027年收入最高增300亿美元\n  针对Meta拟向外部客户出售AI算力及模型访问权限的消息，德意志银行认为，这并不意味着Meta削弱前沿模型或“超级智能”布局，而更可能是将较旧、非核心或阶段性闲置的算力对外变现，同时保留最新一代芯片用于内部训练。此举有望把市场对Meta“高资本开支、收入回报有限”的担忧，转向对其新增高利润收入"
+    },
+    {
+      "title": "理想组织再动刀：去中间环节，整车和智驾产品回归研发｜36氪独家",
+      "link": "https://36kr.com/p/3877919172047111?f=rss",
+      "desc": "图源视觉中国\n  文｜肖漫编辑｜李勤、杨轩\n  “回归创业状态”，去年李想说出这个目标后，理想汽车还在进行组织和流程精简。\n  36氪汽车从多位知情人士处获悉，理想即将围绕产品决策流程进行新一轮组织架构调整，计划将产品部的部分关键职能拆分，并入研发部门。\n  从群组关系来看，理想汽车产品部由范皓宇负责，包含电动本体、空间智能、自动驾驶终端产品、交互设计、平台运营、App与官网等。\n  了解调整动向"
+    },
+    {
+      "title": "光大证券：半导体与AI浪潮驱动含氟新材料进入高速成长期",
+      "link": "https://36kr.com/newsflashes/3882063262068998?f=rss",
+      "desc": "7月5日消息，光大证券研报认为，国内氟化工领军企业正加速布局含氟新材料，聚焦打造第二成长曲线。在半导体领域，高纯度（如G5级）电子级氢氟酸作为芯片制造不可或缺的关键湿电子化学品，过去长期被日美企业垄断。近年来，国内企业凭借产业链一体化优势突破了超净高纯工艺瓶颈，电子级氢氟酸顺利通过国内外一线晶圆代工厂的严苛认证，并进入规模化放量阶段。与此同时，AI、HPC和超大规模数据中心算力的快速攀升致使数据中"
+    },
+    {
+      "title": "美光科技投资93亿美元扩建先进存储芯片项目，预计2028下半年出货HBM",
+      "link": "https://36kr.com/newsflashes/3882061184413701?f=rss",
+      "desc": "美光科技当地时间周六（7月4日）正式启动其位于日本西部广岛工厂的扩建工程。这项总投资达1.5万亿日元（约合93亿美元）的项目，旨在生产包括高带宽存储器（HBM）在内的先进存储芯片，以满足人工智能（AI）浪潮带来的旺盛需求。HBM是英伟达AI处理器的关键组件，工厂预计将于2028年夏季左右开始出货。近期，美光、三星电子和SK海力士各自都宣布了扩充制造能力的计划。本周早些时候，SK海力士宣布，计划投资"
+    }
+  ],
+  "verge": []
+}
