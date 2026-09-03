@@ -1,0 +1,58 @@
+# Nmap 7.80 scan initiated Thu Sep  3 16:51:47 2026 as: nmap -sV -sC --top-ports 1000 -oN dnz_reg_scan.txt dnz-reg.nz.ua
+Nmap scan report for dnz-reg.nz.ua (193.138.146.2)
+Host is up (0.035s latency).
+rDNS record for 193.138.146.2: 2.146.138.193.triolan.net
+Not shown: 991 filtered ports
+PORT    STATE SERVICE    VERSION
+21/tcp  open  tcpwrapped
+25/tcp  open  tcpwrapped
+| smtp-commands: mail.mz.com.ua, AUTH CRAM-MD5 PLAIN LOGIN DIGEST-MD5 NTLM, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, PIPELINING, ETRN, DSN, HELP, 
+|_ 2.0.0 Commands: HELO EHLO MAIL RCPT DATA RSET NOOP VRFY QUIT STARTTLS 
+80/tcp  open  tcpwrapped
+|_http-server-header: cloudflare
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).
+110/tcp open  tcpwrapped
+|_pop3-capabilities: SASL(CRAM-MD5 PLAIN LOGIN DIGEST-MD5 NTLM) USER UIDL TOP STLS APOP
+| ssl-cert: Subject: commonName=mail.mz.com.ua/organizationName=NZ/countryName=UA
+| Not valid before: 2012-11-30T19:44:39
+|_Not valid after:  2022-11-28T19:44:39
+|_ssl-date: TLS randomness does not represent time
+|_sslv2: ERROR: Script execution failed (use -d to debug)
+143/tcp open  tcpwrapped
+| imap-ntlm-info: 
+|   Target_Name: SERVER1
+|   NetBIOS_Domain_Name: SERVER1
+|   NetBIOS_Computer_Name: SERVER1
+|   DNS_Domain_Name: server1
+|   DNS_Computer_Name: server1
+|_  Product_Version: 5.2.3790
+| ssl-cert: Subject: commonName=mail.mz.com.ua/organizationName=NZ/countryName=UA
+| Not valid before: 2012-11-30T19:44:39
+|_Not valid after:  2022-11-28T19:44:39
+|_ssl-date: TLS randomness does not represent time
+443/tcp open  tcpwrapped
+|_http-server-header: cloudflare
+| ssl-cert: Subject: commonName=dnz-reg.nz.ua
+| Subject Alternative Name: DNS:dnz-reg.nz.ua
+| Not valid before: 2026-09-03T15:52:09
+|_Not valid after:  2026-09-04T16:52:09
+587/tcp open  tcpwrapped
+| smtp-commands: mail.mz.com.ua, AUTH CRAM-MD5 PLAIN LOGIN DIGEST-MD5 NTLM, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, PIPELINING, ETRN, DSN, HELP, 
+|_ 2.0.0 Commands: EHLO MAIL RCPT DATA RSET NOOP VRFY QUIT STARTTLS 
+| ssl-cert: Subject: commonName=mail.mz.com.ua/organizationName=NZ/countryName=UA
+| Not valid before: 2012-11-30T19:44:39
+|_Not valid after:  2022-11-28T19:44:39
+|_ssl-date: TLS randomness does not represent time
+993/tcp open  tcpwrapped
+| ssl-cert: Subject: commonName=mail.mz.com.ua/organizationName=NZ/countryName=UA
+| Not valid before: 2012-11-30T19:44:39
+|_Not valid after:  2022-11-28T19:44:39
+|_ssl-date: TLS randomness does not represent time
+995/tcp open  tcpwrapped
+| ssl-cert: Subject: commonName=mail.mz.com.ua/organizationName=NZ/countryName=UA
+| Not valid before: 2012-11-30T19:44:39
+|_Not valid after:  2022-11-28T19:44:39
+|_ssl-date: TLS randomness does not represent time
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Thu Sep  3 16:54:54 2026 -- 1 IP address (1 host up) scanned in 186.91 seconds

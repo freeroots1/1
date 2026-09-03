@@ -1,0 +1,55 @@
+# Nmap 7.80 scan initiated Thu Sep  3 16:55:20 2026 as: nmap -p- -T4 -sV -sC -oN origin_full.txt 193.138.146.2
+Nmap scan report for 2.146.138.193.triolan.net (193.138.146.2)
+Host is up (0.00035s latency).
+Not shown: 65526 filtered ports
+PORT    STATE SERVICE    VERSION
+21/tcp  open  tcpwrapped
+25/tcp  open  tcpwrapped
+| smtp-commands: mail.mz.com.ua, AUTH CRAM-MD5 PLAIN LOGIN DIGEST-MD5 NTLM, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, PIPELINING, ETRN, DSN, HELP, 
+|_ 2.0.0 Commands: HELO EHLO MAIL RCPT DATA RSET NOOP VRFY QUIT STARTTLS 
+80/tcp  open  tcpwrapped
+|_http-server-header: cloudflare
+|_http-title: Site doesn't have a title (text/plain; charset=UTF-8).
+110/tcp open  tcpwrapped
+|_pop3-capabilities: APOP UIDL TOP STLS SASL(CRAM-MD5 PLAIN LOGIN DIGEST-MD5 NTLM) USER
+| pop3-ntlm-info: 
+|   Target_Name: SERVER1
+|   NetBIOS_Domain_Name: SERVER1
+|   NetBIOS_Computer_Name: SERVER1
+|   DNS_Domain_Name: server1
+|   DNS_Computer_Name: server1
+|_  Product_Version: 5.2.3790
+| ssl-cert: Subject: commonName=mail.mz.com.ua/organizationName=NZ/countryName=UA
+| Not valid before: 2012-11-30T19:44:39
+|_Not valid after:  2022-11-28T19:44:39
+|_ssl-date: TLS randomness does not represent time
+143/tcp open  tcpwrapped
+|_imap-capabilities: AUTH=PLAIN LITERAL+ XLIST AUTH=DIGEST-MD5 UNSELECT IMAP4rev1 ANNOTATE completed SPECIAL-USE UIDPLUS CAPABILITY OK AUTH=NTLMA0001 AUTH=LOGIN IDLE NAMESPACE STATUS-COUNTERS LISTEXT ACL ANNOTATEMORE SORT AUTH=CRAM-MD5 QUOTA ID IMAP4 STARTTLS
+|_imap-ntlm-info: ERROR: Script execution failed (use -d to debug)
+| ssl-cert: Subject: commonName=mail.mz.com.ua/organizationName=NZ/countryName=UA
+| Not valid before: 2012-11-30T19:44:39
+|_Not valid after:  2022-11-28T19:44:39
+|_ssl-date: TLS randomness does not represent time
+443/tcp open  tcpwrapped
+|_http-server-header: cloudflare
+|_http-title: Site doesn't have a title (text/plain; charset=UTF-8).
+587/tcp open  tcpwrapped
+| smtp-commands: mail.mz.com.ua, AUTH CRAM-MD5 PLAIN LOGIN DIGEST-MD5 NTLM, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, PIPELINING, ETRN, DSN, HELP, 
+|_ 2.0.0 Commands: EHLO MAIL RCPT DATA RSET NOOP VRFY QUIT STARTTLS 
+| ssl-cert: Subject: commonName=mail.mz.com.ua/organizationName=NZ/countryName=UA
+| Not valid before: 2012-11-30T19:44:39
+|_Not valid after:  2022-11-28T19:44:39
+|_ssl-date: TLS randomness does not represent time
+993/tcp open  tcpwrapped
+| ssl-cert: Subject: commonName=mail.mz.com.ua/organizationName=NZ/countryName=UA
+| Not valid before: 2012-11-30T19:44:39
+|_Not valid after:  2022-11-28T19:44:39
+|_ssl-date: TLS randomness does not represent time
+995/tcp open  tcpwrapped
+| ssl-cert: Subject: commonName=mail.mz.com.ua/organizationName=NZ/countryName=UA
+| Not valid before: 2012-11-30T19:44:39
+|_Not valid after:  2022-11-28T19:44:39
+|_ssl-date: TLS randomness does not represent time
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Thu Sep  3 16:59:03 2026 -- 1 IP address (1 host up) scanned in 223.26 seconds
