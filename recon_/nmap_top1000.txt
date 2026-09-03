@@ -1,0 +1,4 @@
+# Nmap 7.80 scan initiated Thu Sep  3 16:22:37 2026 as: nmap -T4 --top-ports 1000 -oN nmap_top1000.txt 
+Failed to resolve "".
+WARNING: No targets were specified, so 0 hosts scanned.
+# Nmap done at Thu Sep  3 16:22:37 2026 -- 0 IP addresses (0 hosts up) scanned in 0.03 seconds

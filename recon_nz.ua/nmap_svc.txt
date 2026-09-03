@@ -1,0 +1,256 @@
+# Nmap 7.80 scan initiated Thu Sep  3 16:25:43 2026 as: nmap -sV -sC -p 80,443,8080 -oN nmap_svc.txt nz.ua
+Nmap scan report for nz.ua (104.26.10.38)
+Host is up (0.00040s latency).
+Other addresses for nz.ua (not scanned): 104.26.11.38 172.67.74.159 2606:4700:20::681a:a26 2606:4700:20::681a:b26 2606:4700:20::ac43:4a9f
+
+PORT     STATE SERVICE    VERSION
+80/tcp   open  http       cloudflare
+| fingerprint-strings: 
+|   FourOhFourRequest: 
+|     HTTP/1.1 403 Forbidden
+|     Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+|     Cf-Ray: a3561cfa7fa9f3e1-ATL
+|     Connection: close
+|     Content-Length: 17
+|     Content-Type: text/plain; charset=UTF-8
+|     Date: Thu, 03 Sep 2026 16:25:54 GMT
+|     Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|     Referrer-Policy: same-origin
+|     Server: cloudflare
+|     X-Frame-Options: SAMEORIGIN
+|     error code: 1003
+|   GetRequest: 
+|     HTTP/1.1 403 Forbidden
+|     Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+|     Cf-Ray: a3561cdaf9fff3e1-ATL
+|     Connection: close
+|     Content-Length: 17
+|     Content-Type: text/plain; charset=UTF-8
+|     Date: Thu, 03 Sep 2026 16:25:50 GMT
+|     Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|     Referrer-Policy: same-origin
+|     Server: cloudflare
+|     X-Frame-Options: SAMEORIGIN
+|     error code: 1003
+|   HTTPOptions: 
+|     HTTP/1.1 403 Forbidden
+|     Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+|     Cf-Ray: a3561cdb1a24f3e1-ATL
+|     Connection: close
+|     Content-Length: 17
+|     Content-Type: text/plain; charset=UTF-8
+|     Date: Thu, 03 Sep 2026 16:25:50 GMT
+|     Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|     Referrer-Policy: same-origin
+|     Server: cloudflare
+|     X-Frame-Options: SAMEORIGIN
+|_    error code: 1003
+|_http-server-header: cloudflare
+|_http-title: Did not follow redirect to https://nz.ua/
+443/tcp  open  ssl/https  cloudflare
+| fingerprint-strings: 
+|   FourOhFourRequest: 
+|     HTTP/1.1 403 Forbidden
+|     Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+|     Cf-Ray: a3561d013877f3e1-ATL
+|     Connection: close
+|     Content-Length: 17
+|     Content-Type: text/plain; charset=UTF-8
+|     Date: Thu, 03 Sep 2026 16:25:56 GMT
+|     Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|     Referrer-Policy: same-origin
+|     Server: cloudflare
+|     X-Frame-Options: SAMEORIGIN
+|     error code: 1003
+|   GetRequest: 
+|     HTTP/1.1 403 Forbidden
+|     Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+|     Cf-Ray: a3561d007f58f3e1-ATL
+|     Connection: close
+|     Content-Length: 17
+|     Content-Type: text/plain; charset=UTF-8
+|     Date: Thu, 03 Sep 2026 16:25:55 GMT
+|     Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|     Referrer-Policy: same-origin
+|     Server: cloudflare
+|     X-Frame-Options: SAMEORIGIN
+|     error code: 1003
+|   HTTPOptions: 
+|     HTTP/1.1 403 Forbidden
+|     Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+|     Cf-Ray: a3561d00dffcf3e1-ATL
+|     Connection: close
+|     Content-Length: 17
+|     Content-Type: text/plain; charset=UTF-8
+|     Date: Thu, 03 Sep 2026 16:25:55 GMT
+|     Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|     Referrer-Policy: same-origin
+|     Server: cloudflare
+|     X-Frame-Options: SAMEORIGIN
+|_    error code: 1003
+| http-cookie-flags: 
+|   /: 
+|     PHPSESSID: 
+|_      secure flag not set and HTTPS in use
+|_http-server-header: cloudflare
+|_http-title:  | \xD0\x9D\xD0\xBE\xD0\xB2\xD1\x96 \xD0\xB7\xD0\xBD\xD0\xB0\xD0\xBD\xD0\xBD\xD1\x8F
+| ssl-cert: Subject: commonName=nz.ua
+| Subject Alternative Name: DNS:nz.ua
+| Not valid before: 2026-09-03T15:01:10
+|_Not valid after:  2026-09-04T16:01:10
+8080/tcp open  http-proxy cloudflare
+| fingerprint-strings: 
+|   FourOhFourRequest: 
+|     HTTP/1.1 403 Forbidden
+|     Date: Thu, 03 Sep 2026 16:25:50 GMT
+|     Content-Type: text/plain; charset=UTF-8
+|     Content-Length: 17
+|     Connection: close
+|     Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+|     Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|     Referrer-Policy: same-origin
+|     X-Frame-Options: SAMEORIGIN
+|     Server: cloudflare
+|     CF-RAY: a3561cdb3deef3e1-ATL
+|     error code: 1003
+|   GetRequest: 
+|     HTTP/1.1 403 Forbidden
+|     Date: Thu, 03 Sep 2026 16:25:50 GMT
+|     Content-Type: text/plain; charset=UTF-8
+|     Content-Length: 17
+|     Connection: close
+|     Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+|     Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|     Referrer-Policy: same-origin
+|     X-Frame-Options: SAMEORIGIN
+|     Server: cloudflare
+|     CF-RAY: a3561cdafcbff3e1-ATL
+|     error code: 1003
+|   HTTPOptions: 
+|     HTTP/1.1 403 Forbidden
+|     Date: Thu, 03 Sep 2026 16:25:50 GMT
+|     Content-Type: text/plain; charset=UTF-8
+|     Content-Length: 17
+|     Connection: close
+|     Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+|     Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|     Referrer-Policy: same-origin
+|     X-Frame-Options: SAMEORIGIN
+|     Server: cloudflare
+|     CF-RAY: a3561cdb1d4ef3e1-ATL
+|     error code: 1003
+|   RTSPRequest: 
+|     <html>
+|     <head><title>400 Bad Request</title></head>
+|     <body>
+|     <center><h1>400 Bad Request</h1></center>
+|     <hr><center>cloudflare</center>
+|     </body>
+|     </html>
+|   Socks5: 
+|     HTTP/1.1 400 Bad Request
+|     Server: cloudflare
+|     Date: Thu, 03 Sep 2026 16:25:50 GMT
+|     Content-Type: text/html
+|     Content-Length: 155
+|     Connection: close
+|     CF-RAY: -
+|     <html>
+|     <head><title>400 Bad Request</title></head>
+|     <body>
+|     <center><h1>400 Bad Request</h1></center>
+|     <hr><center>cloudflare</center>
+|     </body>
+|_    </html>
+|_http-server-header: cloudflare
+|_http-title: Did not follow redirect to https://nz.ua/
+3 services unrecognized despite returning data. If you know the service/version, please submit the following fingerprints at https://nmap.org/cgi-bin/submit.cgi?new-service :
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port80-TCP:V=7.80%I=7%D=9/3%Time=6A999F8E%P=x86_64-pc-linux-gnu%r(GetRe
+SF:quest,198,"HTTP/1\.1\x20403\x20Forbidden\r\nCache-Control:\x20private,\
+SF:x20max-age=0,\x20no-store,\x20no-cache,\x20must-revalidate,\x20post-che
+SF:ck=0,\x20pre-check=0\r\nCf-Ray:\x20a3561cdaf9fff3e1-ATL\r\nConnection:\
+SF:x20close\r\nContent-Length:\x2017\r\nContent-Type:\x20text/plain;\x20ch
+SF:arset=UTF-8\r\nDate:\x20Thu,\x2003\x20Sep\x202026\x2016:25:50\x20GMT\r\
+SF:nExpires:\x20Thu,\x2001\x20Jan\x201970\x2000:00:01\x20GMT\r\nReferrer-P
+SF:olicy:\x20same-origin\r\nServer:\x20cloudflare\r\nX-Frame-Options:\x20S
+SF:AMEORIGIN\r\n\r\nerror\x20code:\x201003\n")%r(HTTPOptions,198,"HTTP/1\.
+SF:1\x20403\x20Forbidden\r\nCache-Control:\x20private,\x20max-age=0,\x20no
+SF:-store,\x20no-cache,\x20must-revalidate,\x20post-check=0,\x20pre-check=
+SF:0\r\nCf-Ray:\x20a3561cdb1a24f3e1-ATL\r\nConnection:\x20close\r\nContent
+SF:-Length:\x2017\r\nContent-Type:\x20text/plain;\x20charset=UTF-8\r\nDate
+SF::\x20Thu,\x2003\x20Sep\x202026\x2016:25:50\x20GMT\r\nExpires:\x20Thu,\x
+SF:2001\x20Jan\x201970\x2000:00:01\x20GMT\r\nReferrer-Policy:\x20same-orig
+SF:in\r\nServer:\x20cloudflare\r\nX-Frame-Options:\x20SAMEORIGIN\r\n\r\ner
+SF:ror\x20code:\x201003\n")%r(FourOhFourRequest,198,"HTTP/1\.1\x20403\x20F
+SF:orbidden\r\nCache-Control:\x20private,\x20max-age=0,\x20no-store,\x20no
+SF:-cache,\x20must-revalidate,\x20post-check=0,\x20pre-check=0\r\nCf-Ray:\
+SF:x20a3561cfa7fa9f3e1-ATL\r\nConnection:\x20close\r\nContent-Length:\x201
+SF:7\r\nContent-Type:\x20text/plain;\x20charset=UTF-8\r\nDate:\x20Thu,\x20
+SF:03\x20Sep\x202026\x2016:25:54\x20GMT\r\nExpires:\x20Thu,\x2001\x20Jan\x
+SF:201970\x2000:00:01\x20GMT\r\nReferrer-Policy:\x20same-origin\r\nServer:
+SF:\x20cloudflare\r\nX-Frame-Options:\x20SAMEORIGIN\r\n\r\nerror\x20code:\
+SF:x201003\n");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port443-TCP:V=7.80%T=SSL%I=7%D=9/3%Time=6A999F94%P=x86_64-pc-linux-gnu%
+SF:r(GetRequest,198,"HTTP/1\.1\x20403\x20Forbidden\r\nCache-Control:\x20pr
+SF:ivate,\x20max-age=0,\x20no-store,\x20no-cache,\x20must-revalidate,\x20p
+SF:ost-check=0,\x20pre-check=0\r\nCf-Ray:\x20a3561d007f58f3e1-ATL\r\nConne
+SF:ction:\x20close\r\nContent-Length:\x2017\r\nContent-Type:\x20text/plain
+SF:;\x20charset=UTF-8\r\nDate:\x20Thu,\x2003\x20Sep\x202026\x2016:25:55\x2
+SF:0GMT\r\nExpires:\x20Thu,\x2001\x20Jan\x201970\x2000:00:01\x20GMT\r\nRef
+SF:errer-Policy:\x20same-origin\r\nServer:\x20cloudflare\r\nX-Frame-Option
+SF:s:\x20SAMEORIGIN\r\n\r\nerror\x20code:\x201003\n")%r(HTTPOptions,198,"H
+SF:TTP/1\.1\x20403\x20Forbidden\r\nCache-Control:\x20private,\x20max-age=0
+SF:,\x20no-store,\x20no-cache,\x20must-revalidate,\x20post-check=0,\x20pre
+SF:-check=0\r\nCf-Ray:\x20a3561d00dffcf3e1-ATL\r\nConnection:\x20close\r\n
+SF:Content-Length:\x2017\r\nContent-Type:\x20text/plain;\x20charset=UTF-8\
+SF:r\nDate:\x20Thu,\x2003\x20Sep\x202026\x2016:25:55\x20GMT\r\nExpires:\x2
+SF:0Thu,\x2001\x20Jan\x201970\x2000:00:01\x20GMT\r\nReferrer-Policy:\x20sa
+SF:me-origin\r\nServer:\x20cloudflare\r\nX-Frame-Options:\x20SAMEORIGIN\r\
+SF:n\r\nerror\x20code:\x201003\n")%r(FourOhFourRequest,198,"HTTP/1\.1\x204
+SF:03\x20Forbidden\r\nCache-Control:\x20private,\x20max-age=0,\x20no-store
+SF:,\x20no-cache,\x20must-revalidate,\x20post-check=0,\x20pre-check=0\r\nC
+SF:f-Ray:\x20a3561d013877f3e1-ATL\r\nConnection:\x20close\r\nContent-Lengt
+SF:h:\x2017\r\nContent-Type:\x20text/plain;\x20charset=UTF-8\r\nDate:\x20T
+SF:hu,\x2003\x20Sep\x202026\x2016:25:56\x20GMT\r\nExpires:\x20Thu,\x2001\x
+SF:20Jan\x201970\x2000:00:01\x20GMT\r\nReferrer-Policy:\x20same-origin\r\n
+SF:Server:\x20cloudflare\r\nX-Frame-Options:\x20SAMEORIGIN\r\n\r\nerror\x2
+SF:0code:\x201003\n");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port8080-TCP:V=7.80%I=7%D=9/3%Time=6A999F8E%P=x86_64-pc-linux-gnu%r(Get
+SF:Request,198,"HTTP/1\.1\x20403\x20Forbidden\r\nDate:\x20Thu,\x2003\x20Se
+SF:p\x202026\x2016:25:50\x20GMT\r\nContent-Type:\x20text/plain;\x20charset
+SF:=UTF-8\r\nContent-Length:\x2017\r\nConnection:\x20close\r\nCache-Contro
+SF:l:\x20private,\x20max-age=0,\x20no-store,\x20no-cache,\x20must-revalida
+SF:te,\x20post-check=0,\x20pre-check=0\r\nExpires:\x20Thu,\x2001\x20Jan\x2
+SF:01970\x2000:00:01\x20GMT\r\nReferrer-Policy:\x20same-origin\r\nX-Frame-
+SF:Options:\x20SAMEORIGIN\r\nServer:\x20cloudflare\r\nCF-RAY:\x20a3561cdaf
+SF:cbff3e1-ATL\r\n\r\nerror\x20code:\x201003\n")%r(HTTPOptions,198,"HTTP/1
+SF:\.1\x20403\x20Forbidden\r\nDate:\x20Thu,\x2003\x20Sep\x202026\x2016:25:
+SF:50\x20GMT\r\nContent-Type:\x20text/plain;\x20charset=UTF-8\r\nContent-L
+SF:ength:\x2017\r\nConnection:\x20close\r\nCache-Control:\x20private,\x20m
+SF:ax-age=0,\x20no-store,\x20no-cache,\x20must-revalidate,\x20post-check=0
+SF:,\x20pre-check=0\r\nExpires:\x20Thu,\x2001\x20Jan\x201970\x2000:00:01\x
+SF:20GMT\r\nReferrer-Policy:\x20same-origin\r\nX-Frame-Options:\x20SAMEORI
+SF:GIN\r\nServer:\x20cloudflare\r\nCF-RAY:\x20a3561cdb1d4ef3e1-ATL\r\n\r\n
+SF:error\x20code:\x201003\n")%r(RTSPRequest,9B,"<html>\r\n<head><title>400
+SF:\x20Bad\x20Request</title></head>\r\n<body>\r\n<center><h1>400\x20Bad\x
+SF:20Request</h1></center>\r\n<hr><center>cloudflare</center>\r\n</body>\r
+SF:\n</html>\r\n")%r(FourOhFourRequest,198,"HTTP/1\.1\x20403\x20Forbidden\
+SF:r\nDate:\x20Thu,\x2003\x20Sep\x202026\x2016:25:50\x20GMT\r\nContent-Typ
+SF:e:\x20text/plain;\x20charset=UTF-8\r\nContent-Length:\x2017\r\nConnecti
+SF:on:\x20close\r\nCache-Control:\x20private,\x20max-age=0,\x20no-store,\x
+SF:20no-cache,\x20must-revalidate,\x20post-check=0,\x20pre-check=0\r\nExpi
+SF:res:\x20Thu,\x2001\x20Jan\x201970\x2000:00:01\x20GMT\r\nReferrer-Policy
+SF::\x20same-origin\r\nX-Frame-Options:\x20SAMEORIGIN\r\nServer:\x20cloudf
+SF:lare\r\nCF-RAY:\x20a3561cdb3deef3e1-ATL\r\n\r\nerror\x20code:\x201003\n
+SF:")%r(Socks5,13C,"HTTP/1\.1\x20400\x20Bad\x20Request\r\nServer:\x20cloud
+SF:flare\r\nDate:\x20Thu,\x2003\x20Sep\x202026\x2016:25:50\x20GMT\r\nConte
+SF:nt-Type:\x20text/html\r\nContent-Length:\x20155\r\nConnection:\x20close
+SF:\r\nCF-RAY:\x20-\r\n\r\n<html>\r\n<head><title>400\x20Bad\x20Request</t
+SF:itle></head>\r\n<body>\r\n<center><h1>400\x20Bad\x20Request</h1></cente
+SF:r>\r\n<hr><center>cloudflare</center>\r\n</body>\r\n</html>\r\n");
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Thu Sep  3 16:27:28 2026 -- 1 IP address (1 host up) scanned in 104.67 seconds

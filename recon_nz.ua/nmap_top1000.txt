@@ -1,0 +1,11 @@
+# Nmap 7.80 scan initiated Thu Sep  3 16:24:40 2026 as: nmap -T4 --top-ports 1000 -oN nmap_top1000.txt nz.ua
+Nmap scan report for nz.ua (104.26.11.38)
+Host is up (0.00072s latency).
+Other addresses for nz.ua (not scanned): 172.67.74.159 104.26.10.38 2606:4700:20::681a:b26 2606:4700:20::ac43:4a9f 2606:4700:20::681a:a26
+Not shown: 997 filtered ports
+PORT     STATE SERVICE
+80/tcp   open  http
+443/tcp  open  https
+8080/tcp open  http-proxy
+
+# Nmap done at Thu Sep  3 16:24:45 2026 -- 1 IP address (1 host up) scanned in 4.99 seconds

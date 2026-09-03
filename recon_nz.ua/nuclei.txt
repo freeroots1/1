@@ -1,0 +1,21 @@
+[azure-domain-tenant] [http] [info] https://login.microsoftonline.com:443/nz.ua/v2.0/.well-known/openid-configuration ["1c424f88-ee66-40ff-b045-0717e8410fc9"]
+[cookies-without-secure] [javascript] [info] nz.ua ["PHPSESSID","_csrf"]
+[request-based-interaction:dns] [http] [info] https://nz.ua/
+[missing-cookie-samesite-strict] [http] [info] https://nz.ua ["PHPSESSID=2af6h6cp8vaht5ls4f568kqf1v; path=/; HttpOnly _csrf=4286e5acb35b252e3a5520d72dcf7778f202fc8215e64e637c139db616dd2cdea%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22XpjyMj0nJmcKmiYvvRI_43f-eV4y4TW2%22%3B%7D; path=/; HttpOnly; SameSite=Lax"]
+[robots-txt] [http] [info] https://nz.ua/robots.txt
+[external-service-interaction] [http] [info] https://nz.ua/
+[old-copyright] [http] [info] https://nz.ua ["\u00a9 2024"]
+[http-missing-security-headers:referrer-policy] [http] [info] https://nz.ua
+[http-missing-security-headers:cross-origin-resource-policy] [http] [info] https://nz.ua
+[http-missing-security-headers:x-frame-options] [http] [info] https://nz.ua
+[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] https://nz.ua
+[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] https://nz.ua
+[http-missing-security-headers:cross-origin-opener-policy] [http] [info] https://nz.ua
+[http-missing-security-headers:strict-transport-security] [http] [info] https://nz.ua
+[http-missing-security-headers:content-security-policy] [http] [info] https://nz.ua
+[http-missing-security-headers:permissions-policy] [http] [info] https://nz.ua
+[http-missing-security-headers:x-content-type-options] [http] [info] https://nz.ua
+[form-detection] [http] [info] https://nz.ua
+[missing-sri] [http] [info] https://nz.ua/ ["https://www.googletagmanager.com/gtag/js?id=UA-152957941-1","https://www.googletagmanager.com/gtag/js?id=G-K57V1MWP8L","https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css"]
+[ssl-dns-names] [ssl] [info] nz.ua:443 ["nz.ua"]
+[untrusted-root-certificate] [ssl] [low] nz.ua:443
