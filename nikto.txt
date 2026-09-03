@@ -1,0 +1,9 @@
+- Nikto v2.1.5/2.1.5
++ Target Host: nz.ua
++ Target Port: 80
++ GET /: The anti-clickjacking X-Frame-Options header is not present.
++ GET /: Uncommon header 'report-to' found, with contents: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=pRdGRYznFTKUjJ4Op672DlO4Yi18DzVkTXTjNQ94Fzcq02v4jbNPjwKczX3iSetNwtOreDNGhikiBlDDpyezRx9lHtVmPx17fxHCLIliCfthIeU38MDUBBW7r7yGxSpSnglQ"}]}
++ GET /: Uncommon header 'nel' found, with contents: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
++ GET /: Uncommon header 'cf-ray' found, with contents: a35622c129a2f3e1-ATL
++ GET /: Uncommon header 'x-frame-options' found, with contents: SAMEORIGIN
++ GET /: Uncommon header 'referrer-policy' found, with contents: same-origin
